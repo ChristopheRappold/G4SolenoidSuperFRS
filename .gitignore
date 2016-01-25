@@ -1,0 +1,17 @@
+\#*
+*~
+*.d
+*.o
+*.so
+*.pcm
+*.pdf
+*.png
+*par
+*.Dict.*
+*.temp
+.deps
+*eps
+*gz
+*debug
+*log*
+.dir-locals.el
