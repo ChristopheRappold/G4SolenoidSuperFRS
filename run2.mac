@@ -1,0 +1,37 @@
+# Macro file for G4SolSimple
+# 
+# To be run preferably in batch, without graphics:
+# % exampleG4SolSimple run2.mac
+#
+#/run/numberOfWorkers 4
+/run/initialize
+#
+#  turn off randomization 
+#
+/G4SolSimple/generator/randomizePrimary FALSE
+/G4SolSimple/generator/sigmaMomentum 0. 
+/G4SolSimple/generator/sigmaAngle 0.
+/run/verbose 1
+/run/printProgress 0
+#
+/G4SolSimple/detector/armAngle 30. deg
+/gun/particle proton
+/G4SolSimple/generator/momentum 100. GeV
+/G4SolSimple/field/value 100. tesla
+/analysis/setFileName G4SolSimple_proton
+/run/beamOn 30
+#
+/G4SolSimple/detector/armAngle 60. deg
+/gun/particle pi+
+/G4SolSimple/generator/momentum 100. GeV
+/G4SolSimple/field/value 200. tesla
+/analysis/setFileName G4SolSimple_pi+
+/run/beamOn 30
+#
+/gun/particle e+
+/G4SolSimple/detector/armAngle 30. deg
+/G4SolSimple/generator/momentum 100. GeV
+/G4SolSimple/field/value 100. tesla
+/analysis/setFileName G4SolSimple_e+
+/run/beamOn 30
+

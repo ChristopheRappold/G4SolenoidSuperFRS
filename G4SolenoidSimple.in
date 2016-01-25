@@ -1,0 +1,66 @@
+#
+# Test macro file for exampleG4SolSimple
+#
+
+/run/initialize
+
+# Turn off randomization 
+/G4SolSimple/generator/randomizePrimary false
+/G4SolSimple/generator/sigmaMomentum 0. 
+/G4SolSimple/generator/sigmaAngle 0.
+/run/printProgress 5
+#
+/G4SolSimple/detector/armAngle 30. deg
+/gun/particle proton
+/G4SolSimple/generator/momentum 100. GeV
+/G4SolSimple/field/value 100. tesla
+/run/beamOn 5
+#
+/G4SolSimple/detector/armAngle 60. deg
+/gun/particle pi+
+/G4SolSimple/generator/momentum 100. GeV
+/G4SolSimple/field/value 200. tesla
+/run/beamOn 5
+#
+/gun/particle e+
+/G4SolSimple/detector/armAngle 30. deg
+/G4SolSimple/generator/momentum 100. GeV
+/G4SolSimple/field/value 100. tesla
+/run/beamOn 5
+#
+/G4SolSimple/detector/armAngle 30. deg
+/gun/particle proton
+/G4SolSimple/generator/momentum 10. GeV
+/G4SolSimple/field/value 10. tesla
+/run/beamOn 5
+#
+/G4SolSimple/detector/armAngle 60. deg
+/gun/particle pi+
+/G4SolSimple/generator/momentum 10. GeV
+/G4SolSimple/field/value 20. tesla
+/run/beamOn 5
+#
+/gun/particle e+
+/G4SolSimple/detector/armAngle 30. deg
+/G4SolSimple/generator/momentum 10. GeV
+/G4SolSimple/field/value 10. tesla
+/run/beamOn 5
+#
+#
+/G4SolSimple/detector/armAngle 30. deg
+/gun/particle proton
+/G4SolSimple/generator/momentum 1. GeV
+/G4SolSimple/field/value 1. tesla
+/run/beamOn 5
+#
+/G4SolSimple/detector/armAngle 60. deg
+/gun/particle pi+
+/G4SolSimple/generator/momentum 1. GeV
+/G4SolSimple/field/value 2. tesla
+/run/beamOn 5
+#
+/gun/particle e+
+/G4SolSimple/detector/armAngle 30. deg
+/G4SolSimple/generator/momentum 1. GeV
+/G4SolSimple/field/value 1. tesla
+/run/beamOn 5

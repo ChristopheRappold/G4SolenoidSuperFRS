@@ -1,0 +1,32 @@
+# Macro file for G4SolSimple
+# 
+# Can be run in batch, without graphic
+# or interactively: Idle> /control/execute run1.mac
+#
+# Change the default number of workers (in multi-threading mode) 
+#/run/numberOfWorkers 4
+#
+# Initialize kernel
+/run/initialize
+#
+# Defaults:
+# armAngle 30. deg
+# field value: 1.0*tesla
+/run/beamOn 3
+#
+/G4SolSimple/detector/armAngle 0. deg
+/G4SolSimple/field/value 0. tesla
+/run/beamOn 3
+#
+/G4SolSimple/detector/armAngle 60. deg
+/G4SolSimple/field/value 2. tesla
+/run/beamOn 3
+#
+/G4SolSimple/detector/armAngle 30. deg
+/G4SolSimple/field/value 1. tesla
+/G4SolSimple/generator/momentum 2. GeV
+/G4SolSimple/generator/sigmaMomentum 0. 
+/G4SolSimple/generator/sigmaAngle 0.
+/G4SolSimple/generator/sigmaAngle 2. deg
+/run/beamOn 3
+
