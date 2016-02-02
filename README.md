@@ -12,3 +12,6 @@ $ cmake ..
 
 for debug flags : the following have to be added to cmake command :
 -DCMAKE_BUILD_TYPE=Debug
+
+and for release :
+-DCMAKE_BUILD_TYPE=Release
