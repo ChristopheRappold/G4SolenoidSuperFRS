@@ -151,7 +151,7 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
   G4Material* Air = materialMgr->FindOrBuildMaterial("G4_AIR");
   G4Material* Vacuum = materialMgr->FindOrBuildMaterial("G4_Galactic");
-  G4Material* HeGas = materialMgr->FindOrBuildMaterial("G4_He");
+  //G4Material* HeGas = materialMgr->FindOrBuildMaterial("G4_He");
   G4Material* Fe = materialMgr->FindOrBuildMaterial("G4_Fe");
   G4Material* Scinti = materialMgr->FindOrBuildMaterial("G4_POLYETHYLENE");//"Plastic");
   //G4Material* CFRP = materialMgr-> GetMaterial("CFRP");
@@ -159,7 +159,7 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   G4Material* W = materialMgr->FindOrBuildMaterial("G4_W");
   G4Material* Al = materialMgr->FindOrBuildMaterial("G4_Al");
   //G4Material* LHe3 = materialMgr->FindOrBuildMaterial("LHelium-3");
-  G4Material* CH2 = materialMgr->FindOrBuildMaterial("CH2");
+  //G4Material* CH2 = materialMgr->FindOrBuildMaterial("CH2");
   G4Material* Be = materialMgr->FindOrBuildMaterial("G4_Be");
   G4Material* Kapton = materialMgr->FindOrBuildMaterial("G4_KAPTON");
   G4Material* Cu = materialMgr->FindOrBuildMaterial("G4_Cu");
@@ -194,13 +194,13 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   constexpr double twopi = 6.28318530717959;
 
 
-  bool DoKurama = true;
-  bool DoTOFn = true;
-  bool DoTOFp = true;
+  bool DoKurama = false;
+  bool DoTOFn = false;
+  bool DoTOFp = false;
   bool DoCDS = true;
   bool DoCDH = true;
-  bool DoTargetChamber = true;
-  bool DoAC = true;
+  bool DoTargetChamber = false;
+  bool DoAC = false;
 
 
   
@@ -260,8 +260,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       
       //  KuramaAperture_log = new G4LogicalVolume(KuramaAperture_box, HeGas, 
       KuramaAperture_log = new G4LogicalVolume(KuramaAperture_box, Air,"KuramaAperture_log",0,0,0);//, KuramaFieldMgr, 0, 0);
-      G4PVPlacement* KuramaAperture_phys= new G4PVPlacement(0, G4ThreeVector(0.0,0.0,0.0),KuramaAperture_log,"KuramaAperture",Kurama_log,false,0);
-      
+      //G4PVPlacement* KuramaAperture_phys
+      AllPlacements.emplace_back( new G4PVPlacement(0, G4ThreeVector(0.0,0.0,0.0),KuramaAperture_log,"KuramaAperture",Kurama_log,false,0));
       //*******************//
       //*** Kurama Yoke ***//
       //*******************//
@@ -276,18 +276,22 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double kuramaYokeLR_z = 1.4/2.*m;
       G4VSolid* KuramaYokeLR_Box = new G4Box("KuramaYokeLR_box",kuramaYokeLR_x,kuramaYokeLR_y,kuramaYokeLR_z );
       G4LogicalVolume* KuramaYoke_log[4];
-      G4PVPlacement* KuramaYoke_phys[4];
+      //G4PVPlacement* KuramaYoke_phys[4];
       KuramaYoke_log[0] = new G4LogicalVolume(KuramaYokeUD_Box, Fe, "KuramaYoke0_log",0, 0, 0 );
-      KuramaYoke_phys[0]= new G4PVPlacement(0, G4ThreeVector(0.0, 45.0*cm,0.0),KuramaYoke_log[0],"KuramaYoke0",Kurama_log,false,0);
+      //KuramaYoke_phys[0]=
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0.0, 45.0*cm,0.0),KuramaYoke_log[0],"KuramaYoke0",Kurama_log,false,0));
       
       KuramaYoke_log[1] = new G4LogicalVolume(KuramaYokeUD_Box, Fe, "KuramaYoke1_log",0, 0, 0 );
-      KuramaYoke_phys[1]= new G4PVPlacement(0, G4ThreeVector(0.0,-45.0*cm,0.0),KuramaYoke_log[1],"KuramaYoke1",Kurama_log,false,0);
+      //KuramaYoke_phys[1]=
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0.0,-45.0*cm,0.0),KuramaYoke_log[1],"KuramaYoke1",Kurama_log,false,0));
       
       KuramaYoke_log[2] = new G4LogicalVolume(KuramaYokeLR_Box, Fe, "KuramaYoke2_log",0, 0, 0 );
-      KuramaYoke_phys[2]= new G4PVPlacement(0, G4ThreeVector(55.0*cm,0.0,0.0),KuramaYoke_log[2],"KuramaYoke2",Kurama_log,false,0);
+      //KuramaYoke_phys[2]=
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(55.0*cm,0.0,0.0),KuramaYoke_log[2],"KuramaYoke2",Kurama_log,false,0));
       
       KuramaYoke_log[3] = new G4LogicalVolume(KuramaYokeLR_Box, Fe, "KuramaYoke3_log",0, 0, 0 );
-      KuramaYoke_phys[3]= new G4PVPlacement(0, G4ThreeVector(-55.0*cm,0.0,0.0),KuramaYoke_log[3],"KuramaYoke3",Kurama_log,false,0);
+      //KuramaYoke_phys[3]=
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(-55.0*cm,0.0,0.0),KuramaYoke_log[3],"KuramaYoke3",Kurama_log,false,0));
       
       //--- Visualization ---//
       Kurama_log->SetVisAttributes(G4VisAttributes::Invisible);
@@ -323,12 +327,14 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double SDC1_pos_z[2] = {SDC1_pos_z_base-SDC1_block_z*2-SDC1_SDC1_space,
 				SDC1_pos_z_base};
 
-      G4PVPlacement* SDC1_phys[2];
+      //G4PVPlacement* SDC1_phys[2];
       char phys_name[100];
       for (G4int i=0; i<2; i++)
 	{
 	  sprintf(phys_name, "SDC1_phys%d", i);
-	  SDC1_phys[i] = new G4PVPlacement(0, G4ThreeVector(SDC1_pos_x,SDC1_pos_y,SDC1_pos_z[i]),SDC1_log[i], phys_name, experimentalHall_log, false, 0);
+	  //SDC1_phys[i] =
+	  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(SDC1_pos_x,SDC1_pos_y,SDC1_pos_z[i]),SDC1_log[i],
+						       phys_name, experimentalHall_log, false, 0));
 	}
       const G4double SDC1_cell_size = 8.0*mm; // full width
       G4double SDC1_seg_x = SDC1_cell_size/2;
@@ -398,13 +404,14 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double SDC2_pos_z_base = kuramaPos_z+kurama_z+5.0*cm+SDC2_block_z;
 
       G4double SDC2_pos_z[1] = {SDC2_pos_z_base};
-      G4PVPlacement* SDC2_phys[2];
+      //G4PVPlacement* SDC2_phys[2];
 
       for (G4int i=0; i<1; i++)
 	{
 	  sprintf(phys_name, "SDC2_phys%d", i);
-	  SDC2_phys[i] = new G4PVPlacement(0, G4ThreeVector(SDC2_pos_x,SDC2_pos_y,SDC2_pos_z[i]),
-					   SDC2_log[i], phys_name, experimentalHall_log, false, 0);
+	  //SDC2_phys[i] =
+	  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(SDC2_pos_x,SDC2_pos_y,SDC2_pos_z[i]),
+						       SDC2_log[i], phys_name, experimentalHall_log, false, 0));
 	}
       const G4double SDC2_cell_size = 20.0*mm; // full width
       G4double SDC2_seg_x = SDC2_cell_size/2;
@@ -533,7 +540,7 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       //std::string log_name,phys_name;
   
       G4LogicalVolume* sTOF_log = new G4LogicalVolume(sTOF_box, Scinti, log_name, 0,0,0);
-      G4PVPlacement* sTOF_phys [7][16];
+      //G4PVPlacement* sTOF_phys [7][16];
       G4int n=0;
       for (G4int i=0; i<7; ++i)
 	{
@@ -543,7 +550,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(log_name, "sTOF_log%d%02d", i+1, j+1);
 	      sprintf(phys_name, "sTOF_phys%d%02d", i+1, j+1);
 	      G4ThreeVector sTOF_Pos((double)(j+1.-8.5)*TOF_seg_x*2.0, 0.0,(double)(i+1.-4.0)*TOF_seg_z*2.0);
-	      sTOF_phys[i][j] = new G4PVPlacement(0, sTOF_Pos, sTOF_log, phys_name, TOF_log, false, n);
+	      //sTOF_phys[i][j] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, sTOF_Pos, sTOF_log, phys_name, TOF_log, false, n));
 	      n++;
 	    }
 	}
@@ -575,7 +583,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double pTOF_blockPos_y = 0.0*m;
       G4double pTOF_blockPos_z = TofRefPos*m+pTOF_block_z+0.5*cm-1.0*m;
       G4cout << " ToF length for PB        = " << pTOF_blockPos_z << G4endl; 
-      G4PVPlacement* pTOF_phys = new G4PVPlacement(0,G4ThreeVector(pTOF_blockPos_x,pTOF_blockPos_y,pTOF_blockPos_z), pTOF_log,"pTOF",experimentalHall_log,false,0);
+      //G4PVPlacement* pTOF_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(pTOF_blockPos_x,pTOF_blockPos_y,pTOF_blockPos_z), pTOF_log,"pTOF",experimentalHall_log,false,0));
 
       //**********************************************//
       //*** sTOF ( counter element in TOF volume ) ***//
@@ -588,7 +597,7 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       char log_name[100], phys_name[100];
       
       G4LogicalVolume* spTOF_log = new G4LogicalVolume(spTOF_box, Scinti,log_name, 0,0,0);
-      G4PVPlacement* spTOF_phys [1][61];
+      //G4PVPlacement* spTOF_phys [1][61];
       G4int n=0;
       for (G4int i=0; i<1; i++)
 	{
@@ -598,7 +607,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(log_name, "sptof_log%d%02d", i+1, j+1);
 	      sprintf(phys_name, "sptof_phys%d%02d", i+1, j+1);
 	      G4ThreeVector spTOF_Pos(-(double)(j+1-17.5)*(pTOF_seg_x+0.5*mm)*2.0, 0.0,(double)(i+1.-1.0)*pTOF_seg_z*2.0);
-	      spTOF_phys[i][j] = new G4PVPlacement(0, spTOF_Pos, spTOF_log, phys_name, pTOF_log, false, n);
+	      //spTOF_phys[i][j] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, spTOF_Pos, spTOF_log, phys_name, pTOF_log, false, n));
 	      n++;
 	    }
 	}
@@ -628,7 +638,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4RotationMatrix* rotCounterTof2 = new G4RotationMatrix;
       rotCounterTof2->rotateY(-pTOF2_tiltangle);
       G4Transform3D posCounterTof2(*rotCounterTof2, pTOF2Counter);
-      G4PVPlacement* pTOF2_phys = new G4PVPlacement(posCounterTof2, pTOF2_log, "pTOF2", experimentalHall_log, false, 0);  
+      //G4PVPlacement* pTOF2_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(posCounterTof2, pTOF2_log, "pTOF2", experimentalHall_log, false, 0));  
 
 
       //   pTOF2_phys = new G4PVPlacement(0,
@@ -647,7 +658,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(log_name, "sptof_log%d%02d", i+1, j+1);
 	      sprintf(phys_name, "sptof_phys%d%02d", i+1, j+1);
 	      G4ThreeVector spTOF_Pos(-(double)(j+1-48.0)*(pTOF_seg_x+0.5*mm)*2.0, 0.0,-pTOF2_block_z+pTOF_seg_z);
-	      spTOF_phys[i][j] = new G4PVPlacement(0, spTOF_Pos, spTOF_log, phys_name, pTOF2_log, false, n);
+	      //spTOF_phys[i][j] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, spTOF_Pos, spTOF_log, phys_name, pTOF2_log, false, n));
 	      n++;
 	    }
 	}
@@ -694,7 +706,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4Tubs* CDSYoke_tube= new G4Tubs("CDS_tube", cdsyoke_rmin, cdsyoke_rmax, cds_z, 0.0, twopi);
       G4LogicalVolume* CDSYoke_log = new G4LogicalVolume(CDSYoke_tube, Fe, "CDSYoke_log", 0,0,0);
 
-      G4PVPlacement* CDSYoke_phys = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CDSYoke_log, "CDS_Yoke", experimentalHall_log, false,0);
+      //G4PVPlacement* CDSYoke_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CDSYoke_log, "CDS_Yoke", experimentalHall_log, false,0));
 
       //--- Visualization ---//
       G4VisAttributes *CDSYoke_att = new G4VisAttributes(Gray);
@@ -710,12 +723,14 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
       G4VSolid* CDS_endcap_tube = new G4Tubs("CDS_endcap_tube", cds_endcap_rmin, cds_endcap_rmax, cds_endcap_z, 0.0, twopi);
       CDS_endcap_log  = new G4LogicalVolume(CDS_endcap_tube, Fe, "CDS_endcap_log",0,0,0);//, CDCFieldMgr,0,0);
-
-      G4PVPlacement* CDS_endcap_phys[2];
-      CDS_endcap_phys[0] = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z-(cds_z+cds_endcap_z)),
-					     CDS_endcap_log, "CDS_endcap_up", experimentalHall_log, false,0);
-      CDS_endcap_phys[1] = new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z+(cds_z+cds_endcap_z)),
-					     CDS_endcap_log, "CDS_endcap_down", experimentalHall_log, false,0);
+      
+      //G4PVPlacement* CDS_endcap_phys[2];
+      //CDS_endcap_phys[0] =
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z-(cds_z+cds_endcap_z)),
+						   CDS_endcap_log, "CDS_endcap_up", experimentalHall_log, false,0));
+      //CDS_endcap_phys[1] =
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z+(cds_z+cds_endcap_z)),
+						   CDS_endcap_log, "CDS_endcap_down", experimentalHall_log, false,0));
 
       //--- Visualization ---//
       G4VisAttributes *CDS_endcap_att = new G4VisAttributes(Gray);
@@ -731,7 +746,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
       G4VSolid* CDC_body_tube = new G4Tubs("CDC_body_tube", cdc_rmin, cdc_rmax, cdc_z, 0.0, twopi);
       G4LogicalVolume* CDC_body_log  = new G4LogicalVolume(CDC_body_tube,ChamberGas,"CDC_body_log",0,0,0);
-      G4PVPlacement* CDC_body_phys = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CDC_body_log, "CDC_body_phys", CDS_log, false, 0);  
+      //G4PVPlacement* CDC_body_phys=
+      AllPlacements.emplace_back( new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CDC_body_log, "CDC_body_phys", CDS_log, false, 0));  
 
       const G4double cdc_wire_dist = 0.45*cm;
       const G4double cdc_off = cdc_wire_dist;
@@ -967,14 +983,16 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   
       G4VSolid* CDC_win_solid = new G4Tubs("CDC_sol",cdc_win_rmin,cdc_win_rmax,cdc_z,0.0, twopi);
       G4LogicalVolume* CDC_win_log   = new G4LogicalVolume(CDC_win_solid,Vacuum,"CDC_win_log",0,0,0); // Material CFRP
-      G4PVPlacement* CDC_win_phys  = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_win_log, "CDC_window",CDS_log, false, 0);
+      //G4PVPlacement* CDC_win_phys  =
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_win_log, "CDC_window",CDS_log, false, 0));
 
       G4double cdc_win_out_rmin = cdc_rmax; 
       G4double cdc_win_out_rmax = cdc_rmax+0.07*mm;
 
       G4VSolid* CDC_win_out_solid = new G4Tubs("CDC_out_sol",cdc_win_out_rmin,cdc_win_out_rmax,cdc_z,0.0, twopi);
       G4LogicalVolume* CDC_win_out_log   = new G4LogicalVolume(CDC_win_out_solid,Mylar,"CDC_win_out_log",0,0,0);
-      G4PVPlacement* CDC_win_out_phys  = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_win_out_log, "CDC_out_window",CDS_log, false, 0);
+      //G4PVPlacement* CDC_win_out_phys  =
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_win_out_log, "CDC_out_window",CDS_log, false, 0));
 
       //--- Visualization ---//
       G4VisAttributes *CDC_win_att = new G4VisAttributes(Purple);
@@ -1228,13 +1246,14 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
       G4VSolid* TarCham_tube = 0;
       G4LogicalVolume* TarCham_log = 0; 
-      G4PVPlacement* TarCham_phys = 0;
+      //G4PVPlacement* TarCham_phys = 0;
 
       if (TargetMaterialID!=2)
 	{
 	  TarCham_tube = new G4Tubs("TarCham_tube", 0.0, tarCham_rmax, tarCham_z, 0.0, twopi);
 	  TarCham_log  = new G4LogicalVolume(TarCham_tube, Vacuum, "TarCham_log", 0,0,0);
-	  TarCham_phys = new G4PVPlacement(0,G4ThreeVector(tarChamPos_x, tarChamPos_y, tarChamPos_z), TarCham_log, "Target_Chamber", CDS_log, false,0);
+	  //TarCham_phys =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(tarChamPos_x, tarChamPos_y, tarChamPos_z), TarCham_log, "Target_Chamber", CDS_log, false,0));
 	}
 
       //**************//
@@ -1258,44 +1277,46 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double targetPos_y = 0.0*m;
       G4double targetPos_z = 0.0*m;
 
-      G4PVPlacement* Target_phys;
+      //G4PVPlacement* Target_phys;
       if (TargetMaterialID!=2)
-	Target_phys = new G4PVPlacement(0, G4ThreeVector(targetPos_x, targetPos_y, targetPos_z), Target_log, "Target", TarCham_log, false,0);
+	//Target_phys =
+	AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(targetPos_x, targetPos_y, targetPos_z), Target_log, "Target", TarCham_log, false,0));
       else
-	Target_phys = new G4PVPlacement(0, G4ThreeVector(targetPos_x, targetPos_y, targetPos_z), Target_log, "Target", CDS_log, false,0);
+	//Target_phys =
+	AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(targetPos_x, targetPos_y, targetPos_z), Target_log, "Target", CDS_log, false,0));
 
 
       G4VSolid* TarPET_tube =0; 	
       G4LogicalVolume* TarPET_log  =0; 
-      G4PVPlacement* TarPET_phys =0;
+      //G4PVPlacement* TarPET_phys =0;
 
       G4VSolid* TarAl_tube =0; 
       G4LogicalVolume* TarAl_log =0; 
-      G4PVPlacement* TarAl_phys=0; 
+      //G4PVPlacement* TarAl_phys=0; 
 
       G4VSolid* TarCFRP_tube = 0;
       G4LogicalVolume* TarCFRP_log =0; 
-      G4PVPlacement* TarCFRP_phys  =0; 
+      //G4PVPlacement* TarCFRP_phys  =0; 
 
       G4VSolid* TarChmEndCapU_solid = 0;
       G4LogicalVolume* TarChmEndCapU_log =0; 
-      G4PVPlacement* TarChmEndCapU_phys  =0; 
+      //G4PVPlacement* TarChmEndCapU_phys  =0; 
   
       G4VSolid* TarChmEndCapD_solid =0;
       G4LogicalVolume* TarChmEndCapD_log=0;
-      G4PVPlacement* TarChmEndCapD_phys  =0;
+      //G4PVPlacement* TarChmEndCapD_phys  =0;
 
       G4VSolid* TarSUS_tube = 0;
       G4LogicalVolume* TarSUS_log =0;  
-      G4PVPlacement* TarSUS_phys=0;
+      //G4PVPlacement* TarSUS_phys=0;
 
       G4VSolid* TarSUSEndCapU_solid =0;
       G4LogicalVolume* TarSUSEndCapU_log =0; 
-      G4PVPlacement* TarSUSEndCapU_phys=0;
+      //G4PVPlacement* TarSUSEndCapU_phys=0;
                    
       G4VSolid* TarSUSEndCapD_solid=0;
       G4LogicalVolume* TarSUSEndCapD_log=0;  
-      G4PVPlacement* TarSUSEndCapD_phys =0;
+      //G4PVPlacement* TarSUSEndCapD_phys =0;
 
   
       if (TargetMaterialID!=2)
@@ -1308,7 +1329,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       
 	  TarPET_tube = new G4Tubs("TarPET_tube", tarPET_rmin, tarPET_rmax, target_z, 0.0, twopi);
 	  TarPET_log  = new G4LogicalVolume(TarPET_tube, Be, "TarPET_log", 0,0,0);
-	  TarPET_phys = new G4PVPlacement(0, G4ThreeVector(targetPos_x, targetPos_y, targetPos_z), TarPET_log, "PET", TarCham_log, false,0);
+	  //TarPET_phys =
+	  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(targetPos_x, targetPos_y, targetPos_z), TarPET_log, "PET", TarCham_log, false,0));
 
 	  //*****************//
 	  //*** Target-Al ***//
@@ -1319,7 +1341,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
 	  TarAl_tube= new G4Tubs("TarAl_tube", tarAl_rmin, tarAl_rmax, tarAl_z, 0.0, twopi);
 	  TarAl_log = new G4LogicalVolume(TarAl_tube, Al, "TarAl_log", 0,0,0);
-	  TarAl_phys = new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z),TarAl_log, "Al", TarCham_log, false,0);
+	  //TarAl_phys =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z),TarAl_log, "Al", TarCham_log, false,0));
 
 
 	  //*******************//
@@ -1331,7 +1354,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
 	  TarCFRP_tube= new G4Tubs("TarCFRP_tube", tarCFRP_rmin, tarCFRP_rmax, tarCFRP_z, 0.0, twopi);
 	  TarCFRP_log = new G4LogicalVolume(TarCFRP_tube, Vacuum, "TarCFRP_log", 0,0,0); // Material CFRP
-	  TarCFRP_phys = new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z),TarCFRP_log, "CFRP", TarCham_log, false,0);
+	  //TarCFRP_phys =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z),TarCFRP_log, "CFRP", TarCham_log, false,0));
 
 	  TarCFRP_log->SetUserLimits(new G4UserLimits(1.0*mm));
 
@@ -1340,14 +1364,16 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	  //*****************************//
 	  TarChmEndCapU_solid     = new G4Tubs("TarChmEndCapU_solid", 0.0, tarCFRP_rmax,0.25*mm, 0.0, twopi);
 	  TarChmEndCapU_log       = new G4LogicalVolume(TarChmEndCapU_solid, Al, "TarChmEndCapU_log", 0, 0, 0);
-	  TarChmEndCapU_phys      = new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z-tarCFRP_z-0.25*mm),
-						      TarChmEndCapU_log, "TarChmEndCapU", CDS_log,false,0);
+	  //TarChmEndCapU_phys      =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z-tarCFRP_z-0.25*mm),
+						       TarChmEndCapU_log, "TarChmEndCapU", CDS_log,false,0));
 	  //TarChmEndCapU_log->SetSensitiveDetector(chamberSD);
 
 	  TarChmEndCapD_solid     = new G4Tubs("TarChmEndCapD_solid", 0.0, tarCFRP_rmax,0.25*mm, 0.0, twopi);
 	  TarChmEndCapD_log       = new G4LogicalVolume(TarChmEndCapD_solid, Al, "TarChmEndCapU_log", 0, 0, 0);
-	  TarChmEndCapD_phys      = new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z+tarCFRP_z+0.25*mm),
-						      TarChmEndCapD_log, "TarChmEndCapD", CDS_log,false,0);
+	  //TarChmEndCapD_phys      =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z+tarCFRP_z+0.25*mm),
+						       TarChmEndCapD_log, "TarChmEndCapD", CDS_log,false,0));
 	  //TarChmEndCapD_log->SetSensitiveDetector(chamberSD);
 
 	  //--- Visualization ---//
@@ -1381,22 +1407,25 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
 	  TarSUS_tube = new G4Tubs("TarSUS_tube", tarSUS_rmin, tarSUS_rmax, target_z, 0.0, twopi);
 	  TarSUS_log  = new G4LogicalVolume(TarSUS_tube, Vacuum, "TarSUS_log", 0,0,0); // Material SUS 
-	  TarSUS_phys = new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z),
-					  TarSUS_log, "SUS", CDS_log, false,0);
+	  //TarSUS_phys =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z),
+						       TarSUS_log, "SUS", CDS_log, false,0));
     
 	  //*****************************//
 	  //*** Target Chamber endcap ***//
 	  //*****************************//
 	  TarSUSEndCapU_solid     = new G4Tubs("TarSUSEndCapU_solid", 0.0, tarSUS_rmax,0.5*mm, 0.0, twopi);
 	  TarSUSEndCapU_log       = new G4LogicalVolume(TarSUSEndCapU_solid, Vacuum, "TarSUSEndCapU_log", 0, 0, 0); // Material SUS
-	  TarSUSEndCapU_phys      = new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z-target_z-0.5*mm),
-						      TarSUSEndCapU_log, "TarSUSEndCapU", CDS_log,false,0);
+	  //TarSUSEndCapU_phys      =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z-target_z-0.5*mm),
+						       TarSUSEndCapU_log, "TarSUSEndCapU", CDS_log,false,0));
 	  //TarChmEndCapU_log->SetSensitiveDetector(chamberSD);
 
 	  TarSUSEndCapD_solid     = new G4Tubs("TarSUSEndCapD_solid", 0.0, tarSUS_rmax,0.5*mm, 0.0, twopi);
 	  TarSUSEndCapD_log       = new G4LogicalVolume(TarSUSEndCapD_solid, Vacuum, "TarSUSEndCapU_log", 0, 0, 0); // Material SUS
-	  TarSUSEndCapD_phys      = new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z+target_z+0.5*mm),
-						      TarSUSEndCapD_log, "TarSUSEndCapD", CDS_log,false,0);
+	  //TarSUSEndCapD_phys      =
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(targetPos_x, targetPos_y, targetPos_z+target_z+0.5*mm),
+						       TarSUSEndCapD_log, "TarSUSEndCapD", CDS_log,false,0));
 	  //TarChmEndCapD_log->SetSensitiveDetector(chamberSD);
 
 	  //--- Visualization ---//
@@ -1422,9 +1451,10 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
       G4VSolid* CVC_solid = new G4Tubs("CVC_solid",0.0, cvc_r, CVC_Length, 0.0, twopi);
       G4LogicalVolume* CVC_log = new G4LogicalVolume(CVC_solid, Scinti, "CVC_log", 0, 0, 0);
-      G4PVPlacement* CVC_phys = new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, CVC_Zpos),
-						  CVC_log, "CVC_phys", TarCham_log,false,0);  
-
+      //G4PVPlacement* CVC_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, CVC_Zpos),
+						   CVC_log, "CVC_phys", TarCham_log,false,0));  
+				   
       //CVC_log->SetSensitiveDetector(counterSD); 
 
       //--- Visualization ---//
@@ -1452,17 +1482,18 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       
 	      G4Tubs* ZVC_body_tube[2];
 	      G4LogicalVolume* ZVC_body_log[2] ;
-	      G4PVPlacement* ZVC_body_phys[2];
+	      //G4PVPlacement* ZVC_body_phys[2];
 
 	      ZVC_body_tube[0]= new G4Tubs("ZVC_body_tube1", zvc_rmin, zvc_rmax, zvc_z, 0.0, twopi);
 	      ZVC_body_log[0] = new G4LogicalVolume(ZVC_body_tube[0], Vacuum, "ZVC_body_log1", 0,0,0); // Material ArCH4_90_10
-	      ZVC_body_phys[0] = new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),ZVC_body_log[0], "ZVC(TPC)", CDS_log, false,0);
+	      //ZVC_body_phys[0] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),ZVC_body_log[0], "ZVC(TPC)", CDS_log, false,0));
       
 	      char name[100];
 
 	      G4VSolid* ZVC_tube [1][8];
 	      G4LogicalVolume* ZVC_log[1][8]; 
-	      G4PVPlacement* ZVC_phys[1][8];      
+	      //G4PVPlacement* ZVC_phys[1][8];      
 	      G4double rmin = 0.0;
 	      G4double rmax = 0.0;
 	      // Kapton
@@ -1471,35 +1502,41 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(name, "ZVC_inner_Kapton");
 	      ZVC_tube[0][0] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][0] = new G4LogicalVolume(ZVC_tube[0][0],Kapton,name,0,0,0);
-	      ZVC_phys[0][0] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][0], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][0] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][0], name, ZVC_body_log[0], false, 0));  
 	      // Kapton
 	      rmin = 95.0*mm;
 	      rmax = rmin+0.4*mm;
 	      sprintf(name, "ZVC_field_in_Kapton");
 	      ZVC_tube[0][1] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][1] = new G4LogicalVolume(ZVC_tube[0][1],Kapton,name,0,0,0);
-	      ZVC_phys[0][1] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][1], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][1] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][1], name, ZVC_body_log[0], false, 0));  
 	      // Cu
 	      rmin = rmax;
 	      rmax = rmin+0.018*mm;
 	      sprintf(name, "ZVC_field_in_Cu");
 	      ZVC_tube[0][2] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][2] = new G4LogicalVolume(ZVC_tube[0][2],Cu,name,0,0,0);
-	      ZVC_phys[0][2] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][2], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][2] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][2], name, ZVC_body_log[0], false, 0));  
 	      // Kapton
 	      rmin = 130.0*mm;
 	      rmax = rmin+0.4*mm;
 	      sprintf(name, "ZVC_field_out_Kapton");
 	      ZVC_tube[0][3] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][3] = new G4LogicalVolume(ZVC_tube[0][3],Kapton,name,0,0,0);
-	      ZVC_phys[0][3] = new G4PVPlacement(0, G4ThreeVector(0,0,0), ZVC_log[0][3], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][3] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0), ZVC_log[0][3], name, ZVC_body_log[0], false, 0));  
+	      
 	      // Cu
 	      rmin = rmax;
 	      rmax = rmin+0.018*mm;
 	      sprintf(name, "ZVC_field_out_Cu");
 	      ZVC_tube[0][4] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][4] = new G4LogicalVolume(ZVC_tube[0][4],Cu,name,0,0,0);
-	      ZVC_phys[0][4] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][4], name, ZVC_body_log[0], false, 0);
+	      //ZVC_phys[0][4] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][4], name, ZVC_body_log[0], false, 0));
       
 	      // Kapton
 	      rmin = zvc_rmax-1.0*mm-0.4*mm;
@@ -1507,15 +1544,17 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(name, "ZVC_outer_Kapton");
 	      ZVC_tube[0][5] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][5] = new G4LogicalVolume(ZVC_tube[0][5],Kapton,name,0,0,0);
-	      ZVC_phys[0][5] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][5], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][5] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][5], name, ZVC_body_log[0], false, 0));  
 	      // Al
 	      rmin = rmax;
 	      rmax = zvc_rmax;
 	      sprintf(name, "ZVC_outer_Al");
 	      ZVC_tube[0][6] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][6] = new G4LogicalVolume(ZVC_tube[0][6],Al,name,0,0,0);
-	      ZVC_phys[0][6] = new G4PVPlacement(0, G4ThreeVector(0,0,0),
-						 ZVC_log[0][6], name, ZVC_body_log[0], false, 0);
+	      //ZVC_phys[0][6] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),
+							   ZVC_log[0][6], name, ZVC_body_log[0], false, 0));
 
 	      // readout-cell
 	      rmin = 95.0*mm+0.4*mm+0.018*mm;
@@ -1562,7 +1601,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(name, "ZVC_drift_region");
 	      ZVC_tube[0][7] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][7] = new G4LogicalVolume(ZVC_tube[0][7],Vacuum,name,0,0,0); // Material ArCH4_90_10
-	      ZVC_phys[0][7] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][7], name, ZVC_body_log[0], false, 0);
+	      //ZVC_phys[0][7] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][7], name, ZVC_body_log[0], false, 0));
 
 	
 	      //ZVC_cell_log[0]->SetSensitiveDetector(chamberSD);
@@ -1597,16 +1637,17 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       	      
 	      G4Tubs* ZVC_body_tube[2];
 	      G4LogicalVolume* ZVC_body_log[2] ;
-	      G4PVPlacement* ZVC_body_phys[2];
+	      //G4PVPlacement* ZVC_body_phys[2];
 	      ZVC_body_tube[0]= new G4Tubs("ZVC_body_tube1", zvc_rmin, zvc_rmax, zvc_z, 0.0, twopi);
 	      ZVC_body_log[0] = new G4LogicalVolume(ZVC_body_tube[0], ChamberGas, "ZVC_body_log1", 0,0,0);
-	      ZVC_body_phys[0] = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),ZVC_body_log[0], "ZVC1", CDS_log, false,0);
+	      //ZVC_body_phys[0] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),ZVC_body_log[0], "ZVC1", CDS_log, false,0));
 	      
 	      char name[100];
 
 	      G4VSolid* ZVC_tube [2][11];
 	      G4LogicalVolume* ZVC_log[2][11]; 
-	      G4PVPlacement* ZVC_phys[2][11];      
+	      //G4PVPlacement* ZVC_phys[2][11];      
 
 	      G4double rmin = 0.0;
 	      G4double rmax = 0.0;
@@ -1617,63 +1658,72 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(name, "ZVC_cathode-Kapton1");
 	      ZVC_tube[0][0] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][0] = new G4LogicalVolume(ZVC_tube[0][0],Kapton,name,0,0,0);
-	      ZVC_phys[0][0] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][0], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][0] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][0], name, ZVC_body_log[0], false, 0));  
 	      // cathode-Al
 	      rmin = rmax;
 	      rmax = rmin+0.01*mm;
 	      sprintf(name, "ZVC_cathode-Al1");
 	      ZVC_tube[0][1] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][1] = new G4LogicalVolume(ZVC_tube[0][1],Al,name,0,0,0);
-	      ZVC_phys[0][1] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][1], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][1] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][1], name, ZVC_body_log[0], false, 0));  
 	      // GEM1-Cu
 	      rmin = rmax+2.0*mm;
 	      rmax = rmin+0.008*mm;
 	      sprintf(name, "ZVC_GEM1-Cu1");
 	      ZVC_tube[0][2] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][2] = new G4LogicalVolume(ZVC_tube[0][2],Cu,name,0,0,0);
-	      ZVC_phys[0][2] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][2], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][2] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][2], name, ZVC_body_log[0], false, 0));  
 	      // GEM1-Kapton
 	      rmin = rmax;
 	      rmax = rmin+0.1*mm;
 	      sprintf(name, "ZVC_GEM1-Kapton1");
 	      ZVC_tube[0][3] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][3] = new G4LogicalVolume(ZVC_tube[0][3],Kapton,name,0,0,0);
-	      ZVC_phys[0][3] = new G4PVPlacement(0, G4ThreeVector(0,0,0), ZVC_log[0][3], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][3] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0), ZVC_log[0][3], name, ZVC_body_log[0], false, 0));  
 	      // GEM1-Cu
 	      rmin = rmax;
 	      rmax = rmin+0.008*mm;
 	      sprintf(name, "ZVC_GEM1-Cu1");
 	      ZVC_tube[0][4] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][4] = new G4LogicalVolume(ZVC_tube[0][4],Cu,name,0,0,0);
-	      ZVC_phys[0][4] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][4], name, ZVC_body_log[0], false, 0);
+	      //ZVC_phys[0][4] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][4], name, ZVC_body_log[0], false, 0));
 	      // GEM2-Cu
 	      rmin = rmax+1.0*mm;
 	      rmax = rmin+0.005*mm;
 	      sprintf(name, "ZVC_GEM2-Cu1");
 	      ZVC_tube[0][5] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][5] = new G4LogicalVolume(ZVC_tube[0][5],Cu,name,0,0,0);
-	      ZVC_phys[0][5] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][5], name, ZVC_body_log[0], false, 0);
+	      //ZVC_phys[0][5] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][5], name, ZVC_body_log[0], false, 0));
 	      // GEM2-Kapton
 	      rmin = rmax;
 	      rmax = rmin+0.05*mm;
 	      sprintf(name, "ZVC_GEM1-Kapton1");
 	      ZVC_tube[0][6] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][6] = new G4LogicalVolume(ZVC_tube[0][6],Kapton,name,0,0,0);
-	      ZVC_phys[0][6] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][6], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][6] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][6], name, ZVC_body_log[0], false, 0));  
 	      // GEM2-Cu
 	      rmin = rmax;
 	      rmax = rmin+0.005*mm;
 	      sprintf(name, "ZVC_GEM2-Cu1");
 	      ZVC_tube[0][7] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][7] = new G4LogicalVolume(ZVC_tube[0][7],Cu,name,0,0,0);
-	      ZVC_phys[0][7] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][7], name, ZVC_body_log[0], false, 0);
+	      //ZVC_phys[0][7] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][7], name, ZVC_body_log[0], false, 0));
 	      // readout-Al
 	      rmin = rmax+2.0*mm;
 	      rmax = rmin+0.01*mm;
 	      sprintf(name, "ZVC_readout-Al1");
 	      ZVC_tube[0][8] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][8] = new G4LogicalVolume(ZVC_tube[0][8],Al,name,0,0,0);
-	      ZVC_phys[0][8] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][8], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][8] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][8], name, ZVC_body_log[0], false, 0));  
 	      // readout-Al-cell
 	      const G4double     ZVC_cell_size = ZVertexChamberCell; // full width
 	      G4int ZVC_n_cell = (G4int)(2*zvc_z/ZVC_cell_size);
@@ -1700,14 +1750,16 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 	      sprintf(name, "ZVC_readout-Kapton1");
 	      ZVC_tube[0][9] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][9] = new G4LogicalVolume(ZVC_tube[0][9],Kapton,name,0,0,0);
-	      ZVC_phys[0][9] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][9], name, ZVC_body_log[0], false, 0);    
+	      //ZVC_phys[0][9] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][9], name, ZVC_body_log[0], false, 0));    
 	      // readout-Al
 	      rmin = rmax;
 	      rmax = rmin+0.01*mm;
 	      sprintf(name, "ZVC_readout-Al1");
 	      ZVC_tube[0][10] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 	      ZVC_log [0][10] = new G4LogicalVolume(ZVC_tube[0][10],Al,name,0,0,0);
-	      ZVC_phys[0][10] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][10], name, ZVC_body_log[0], false, 0);  
+	      //ZVC_phys[0][10] =
+	      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[0][10], name, ZVC_body_log[0], false, 0));  
 	      
 	      
 	      //--- Visualization ---//
@@ -1737,10 +1789,11 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 		  //*******************//
 		  zvc_rmin    = (ZVC_R-35.0-6.0)*mm;
 		  zvc_rmax    = (ZVC_R-35.0+1.0)*mm;
-	      
+		  
 		  ZVC_body_tube[1]= new G4Tubs("ZVC_body_tube2", zvc_rmin, zvc_rmax, zvc_z, 0.0, twopi);
 		  ZVC_body_log[1] = new G4LogicalVolume(ZVC_body_tube[1], ChamberGas, "ZVC_body_log2", 0,0,0);	      
-		  ZVC_body_phys[1] = new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),ZVC_body_log[1], "ZVC2", CDS_log, false,0);
+		  //ZVC_body_phys[1] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),ZVC_body_log[1], "ZVC2", CDS_log, false,0));
 	      
 		  // cathode-Kapton
 		  rmin = (ZVC_R-35.0-5.196)*mm;
@@ -1748,63 +1801,72 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 		  sprintf(name, "ZVC_cathode-Kapton2");
 		  ZVC_tube[1][0] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][0] = new G4LogicalVolume(ZVC_tube[1][0],Kapton,name,0,0,0);
-		  ZVC_phys[1][0] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][0], name, ZVC_body_log[1], false, 0);  
+		  //ZVC_phys[1][0] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][0], name, ZVC_body_log[1], false, 0));  
 		  // cathode-Al
 		  rmin = rmax;
 		  rmax = rmin+0.01*mm;
 		  sprintf(name, "ZVC_cathode-Al2");
 		  ZVC_tube[1][1] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][1] = new G4LogicalVolume(ZVC_tube[1][1],Al,name,0,0,0);
-		  ZVC_phys[1][1] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][1], name, ZVC_body_log[1], false, 0);  
+		  //ZVC_phys[1][1] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][1], name, ZVC_body_log[1], false, 0));  
 		  // GEM1-Cu
 		  rmin = rmax+2.0*mm;
 		  rmax = rmin+0.008*mm;
 		  sprintf(name, "ZVC_GEM1-Cu2");
 		  ZVC_tube[1][2] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][2] = new G4LogicalVolume(ZVC_tube[1][2],Cu,name,0,0,0);
-		  ZVC_phys[1][2] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][2], name, ZVC_body_log[1], false, 0);  
+		  //ZVC_phys[1][2] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][2], name, ZVC_body_log[1], false, 0));  
 		  // GEM1-Kapton
 		  rmin = rmax;
 		  rmax = rmin+0.1*mm;
 		  sprintf(name, "ZVC_GEM1-Kapton2");
 		  ZVC_tube[1][3] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][3] = new G4LogicalVolume(ZVC_tube[1][3],Kapton,name,0,0,0);
-		  ZVC_phys[1][3] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][3], name, ZVC_body_log[1], false, 0);  
+		  //ZVC_phys[1][3] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][3], name, ZVC_body_log[1], false, 0));  
 		  // GEM1-Cu
 		  rmin = rmax;
 		  rmax = rmin+0.008*mm;
 		  sprintf(name, "ZVC_GEM1-Cu2");
 		  ZVC_tube[1][4] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][4] = new G4LogicalVolume(ZVC_tube[1][4],Cu,name,0,0,0);
-		  ZVC_phys[1][4] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][4], name, ZVC_body_log[1], false, 0);
+		  //ZVC_phys[1][4] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][4], name, ZVC_body_log[1], false, 0));
 		  // GEM2-Cu
 		  rmin = rmax+1.0*mm;
 		  rmax = rmin+0.005*mm;
 		  sprintf(name, "ZVC_GEM2-Cu2");
 		  ZVC_tube[1][5] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][5] = new G4LogicalVolume(ZVC_tube[1][5],Cu,name,0,0,0);
-		  ZVC_phys[1][5] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][5], name, ZVC_body_log[1], false, 0);
+		  //ZVC_phys[1][5] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][5], name, ZVC_body_log[1], false, 0));
 		  // GEM2-Kapton
 		  rmin = rmax;
 		  rmax = rmin+0.05*mm;
 		  sprintf(name, "ZVC_GEM1-Kapton2");
 		  ZVC_tube[1][6] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][6] = new G4LogicalVolume(ZVC_tube[1][6],Kapton,name,0,0,0);
-		  ZVC_phys[1][6] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][6], name, ZVC_body_log[1], false, 0);  
+		  //ZVC_phys[1][6] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][6], name, ZVC_body_log[1], false, 0));  
 		  // GEM2-Cu
 		  rmin = rmax;
 		  rmax = rmin+0.005*mm;
 		  sprintf(name, "ZVC_GEM2-Cu2");
 		  ZVC_tube[1][7] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][7] = new G4LogicalVolume(ZVC_tube[1][7],Cu,name,0,0,0);
-		  ZVC_phys[1][7] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][7], name, ZVC_body_log[1], false, 0);
+		  //ZVC_phys[1][7] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][7], name, ZVC_body_log[1], false, 0));
 		  // readout-Al
 		  rmin = rmax+2.0*mm;
 		  rmax = rmin+0.01*mm;
 		  sprintf(name, "ZVC_readout-Al2");
 		  ZVC_tube[1][8] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][8] = new G4LogicalVolume(ZVC_tube[1][8],Al,name,0,0,0);
-		  ZVC_phys[1][8] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][8], name, ZVC_body_log[1], false, 0);  
+		  //ZVC_phys[1][8] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][8], name, ZVC_body_log[1], false, 0));  
 		  // readout-Al-cell
 		  ZVC_cell_tube[1] = new G4Tubs(name, rmin, rmax, ZVC_cell_size/2, 0.0, twopi);
 		  ZVC_cell_log[1]  = new G4LogicalVolume(ZVC_cell_tube[1],Al,name,0,0,0);
@@ -1824,14 +1886,16 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 		  sprintf(name, "ZVC_readout-Kapton2");
 		  ZVC_tube[1][9] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][9] = new G4LogicalVolume(ZVC_tube[1][9],Kapton,name,0,0,0);
-		  ZVC_phys[1][9] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][9], name, ZVC_body_log[1], false, 0);    
+		  //ZVC_phys[1][9] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][9], name, ZVC_body_log[1], false, 0));    
 		  // readout-Al
 		  rmin = rmax;
 		  rmax = rmin+0.01*mm;
 		  sprintf(name, "ZVC_readout-Al2");
 		  ZVC_tube[1][10] = new G4Tubs(name, rmin, rmax, zvc_z, 0.0, twopi);
 		  ZVC_log [1][10] = new G4LogicalVolume(ZVC_tube[1][10],Al,name,0,0,0);
-		  ZVC_phys[1][10] = new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][10], name, ZVC_body_log[1], false, 0);  
+		  //ZVC_phys[1][10] =
+		  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),ZVC_log[1][10], name, ZVC_body_log[1], false, 0));  
 	      
 	      
 		  //--- Visualization ---//
@@ -1869,7 +1933,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       
       
       G4LogicalVolume* KDV_log = new G4LogicalVolume(KDV_solid, Scinti, "KDV_log", 0, 0, 0);
-      G4PVPlacement* KDV_phys  = new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, KDV_Zpos), KDV_log, "KDV_phys", CDS_log,false,0);  
+      //G4PVPlacement* KDV_phys  =
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, KDV_Zpos), KDV_log, "KDV_phys", CDS_log,false,0));  
       
 
       //--- Visualization ---//
@@ -1901,7 +1966,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double AC_blockPos_x = 0.0*m;
       G4double AC_blockPos_y = 0.0*m;
       G4double AC_blockPos_z = -(cds_z+CDS_AC_space+AC_block_z);
-      G4PVPlacement* AC_phys = new G4PVPlacement(0, G4ThreeVector(AC_blockPos_x,AC_blockPos_y,AC_blockPos_z),AC_log,"AC",experimentalHall_log,false,0);
+      //G4PVPlacement* AC_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(AC_blockPos_x,AC_blockPos_y,AC_blockPos_z),AC_log,"AC",experimentalHall_log,false,0));
 
       //********************************************//
       //*** sAC ( counter element in AC volume ) ***//
@@ -1912,7 +1978,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4VSolid* sAC_box = new G4Box("sAC_box",AC_seg_x,AC_seg_y,AC_seg_z);
       G4LogicalVolume* sAC_log = new G4LogicalVolume(sAC_box, Air, //<-material is temporal
 						     "sAC_log", 0,0,0);
-      G4PVPlacement* sAC_phys = new G4PVPlacement(0,G4ThreeVector(0,0,0), sAC_log, "sAC_phys", AC_log, false, 0);
+      //G4PVPlacement* sAC_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0,0,0), sAC_log, "sAC_phys", AC_log, false, 0));
 
       //--- Visualization ---//
       AC_log->SetVisAttributes(G4VisAttributes::Invisible);
@@ -1935,8 +2002,9 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double STC_blockPos_x = 0.0*m;
       G4double STC_blockPos_y = 0.0*m;
       G4double STC_blockPos_z = -(cds_z+CDS_AC_space+AC_block_z*2+AC_STC_space+STC_block_z);
-      G4PVPlacement* STC_phys = new G4PVPlacement(0, G4ThreeVector(STC_blockPos_x,STC_blockPos_y,STC_blockPos_z),
-						  STC_log,"STC",experimentalHall_log,false,0);
+      //G4PVPlacement* STC_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(STC_blockPos_x,STC_blockPos_y,STC_blockPos_z),
+						   STC_log,"STC",experimentalHall_log,false,0));
 	
       //**********************************************//
       //*** sSTC ( counter element in STC volume ) ***//
@@ -1946,7 +2014,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
       G4double STC_seg_z = STC_block_z;
       G4VSolid* sSTC_box = new G4Box("sSTC_box",STC_seg_x,STC_seg_y,STC_seg_z);
       G4LogicalVolume* sSTC_log = new G4LogicalVolume(sSTC_box, Scinti,"sSTC_log", 0,0,0);
-      G4PVPlacement* sSTC_phys = new G4PVPlacement(0, G4ThreeVector(0,0,0),sSTC_log, "sSTC_phys", STC_log, false, 0);
+      //G4PVPlacement* sSTC_phys =
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),sSTC_log, "sSTC_phys", STC_log, false, 0));
 	
       //--- Visualization ---//
       STC_log->SetVisAttributes(G4VisAttributes::Invisible);
@@ -1980,13 +2049,14 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 			       BLC_pos_z_base-BLC_block_z*2-BLC_BLC_space,
 			       BLC_pos_z_base};
 
-      G4PVPlacement* BLC_phys[4] = {0,0,0,0} ;
+      //G4PVPlacement* BLC_phys[4] = {0,0,0,0} ;
       char phys_name[100];
       for (G4int i=0; i<4; i++)
 	{
 	  sprintf(phys_name, "BLC_phys%d", i+1);
-	  BLC_phys[i] = new G4PVPlacement(0, G4ThreeVector(BLC_pos_x,BLC_pos_y,BLC_pos_z[i]),
-					  BLC_log[i], phys_name, experimentalHall_log, false, 0);
+	  //BLC_phys[i] =
+	  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(BLC_pos_x,BLC_pos_y,BLC_pos_z[i]),
+						       BLC_log[i], phys_name, experimentalHall_log, false, 0));
 	}
       const G4double BLC_cell_size = 8.0*mm; // full width
       G4double BLC_seg_x = BLC_cell_size/2;

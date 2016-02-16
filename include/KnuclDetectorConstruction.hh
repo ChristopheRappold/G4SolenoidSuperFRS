@@ -61,6 +61,8 @@ public:
   G4PVPlacement*   CDS_phys;
 
   G4LogicalVolume* CDS_endcap_log;
+
+  std::vector<G4PVPlacement*> AllPlacements;
   
   double FieldInCDC;         
   double FieldInKurama;      
@@ -82,6 +84,8 @@ public:
   double ZVertexChamberCell;
 
 
+
+  
   //### constant for CDS(solenoid) ###//
   const double CDS_RMAX = 590.0; // unit :: mm
   const double CDS_Z = 1170.0; // unit :: mm
