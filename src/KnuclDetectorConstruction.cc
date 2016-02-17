@@ -96,6 +96,8 @@ KnuclDetectorConstruction::KnuclDetectorConstruction()//KnuclAnaManager* ana)
   DoTargetChamber = false;
   DoAC = false;
   
+  DoModHypHI = true;
+
   DefineCommands();
 }
 
@@ -209,6 +211,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   if(DoCDS == true)
     ConstructCDS(cds_rmax, cds_z, cdsPos_x, cdsPos_y, cdsPos_z);
 
+  if(DoModHypHI == true)
+    ConstructInnerTracker(cds_z, cdsPos_x, cdsPos_y, cdsPos_z);
   
   if(DoCDH==true)
     ConstructCDH(cdsPos_x, cdsPos_y, cdsPos_z);
@@ -896,13 +900,77 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z-(cds_z+cds_endcap_z)),
 					       CDS_endcap_log, "CDS_endcap_up", experimentalHall_log, false,0));
   //CDS_endcap_phys[1] =
-  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z+(cds_z+cds_endcap_z)),
-					       CDS_endcap_log, "CDS_endcap_down", experimentalHall_log, false,0));
+
+  if(DoModHypHI==false)
+    {
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z+(cds_z+cds_endcap_z)),
+						   CDS_endcap_log, "CDS_endcap_down", experimentalHall_log, false,0));
+    }
+  else
+    {
+
+      
+      double HypHI_rmax = cds_rmax*1.2;
+      
+      HypHI_Endcap = new G4Tubs("HypHI_Endcap",0, HypHI_rmax, 10*cm, 0,CLHEP::twopi);
+      HypHI_Endcap_log  = new G4LogicalVolume(HypHI_Endcap, Air, "HypHI_Endcap_log",0,0,0);// CDCFieldMgr,0,0);
+      HypHI_Endcap_phys = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z+(cds_z+12.*cm)), HypHI_Endcap_log, "HypHI_Endcap",
+					    experimentalHall_log, false,0);
+      //--- Visualization ---//
+      HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
+  
+      G4VSolid* HypHI_TrackerFwd = new G4Tubs("HypHI_TrackerFwd",cds_endcap_rmin, HypHI_rmax, 1*cm, 0,CLHEP::twopi);
+      HypHI_TrackerFwd_log = new G4LogicalVolume(HypHI_TrackerFwd,Air,"HYpHI_TrackFwd_log",0,0,0);
+
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0, 0, -9*cm),
+						   HypHI_TrackerFwd_log, "HypHI_TrackerFwd0", HypHI_Endcap_log, false,0));
+
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0, 0, -6*cm),
+						   HypHI_TrackerFwd_log, "HypHI_TrackerFwd1", HypHI_Endcap_log, false,1));
+
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0, 0, -3*cm),
+						   HypHI_TrackerFwd_log, "HypHI_TrackerFwd2", HypHI_Endcap_log, false,2));
+
+
+      G4VSolid* HypHI_RPC_l = new G4Tubs("HypHI_RPC_segment_L",cds_endcap_rmin, HypHI_rmax/2., 5*cm, -CLHEP::twopi/16.,2.*CLHEP::twopi/16.);
+      HypHI_RPC_l_log = new G4LogicalVolume(HypHI_RPC_l, Air, "HYpHI_RPC_l_log",0,0,0);
+      G4VSolid* HypHI_RPC_h = new G4Tubs("HypHI_RPC_segment_H",HypHI_rmax/2., HypHI_rmax, 5*cm, -CLHEP::twopi/16.,2.*CLHEP::twopi/16.);
+      HypHI_RPC_h_log = new G4LogicalVolume(HypHI_RPC_h, Air, "HYpHI_RPC_h_log",0,0,0);
+      
+      for(int idRPC = 0; idRPC < 8 ;++idRPC)
+	{
+	  G4RotationMatrix* rotRPC = new G4RotationMatrix;
+	  double rotAngle = CLHEP::twopi/8.*static_cast<double>(idRPC);
+	  rotRPC->rotateZ(rotAngle);
+	  std::string nameRPC ("HypHI_RPC_l");
+	  nameRPC+=std::to_string(idRPC);
+	  AllPlacements.emplace_back(new G4PVPlacement(rotRPC, G4ThreeVector(0, 0, 4.*cm),
+						       HypHI_RPC_l_log, nameRPC, HypHI_Endcap_log, false, idRPC));
+
+	  std::string nameRPC2 ("HypHI_RPC_h");
+	  nameRPC2+=std::to_string(idRPC);
+	  AllPlacements.emplace_back(new G4PVPlacement(rotRPC, G4ThreeVector(0, 0, 4.*cm),
+						       HypHI_RPC_h_log, nameRPC2, HypHI_Endcap_log, false, idRPC));
+	  
+
+	}
+
+      //--- Visualization ---//
+      G4VisAttributes *HypHI_RPC_att = new G4VisAttributes(Orange);
+      HypHI_RPC_att->SetForceWireframe(true);
+      HypHI_RPC_l_log->SetVisAttributes(HypHI_RPC_att);
+      HypHI_RPC_h_log->SetVisAttributes(HypHI_RPC_att);
+      G4VisAttributes *HypHI_Tracker_att = new G4VisAttributes(LightPurple);
+      HypHI_Tracker_att->SetForceWireframe(true);
+      HypHI_TrackerFwd_log->SetVisAttributes(HypHI_Tracker_att);
+    }
+
 
   //--- Visualization ---//
   G4VisAttributes *CDS_endcap_att = new G4VisAttributes(Gray);
   CDS_endcap_att->SetForceWireframe(true);
   CDS_endcap_log->SetVisAttributes(CDS_endcap_att);
+  
 
   //***********//
   //*** CDC ***//
@@ -1360,6 +1428,64 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 
   
 }
+
+void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z)
+{
+  G4NistManager* materialMgr = G4NistManager::Instance();
+    
+  //G4Material* Air = materialMgr->FindOrBuildMaterial("G4_AIR");
+  G4Material* Vacuum = materialMgr->FindOrBuildMaterial("G4_Galactic");
+  G4Material* Si = materialMgr->FindOrBuildMaterial("G4_Si");//"Plastic");
+
+  G4Material* Carbon = materialMgr->FindOrBuildMaterial("G4_C");//"Plastic");
+
+  
+  
+  
+  HypHI_InTracker = new G4Tubs("HypHI_InTracker", 0, 14.*cm, cds_z, 0, CLHEP::twopi);
+  HypHI_InTracker_log = new G4LogicalVolume(HypHI_InTracker, Vacuum,"HypHI_InTracker_log", 0,0,0);
+  HypHI_InTracker_phys = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), HypHI_InTracker_log, "HypHI_InTracker_Phys",
+					   experimentalHall_log, false,0);
+
+  //--- Visualization ---//
+  HypHI_InTracker_log->SetVisAttributes(G4VisAttributes::Invisible);
+
+  HypHI_Target = new G4Box("HypHI_Target", 2.*cm, 2.*cm, 2.*cm);
+  HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
+  HypHI_Target_phys = new G4PVPlacement(0, G4ThreeVector(0, 0 , -cds_z*0.7), HypHI_Target_log, "HypHI_Target_Phys",
+					   HypHI_InTracker_log, false,0);
+
+
+  G4int nb_panel = 16;
+  G4VSolid* HypHI_SiliciumSeg = new G4Tubs("HypHI_SiSeg",1*cm,14*cm, 3*mm,
+					   -CLHEP::twopi/static_cast<double>(2*nb_panel),2.*CLHEP::twopi/static_cast<double>(2*nb_panel)); 
+  HypHI_InSi_log = new G4LogicalVolume(HypHI_SiliciumSeg,Si,"HypHI_InSi_log", 0,0,0);
+  std::vector<double> posZ = {-cds_z*0.6,-cds_z*0.5,-cds_z*0.4,-cds_z*0.3};
+  G4int nb = 0;
+  for(size_t idLayer = 0;idLayer<posZ.size();++idLayer)
+    {
+      for(G4int IdSi = 0 ; IdSi<nb_panel;++IdSi)
+	{
+	  G4RotationMatrix* rotSi = new G4RotationMatrix;
+	  double rotAngle = CLHEP::twopi/static_cast<double>(nb_panel)*static_cast<double>(IdSi);
+	  rotSi->rotateZ(rotAngle);
+	  std::string nameSi ("HypHI_Layer");
+	  nameSi += std::to_string(idLayer);
+	  nameSi += "_SiSeg_";
+	  nameSi += std::to_string(IdSi);
+	  AllPlacements.emplace_back(new G4PVPlacement(rotSi, G4ThreeVector(0, 0, posZ[idLayer]),
+						       HypHI_InSi_log, nameSi, HypHI_InTracker_log, false, nb));
+	  ++nb;
+	}
+    }
+
+  G4VisAttributes *Si_att = new G4VisAttributes(Pink);
+  Si_att->SetForceWireframe(true);
+  HypHI_InSi_log->SetVisAttributes(Si_att);
+  
+}
+
+
 
 void KnuclDetectorConstruction::ConstructCDH(G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z)
 {

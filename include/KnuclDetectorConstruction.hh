@@ -36,15 +36,16 @@ private:
   static G4ThreadLocal G4SolSimpleMagneticField* fMagneticField;
   static G4ThreadLocal G4FieldManager* fFieldMgr;
 
-  const G4Colour  Blue      = {0.0, 0.0, 1.0} ;
-  const G4Colour  Gray      = {0.5, 0.5, 0.5} ;
-  const G4Colour  Red       = {1.0, 0.0, 0.0} ;
-  const G4Colour  LightBlue = {0.0, 0.0, 1.0,0.7} ;
-  const G4Colour  Yellow    = {1.0, 1.0, 0.0} ; 
-  const G4Colour  Purple    = {.5, 0.0, .5} ;
-  const G4Colour  Green     = {0.0, 1.0, 0.0};
-  const G4Colour  Orange    = {1.0,0.647,0};
-  const G4Colour  Pink      = {1.0,0.753,0.796};  
+  const G4Colour  Blue        = {0.0, 0.0, 1.0} ;
+  const G4Colour  Gray        = {0.5, 0.5, 0.5} ;
+  const G4Colour  Red         = {1.0, 0.0, 0.0} ;
+  const G4Colour  LightBlue   = {0.0, 0.0, 1.0,0.7} ;
+  const G4Colour  Yellow      = {1.0, 1.0, 0.0} ; 
+  const G4Colour  Purple      = {.5, 0.0, .5} ;
+  const G4Colour  LightPurple = {106./255., 27./255., 189./255.} ;
+  const G4Colour  Green       = {0.0, 1.0, 0.0};
+  const G4Colour  Orange      = {1.0,0.647,0};
+  const G4Colour  Pink        = {1.0,0.753,0.796};  
 
   void ConstructKurama();
   void ConstructTOFn();
@@ -54,6 +55,7 @@ private:
   void ConstructTargetChamber(G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z, G4double tarCham_rmax, G4double tarCham_z, G4double tarChamPos_x, G4double tarChamPos_y, G4double tarChamPos_z);
   void ConstructKaonVeto(G4double cdsPos_x, G4double cdsPos_y, G4double tarCham_rmax);
   void ConstructAC(G4double cds_z, G4double CDS_AC_space, G4double AC_STC_space, G4double STC_BLC_space, G4double BLC_BLC_space);
+  void ConstructInnerTracker(G4double cds_z, G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z);
 
   void DefineCommands();
   G4GenericMessenger* fMessenger;
@@ -75,6 +77,7 @@ public:
   bool DoTargetChamber;
   bool DoAC;
 
+  bool DoModHypHI;
   
   G4VSolid*        experimentalHall_box;
   G4LogicalVolume* experimentalHall_log;
@@ -97,6 +100,25 @@ public:
 
   G4LogicalVolume* CDS_endcap_log;
 
+  G4VSolid*         HypHI_Target;
+  G4LogicalVolume* HypHI_Target_log;
+  G4PVPlacement*   HypHI_Target_phys;
+  
+  G4VSolid*        HypHI_InTracker;
+  G4LogicalVolume* HypHI_InTracker_log;
+  G4PVPlacement*   HypHI_InTracker_phys;
+
+  G4LogicalVolume* HypHI_InSi_log;
+
+  
+  G4VSolid*        HypHI_Endcap;
+  G4LogicalVolume* HypHI_Endcap_log;
+  G4PVPlacement*   HypHI_Endcap_phys;
+
+  G4LogicalVolume* HypHI_TrackerFwd_log;
+  G4LogicalVolume* HypHI_RPC_l_log;
+  G4LogicalVolume* HypHI_RPC_h_log;
+  
   std::vector<G4PVPlacement*> AllPlacements;
   
   double FieldInCDC;         
