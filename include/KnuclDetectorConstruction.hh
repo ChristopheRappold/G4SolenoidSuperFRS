@@ -13,6 +13,8 @@
 //#include "THypHi_Par.hh"
 #include "G4FieldManager.hh"
 
+#include "G4Color.hh"
+
 //class HypHIFrsMagneticField;
 //class THypHi_Par;
 class G4VSolid;
@@ -26,12 +28,33 @@ class G4GenericMessenger;
 class G4SolSimpleMagneticField;
 class G4FieldManager;
 
+
+
 class KnuclDetectorConstruction : public G4VUserDetectorConstruction
 {
 private:
-    static G4ThreadLocal G4SolSimpleMagneticField* fMagneticField;
-    static G4ThreadLocal G4FieldManager* fFieldMgr;
-      
+  static G4ThreadLocal G4SolSimpleMagneticField* fMagneticField;
+  static G4ThreadLocal G4FieldManager* fFieldMgr;
+
+  const G4Colour  Blue      = {0.0, 0.0, 1.0} ;
+  const G4Colour  Gray      = {0.5, 0.5, 0.5} ;
+  const G4Colour  Red       = {1.0, 0.0, 0.0} ;
+  const G4Colour  LightBlue = {0.0, 0.0, 1.0,0.7} ;
+  const G4Colour  Yellow    = {1.0, 1.0, 0.0} ; 
+  const G4Colour  Purple    = {.5, 0.0, .5} ;
+  const G4Colour  Green     = {0.0, 1.0, 0.0};
+  const G4Colour  Orange    = {1.0,0.647,0};
+  const G4Colour  Pink      = {1.0,0.753,0.796};  
+
+  void ConstructKurama();
+  void ConstructTOFn();
+  void ConstructTOFp();
+  void ConstructCDS(G4double cds_rmax,G4double cds_z, G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z);
+  void ConstructCDH(G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z);
+  void ConstructTargetChamber(G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z, G4double tarCham_rmax, G4double tarCham_z, G4double tarChamPos_x, G4double tarChamPos_y, G4double tarChamPos_z);
+  void ConstructKaonVeto(G4double cdsPos_x, G4double cdsPos_y, G4double tarCham_rmax);
+  void ConstructAC(G4double cds_z, G4double CDS_AC_space, G4double AC_STC_space, G4double STC_BLC_space, G4double BLC_BLC_space);
+  
 public:
   //explicit KnuclDetectorConstruction();//const THypHi_Par& _par);
   KnuclDetectorConstruction();//KnuclAnaManager* ana);
@@ -40,7 +63,9 @@ public:
   void ConstructMaterials();
   G4VPhysicalVolume* Construct();
   virtual void ConstructSDandField();
+ 
 
+  
   G4VSolid*        experimentalHall_box;
   G4LogicalVolume* experimentalHall_log;
   G4PVPlacement*   experimentalHall_phys;
