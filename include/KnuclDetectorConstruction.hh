@@ -54,7 +54,10 @@ private:
   void ConstructTargetChamber(G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z, G4double tarCham_rmax, G4double tarCham_z, G4double tarChamPos_x, G4double tarChamPos_y, G4double tarChamPos_z);
   void ConstructKaonVeto(G4double cdsPos_x, G4double cdsPos_y, G4double tarCham_rmax);
   void ConstructAC(G4double cds_z, G4double CDS_AC_space, G4double AC_STC_space, G4double STC_BLC_space, G4double BLC_BLC_space);
-  
+
+  void DefineCommands();
+  G4GenericMessenger* fMessenger;
+
 public:
   //explicit KnuclDetectorConstruction();//const THypHi_Par& _par);
   KnuclDetectorConstruction();//KnuclAnaManager* ana);
@@ -63,7 +66,14 @@ public:
   void ConstructMaterials();
   G4VPhysicalVolume* Construct();
   virtual void ConstructSDandField();
- 
+
+  bool DoKurama;
+  bool DoTOFn;
+  bool DoTOFp;
+  bool DoCDS;
+  bool DoCDH;
+  bool DoTargetChamber;
+  bool DoAC;
 
   
   G4VSolid*        experimentalHall_box;

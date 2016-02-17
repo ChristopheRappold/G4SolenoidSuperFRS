@@ -42,6 +42,7 @@
 #include "G4Mag_UsualEqRhs.hh"
 #include "G4AutoDelete.hh"
 
+#include <iostream>
 
 G4ThreadLocal G4SolSimpleMagneticField* KnuclDetectorConstruction::fMagneticField = 0;
 G4ThreadLocal G4FieldManager* KnuclDetectorConstruction::fFieldMgr = 0;
@@ -87,8 +88,15 @@ KnuclDetectorConstruction::KnuclDetectorConstruction()//KnuclAnaManager* ana)
   ZVertexChamber     = 1;
   ZVertexChamberCell = 10.0*mm;
 
-
-
+  DoKurama = false;
+  DoTOFn = false;
+  DoTOFp = false;
+  DoCDS = true;
+  DoCDH = true;
+  DoTargetChamber = false;
+  DoAC = false;
+  
+  DefineCommands();
 }
 
 //////////////////////////////////////////////////////
@@ -140,17 +148,9 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
 
   G4cout << "!!! " << ChamberGasSelection << " was selected as chamber gas for CDC " << G4endl;
-  
-  bool DoKurama = true;
-  bool DoTOFn = false;
-  bool DoTOFp = false;
-  bool DoCDS = true;
-  bool DoCDH = true;
-  bool DoTargetChamber = false;
-  bool DoAC = false;
 
+  G4cout<<"Detectors :"<<DoKurama<<" "<<DoTOFn<<" "<<DoTOFp<<" "<<DoCDS<<" "<<DoCDH<<" "<<DoTargetChamber<<" "<<DoAC<<"\n";	    
 
-  
   // ==============================================================
   // experimental hall (world volume)
   //   --- beam line along z axis ---
@@ -2379,3 +2379,57 @@ void KnuclDetectorConstruction::ConstructAC(G4double cds_z, G4double CDS_AC_spac
 
 }
 
+
+
+
+
+void KnuclDetectorConstruction::DefineCommands()
+{
+
+  // Define /B5/detector command directory using generic messenger class                                                                                              
+  fMessenger = new G4GenericMessenger(this,"/G4SolSimple/detector/","Detector control");
+
+  G4GenericMessenger::Command& KuramaCmd = fMessenger->DeclareProperty("SetKurama", DoKurama);
+  G4String guidance = "Boolean flag for setting Kurama.\n";
+  KuramaCmd.SetGuidance(guidance);
+  KuramaCmd.SetParameterName("SetKurama", false);
+  KuramaCmd.SetDefaultValue("false");
+
+
+  G4GenericMessenger::Command& TOFnCmd = fMessenger->DeclareProperty("SetTOFn", DoTOFn);
+  G4String guidance2 = "Boolean flag for setting TOFn.\n";
+  TOFnCmd.SetGuidance(guidance2);
+  TOFnCmd.SetParameterName("SetTOFn", false);
+  TOFnCmd.SetDefaultValue("false");
+
+  G4GenericMessenger::Command& TOFpCmd = fMessenger->DeclareProperty("SetTOFp", DoTOFp);
+  G4String guidance3 = "Boolean flag for setting TOFn.\n";
+  TOFpCmd.SetGuidance(guidance3);
+  TOFpCmd.SetParameterName("SetTOFp", false);
+  TOFpCmd.SetDefaultValue("false");
+
+  G4GenericMessenger::Command& CDSCmd = fMessenger->DeclareProperty("SetCDS", DoCDS);
+  G4String guidance4 = "Boolean flag for setting CDS.\n";
+  CDSCmd.SetGuidance(guidance4);
+  CDSCmd.SetParameterName("SetCDS", true);
+  CDSCmd.SetDefaultValue("true");
+
+  G4GenericMessenger::Command& CDHCmd = fMessenger->DeclareProperty("SetCDH", DoCDH);
+  G4String guidance5 = "Boolean flag for setting CDH.\n";
+  CDHCmd.SetGuidance(guidance5);
+  CDHCmd.SetParameterName("SetCDH", false);
+  CDHCmd.SetDefaultValue("false");
+  
+  G4GenericMessenger::Command& TargetCmd = fMessenger->DeclareProperty("SetTarget", DoTargetChamber);
+  G4String guidance6 = "Boolean flag for setting Target Chamber.\n";
+  TargetCmd.SetGuidance(guidance6);
+  TargetCmd.SetParameterName("SetTarget", false);
+  TargetCmd.SetDefaultValue("false");
+  
+  G4GenericMessenger::Command& ACCmd = fMessenger->DeclareProperty("SetAC", DoAC);
+  G4String guidance7 = "Boolean flag for setting AC.\n";
+  ACCmd.SetGuidance(guidance7);
+  ACCmd.SetParameterName("SetAC", false);
+  ACCmd.SetDefaultValue("false");
+
+}

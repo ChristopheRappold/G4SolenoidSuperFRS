@@ -30,6 +30,9 @@
 # Also, we need to switch off primary randomization for the /gun/ commands to
 # work
 /G4SolSimple/generator/randomizePrimary false
+/G4SolSimple/detector/SetTOFp true
+/G4SolSimple/detector/SetCDS true
+/G4SolSimple/detector/SetKurama false
 #
 # Field menu :
 /gui/addMenu field Field
