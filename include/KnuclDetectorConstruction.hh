@@ -47,6 +47,21 @@ private:
   const G4Colour  Orange      = {1.0,0.647,0};
   const G4Colour  Pink        = {1.0,0.753,0.796};  
 
+  const G4Colour PaletteOrange[5] = {{254/255.,237/255.,222/255.}, {253/255.,190/255.,133/255.}, {253/255.,141/255.,060/255.},
+				     {230/255., 85/255.,13/255.}, {166/255.,54/255.,3/255.}};
+  const G4Colour PaletteGreen[5]  = {{237/255.,248/255.,233/255.}, {186/255.,228/255.,179/255.}, {116/255.,196/255.,118/255.},
+				     { 49/255.,163/255.,84/255.}, {0,109/255.,44/255.}};
+  const G4Colour PaletteRed[5]    = {{254/255.,229/255.,217/255.}, {252/255.,174/255.,145/255.}, {251/255.,106/255.,74/255.}, 
+				     {222/255.,45/255.,38/255.}, {165/255.,15/255.,21/255.}};
+    
+  
+  const G4Colour ColorCDC[15] = {PaletteOrange[0],PaletteOrange[0],PaletteOrange[0],
+				 PaletteOrange[1],PaletteOrange[1],PaletteOrange[1],PaletteOrange[1],
+				 PaletteOrange[2],PaletteOrange[2],
+				 PaletteOrange[3],PaletteOrange[3],PaletteOrange[3],PaletteOrange[3],
+				 PaletteOrange[4],PaletteOrange[4]};
+  
+
   void ConstructKurama();
   void ConstructTOFn();
   void ConstructTOFp();
