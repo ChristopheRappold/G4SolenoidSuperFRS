@@ -93,6 +93,7 @@ public:
   bool DoAC;
 
   bool DoModHypHI;
+  int DoOnlySense;
   
   G4VSolid*        experimentalHall_box;
   G4LogicalVolume* experimentalHall_log;
