@@ -43,6 +43,7 @@
 #include "G4AutoDelete.hh"
 
 #include <iostream>
+#include <set>
 
 G4ThreadLocal G4SolSimpleMagneticField* KnuclDetectorConstruction::fMagneticField = 0;
 G4ThreadLocal G4FieldManager* KnuclDetectorConstruction::fFieldMgr = 0;
@@ -1032,7 +1033,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDC_Set[i] = new G4Tubs(nameSet, rmin, rmax, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i] = new G4LogicalVolume(CDC_Set[i],Vacuum,nameSetLog,0,0,0);
-      CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_Setlog[i],nameSetPhys,CDC_body_log,false,i));
       
       CDC_tube[i] = new G4Tubs(name_sol, rmin, rmax, cdc_z, -0.5*CLHEP::twopi/(double)N_CDC_CELL[i], CLHEP::twopi/(double)N_CDC_CELL[i]);
@@ -1068,9 +1069,10 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       std::string nameSetPhys("CDC_SetPhys");
       nameSetPhys+=std::to_string(i+3);
       
-      CDC_Set[i+3] = new G4TwistedTubs(nameSet, cdc_cell_twist[i+3], rmin, rmax, cdc_z, CLHEP::twopi);
+      //CDC_Set[i+3] = new G4TwistedTubs(nameSet, cdc_cell_twist[i+3], rmin, rmax, cdc_z, CLHEP::twopi);
+      CDC_Set[i+3] = new G4Tubs(nameSet, rmin, rmax, cdc_z,0 , CLHEP::twopi);
       CDC_Setlog[i+3] = new G4LogicalVolume(CDC_Set[i+3],Vacuum,nameSetLog,0,0,0);
-      CDC_Setlog[i+3]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+3]->SetVisAttributes(G4VisAttributes::Invisible);
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_Setlog[i+3],nameSetPhys,CDC_body_log,false,i+3));
 
       
@@ -1107,9 +1109,9 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       std::string nameSetPhys("CDC_SetPhys");
       nameSetPhys+=std::to_string(i+5);
       
-      CDC_Set[i+5] = new G4TwistedTubs(nameSet, cdc_cell_twist[i+5], rmin, rmax, cdc_z, CLHEP::twopi);
+      CDC_Set[i+5] = new G4Tubs(nameSet, rmin, rmax, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+5] = new G4LogicalVolume(CDC_Set[i+5],Vacuum,nameSetLog,0,0,0);
-      CDC_Setlog[i+5]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+5]->SetVisAttributes(G4VisAttributes::Invisible);
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_Setlog[i+5],nameSetPhys,CDC_body_log,false,i+5));
 
       CDC_twist_tube[i+5] = new G4TwistedTubs(name_sol, cdc_cell_twist[i+5], rmin, rmax, cdc_z, CLHEP::twopi/(double)N_CDC_CELL[i+5]);
@@ -1147,7 +1149,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDC_Set[i+7] = new G4Tubs(nameSet, rmin, rmax, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+7] = new G4LogicalVolume(CDC_Set[i+7],Vacuum,nameSetLog,0,0,0);
-      CDC_Setlog[i+7]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+7]->SetVisAttributes(G4VisAttributes::Invisible);
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_Setlog[i+7],nameSetPhys,CDC_body_log,false,i+7));
 
       
@@ -1184,9 +1186,9 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       std::string nameSetPhys("CDC_SetPhys");
       nameSetPhys+=std::to_string(i+9);
       
-      CDC_Set[i+9] = new G4TwistedTubs(nameSet, cdc_cell_twist[i+9], rmin, rmax, cdc_z, CLHEP::twopi);
+      CDC_Set[i+9] = new G4Tubs(nameSet, rmin, rmax, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+9] = new G4LogicalVolume(CDC_Set[i+9],Vacuum,nameSetLog,0,0,0);
-      CDC_Setlog[i+9]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+9]->SetVisAttributes(G4VisAttributes::Invisible);
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_Setlog[i+9],nameSetPhys,CDC_body_log,false,i+9));
 
       CDC_twist_tube[i+9] = new G4TwistedTubs(name_sol, cdc_cell_twist[i+9], rmin, rmax, cdc_z, CLHEP::twopi/(double)N_CDC_CELL[i+9]);
@@ -1222,9 +1224,9 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       std::string nameSetPhys("CDC_SetPhys");
       nameSetPhys+=std::to_string(i+11);
       
-      CDC_Set[i+11] = new G4TwistedTubs(nameSet,cdc_cell_twist[i+11], rmin, rmax, cdc_z, CLHEP::twopi);
+      CDC_Set[i+11] = new G4Tubs(nameSet, rmin, rmax, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+11] = new G4LogicalVolume(CDC_Set[i+11],Vacuum,nameSetLog,0,0,0);
-      CDC_Setlog[i+11]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+11]->SetVisAttributes(G4VisAttributes::Invisible);
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_Setlog[i+11],nameSetPhys,CDC_body_log,false,i+11));
 
       CDC_twist_tube[i+11] = new G4TwistedTubs(name_sol, cdc_cell_twist[i+11], rmin, rmax,cdc_z, CLHEP::twopi/(double)N_CDC_CELL[i+11]);
@@ -1262,7 +1264,6 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	  
 	  CDC_Set[i+13] = new G4Tubs(nameSet, rmin, rmax, cdc_z, 0, CLHEP::twopi);
 	  CDC_Setlog[i+13] = new G4LogicalVolume(CDC_Set[i+13],Vacuum,nameSetLog,0,0,0);
-	  CDC_Setlog[i+13]->SetVisAttributes(G4VisAttributes::Invisible);
 	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),CDC_Setlog[i+13],nameSetPhys,CDC_body_log,false,i+13));
 	  
 	  CDC_tube[i+13] = new G4Tubs(name_sol, rmin, rmax, cdc_z,-0.5*CLHEP::twopi/(double)N_CDC_CELL[i+13], CLHEP::twopi/(double)N_CDC_CELL[i+13]);
@@ -1291,6 +1292,9 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 
   for (G4int i=0; i<15; i++)
     {
+
+      //CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+
       G4VisAttributes *CDC_att = new G4VisAttributes(ColorCDC[i]);
       CDC_att->SetForceWireframe(true);
       //CDC_log[i]->SetSensitiveDetector(chamberSD);
@@ -1326,8 +1330,8 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   CDC_win_out_log->SetVisAttributes(CDC_win_att);
   
 
-  int S_WIRE_VIS=0;
-  int F_WIRE_VIS=0;
+  int S_WIRE_VIS=1;
+  int F_WIRE_VIS=1;
 
   //*****************//
   //*** CDC wires ***//
@@ -1357,6 +1361,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	  nwires[i] =  90;
 	  //tilt[i] = i==12 ? 0 : CLHEP::twopi/4-atan2(2*cdc_z, 2*radius[i]*sin(CLHEP::twopi/(double)nwires[i]));
 	  tilt[i] = CLHEP::twopi/4-atan2(2*cdc_z, 2*radius[i]*sin(CLHEP::twopi/(double)nwires[i]*CDC_OFFSET/2.0));
+	  tilt[i] *= -1.;
 	}
       else if (i>=21 && i<30)
 	{ 
@@ -1374,6 +1379,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	  nwires[i] = 150;
 	  //tilt[i] = i==39 ? 0 : CLHEP::twopi/4-atan2(2*cdc_z, 2*radius[i]*sin(CLHEP::twopi/(double)nwires[i]));
 	  tilt[i] = CLHEP::twopi/4-atan2(2*cdc_z, 2*radius[i]*sin(CLHEP::twopi/(double)nwires[i]*CDC_OFFSET/2.0));
+	  tilt[i] *= -1.;
 	}
       else if (i>=48 && i<57)
 	{ 
@@ -1406,18 +1412,55 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   G4LogicalVolume* CDCSenseWirelog[67];
   G4LogicalVolume* CDCFieldWirelog[67];
 
+  G4VSolid* CDC_field_Structure[67];
+  G4LogicalVolume* CDCFieldStructurelog[67];
+
   std::vector<std::vector<G4PVPlacement*> > CDCSenseWirephy(67),CDCFieldWirephy(67);
   for(size_t i=0;i<CDCSenseWirephy.size();++i)
     {
       CDCSenseWirephy[i].resize(nwires[i],nullptr);
       CDCFieldWirephy[i].resize(nwires[i],nullptr);
     }
+
+  std::set<int> index_sensive={3, 6, 9, 15, 18, 24, 27, 33, 36, 42, 45, 51, 54, 60, 63};
+  std::set<int> index_fieldCloseBySensive;
+  for(auto index : index_sensive)
+    {
+      index_fieldCloseBySensive.insert(index-1);
+      index_fieldCloseBySensive.insert(index+1);
+    }
+
+  std::set<int> index_fieldGuard;
+  for(int indexGuard = 0;indexGuard<67;++indexGuard)
+    {
+      if(index_fieldCloseBySensive.find(indexGuard)!=index_fieldCloseBySensive.end())
+	continue;
+      if(index_sensive.find(indexGuard)!=index_sensive.end())
+	continue;
+      index_fieldGuard.insert(indexGuard);
+    }
+
+  std::cout<<"Sensive Wire :"<<std::endl;
+  for(auto index : index_sensive)
+    std::cout<<" "<<index;
+  std::cout<<std::endl;
+  std::cout<<"Field Wire :"<<std::endl;
+  for(auto index : index_fieldCloseBySensive)
+    std::cout<<" "<<index;
+  std::cout<<std::endl;
+  std::cout<<"Guard Wire :"<<std::endl;
+  for(auto index : index_fieldGuard)
+    std::cout<<" "<<index;
+  std::cout<<std::endl;
+
+  
+  int index_cell = 0;
   for(G4int i=0; i<67; i++)
     {
       if ( i== 0 || i== 1 || i== 3 || i== 5 || i== 7 || i== 9|| i==11 || i==12 || i==13 || i==15 || i==17 ||
 	   i==19 || i==21 || i==22 || i==24 || i==26 || i==28|| i==30 || i==31 || i==33 || i==35 || i==37 ||
 	   i==39 || i==40 || i==42 || i==44 || i==46 || i==48|| i==49 || i==51 || i==53 || i==55 || i==57 ||
-	   i==58 || i==60 || i==62 || i==64 || i==66 )
+	   i==58 || i==60 || i==62 || i==64 || i==66)
 	{
 	  idd = 0;
 	}
@@ -1425,10 +1468,13 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	{
 	  idd = 1;
 	}
-
+      
       if (i== 3 || i== 6 || i== 9 || i==15 || i==18 || i==24 || i==27 || i==33 || i==36 || 
 	  i==42 || i==45 || i==51 || i==54 || i==60 || i==63             )
-	IsSenseWire = 1; 
+	{
+	  IsSenseWire = 1; 
+	  idd = 0;
+	}
       else 
 	IsSenseWire = 0;
 
@@ -1445,8 +1491,22 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDCSenseWirelog[i] =  new G4LogicalVolume(CDC_sense_Wire[i], W,  "CDCSWire_log", 0,0,0);
       CDCFieldWirelog[i] =  new G4LogicalVolume(CDC_field_Wire[i], Al, "CDCFWire_log", 0,0,0);
-
-
+      
+      CDC_field_Structure[i] = nullptr;
+      CDCFieldStructurelog[i] =  nullptr;
+      if(index_fieldGuard.find(i)!=index_fieldGuard.end())
+	{
+	  CDC_field_Structure[i] = new G4Tubs("CDC_FieldStruct", radius[i]-2*mm, radius[i]+2*mm, cdc_z, 0.0, CLHEP::twopi);
+	  CDCFieldStructurelog[i] =  new G4LogicalVolume(CDC_field_Structure[i], ChamberGas, "CDCFieldStructure_log", 0,0,0);
+	  
+	  CDCFieldStructurelog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+	  
+	  std::string namePhysFieldStruct("FieldWireGuard");
+	  namePhysFieldStruct+=std::to_string(i);
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0,0,0),CDCFieldStructurelog[i],namePhysFieldStruct,CDC_body_log,false,i));
+	}
+      
+      
       G4double unit_ang = CLHEP::twopi/(G4double)nwires[i];
       G4double Rwire    = radius[i];
 
@@ -1470,23 +1530,44 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	
 	  G4ThreeVector wire_pos(xxx, yyy, 0.0);
 	  G4RotationMatrix* wire_rot = new G4RotationMatrix;
-	  wire_rot->rotateX(-tilt[i]);
+	  if(IsSenseWire == 1)
+	    wire_rot->rotateX(-tilt[i]);
+	  else
+	    wire_rot->rotateX(tilt[i]);
 	  wire_rot->rotateZ(ang);
 	  G4Transform3D wire_geom(*wire_rot, wire_pos);
 	
 	  //  /**
 	  if (IsSenseWire == 1 )
 	    {
+
 	      sprintf(name_phy,"CDCSWire_phy%06d", total_sense_wires);
 	      //CDCSenseWirephy[total_sense_wires] =  new G4PVPlacement(0, wire_pos, CDCSenseWirelog, 
-	      CDCSenseWirephy[i][j] =  new G4PVPlacement(wire_geom, CDCSenseWirelog[i], name_phy, CDC_body_log, false, 0 ); 	
+	      if(index_sensive.find(i) != index_sensive.end())//i==3 || i==6 || i== 9 || i==15)
+		{
+		  if(CDCSenseWirephy[i][0]==nullptr)
+		    {
+		      CDCSenseWirephy[i][0] =  new G4PVPlacement(wire_rot,wire_pos, CDCSenseWirelog[i], name_phy, CDC_log[index_cell], false, total_sense_wires );
+		      ++index_cell;
+		    }
+		}
+	      else
+		CDCSenseWirephy[i][j] =  new G4PVPlacement(wire_geom, CDCSenseWirelog[i], name_phy, CDC_body_log, false, total_sense_wires ); 	
 	      total_sense_wires++;
 	    }
 	  else if (IsSenseWire == 0 ) 
 	    {
 	      sprintf(name_phy,"CDCFWire_phy%06d", total_field_wires);
 	      //CDCFieldWirephy[total_field_wires] =  new G4PVPlacement(0, wire_pos, CDCFieldWirelog, 
-	      CDCFieldWirephy[i][j] =  new G4PVPlacement(wire_geom, CDCFieldWirelog[i], name_phy, CDC_body_log, false, 0 );
+	      if(CDCFieldStructurelog[i]!=nullptr)
+		CDCFieldWirephy[i][j] =  new G4PVPlacement(wire_geom, CDCFieldWirelog[i], name_phy, CDCFieldStructurelog[i], false, total_field_wires );
+	      else
+		{
+		  auto TempIndex_Field = index_fieldCloseBySensive.find(i);
+		  size_t distanceIndex = std::distance(index_fieldCloseBySensive.begin(),TempIndex_Field);
+		  size_t IndexCDCSet = distanceIndex/2;
+		  CDCFieldWirephy[i][j] =  new G4PVPlacement(wire_geom, CDCFieldWirelog[i], name_phy, CDC_Setlog[IndexCDCSet], false, total_field_wires );
+		}
 	      total_field_wires++;
 	    }
 	  else
@@ -1623,7 +1704,7 @@ void KnuclDetectorConstruction::ConstructCDH(G4double cdsPos_x, G4double cdsPos_
   AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z),
 					       CDH_Setlog, "CDH_SetPhys", CDS_log, false, 0));
   CDH_Setlog->SetVisAttributes(G4VisAttributes::Invisible);
-	    
+
   G4Tubs* CDH_tube= new G4Tubs("CDH_tube", cdh_rmin, cdh_rmax, cdh_z, 0, CLHEP::twopi/(double)Ncdh);
   G4LogicalVolume* CDH_log = new G4LogicalVolume(CDH_tube, Scinti,"CDH_log", 0,0,0);
   G4int n=0;
