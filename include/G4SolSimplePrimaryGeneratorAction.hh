@@ -47,37 +47,38 @@ class G4ParticleDefinition;
 class G4SolSimplePrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-    G4SolSimplePrimaryGeneratorAction();
-    virtual ~G4SolSimplePrimaryGeneratorAction();
+  G4SolSimplePrimaryGeneratorAction();
+  virtual ~G4SolSimplePrimaryGeneratorAction();
     
-    virtual void GeneratePrimaries(G4Event*);
-    
-    void SetMomentum(G4double val) { fMomentum = val; }
-    G4double GetMomentum() const { return fMomentum; }
+  virtual void GeneratePrimaries(G4Event*);
 
-    void SetSigmaMomentum(G4double val) { fSigmaMomentum = val; }
-    G4double GetSigmaMomentum() const { return fSigmaMomentum; }
+  void SetParticle(G4String& name) { nameParticle =  name;} 
 
-    void SetSigmaAngle(G4double val) { fSigmaAngle = val; }
-    G4double GetSigmaAngle() const { return fSigmaAngle; }
+  void SetMomentum(G4double val) { fMomentum = val; }
+  G4double GetMomentum() const { return fMomentum; }
 
-    void SetRandomize(G4bool val) { fRandomizePrimary = val; }
-    G4bool GetRandomize() const { return fRandomizePrimary; }
-    
+  void SetSigmaMomentum(G4double val) { fSigmaMomentum = val; fRandomizePrimary[1] = true; }
+  G4double GetSigmaMomentum() const { return fSigmaMomentum; }
+
+  void SetSigmaAngle(G4double val) { fSigmaAngle = val; fRandomizePrimary[2] = true; }
+  G4double GetSigmaAngle() const { return fSigmaAngle; }
+
+  void SetRandomize(G4bool val, int i) { fRandomizePrimary[i] = val; }
+  G4bool GetRandomize(int i = 0) const { return fRandomizePrimary[i]; }
+
+  G4ParticleDefinition* GetParticle(const G4String& particleName);
+
 private:
-    void DefineCommands();
+  void DefineCommands();
 
-    G4ParticleGun* fParticleGun;
-    G4GenericMessenger* fMessenger;
-    G4ParticleDefinition* fPositron;
-    G4ParticleDefinition* fMuon;
-    G4ParticleDefinition* fPion;
-    G4ParticleDefinition* fKaon;
-    G4ParticleDefinition* fProton;
-    G4double fMomentum;
-    G4double fSigmaMomentum;
-    G4double fSigmaAngle;
-    G4bool fRandomizePrimary;
+  G4ParticleGun* fParticleGun;
+  G4GenericMessenger* fMessenger;
+  G4String nameParticle;
+  G4ParticleDefinition* ConstParticle;
+  G4double fMomentum;
+  G4double fSigmaMomentum;
+  G4double fSigmaAngle;
+  G4bool fRandomizePrimary[3] = {true,true,true};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
