@@ -38,6 +38,8 @@
 #include "FTFP_BERT.hh"
 #include "G4StepLimiterPhysics.hh"
 
+#include "G4SolConfig.hh"
+
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
 #endif
@@ -68,6 +70,19 @@ int main(int argc,char** argv)
   G4RunManager* runManager = new G4RunManager;
 #endif
 
+  std::cout<<" Config :"<<std::endl;
+  G4SolConfig config("testconfig.par");
+  config.CheckConfig();
+  // std::string nameP = config.Get<std::string>("Particle");
+  // double sizeTarget = config.Get<double>("Target_Size");
+  // std::string unit = config.Get<std::string>("Target_Size.unit");
+  // std::string nameUnit("Target_Size.unit."+unit);
+
+  // double unitVal = config.Get<double>(nameUnit);
+  // std::cout<<" get:"<<nameP<<" "<<sizeTarget/unitVal<<" "<<unit<<" ("<<unitVal<<" "<<sizeTarget<<")"<<std::endl;
+  // std::cout<<" done !"<<std::endl;
+
+  
   // Mandatory user initialization classes
   runManager->SetUserInitialization(new KnuclDetectorConstruction());
 
