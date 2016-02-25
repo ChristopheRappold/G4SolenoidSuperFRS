@@ -104,13 +104,17 @@ void G4SolConfig::SetDefault()
 {
   tree.put("Particle","proton");
 
+  tree.put("Beam_SpotSizeSigma",1);
+  tree.put("Beam_SpotSizeSigma.unit","cm");
+  tree.put("Beam_SpotSizeSigma.unit.cm",1.*cm);
+
   tree.put("Beam_Momentum",2);
   tree.put("Beam_Momentum.unit","GeV");
   tree.put("Beam_Momentum.unit.GeV",1.*GeV);
 
   tree.put("Beam_MomentumSigma",10.);
   tree.put("Beam_MomentumSigma.unit","MeV");
-  tree.put("Beam_MomentumSigma.unit.MeV",1*MeV);
+  tree.put("Beam_MomentumSigma.unit.MeV",1.*MeV);
     
   tree.put("Beam_MomentumX",0.);   
   tree.put("Beam_MomentumY",0.);   

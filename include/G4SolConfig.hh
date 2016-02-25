@@ -15,7 +15,7 @@ public:
   ~G4SolConfig();
 
   template<typename T>
-  T Get(const std::string& key)
+  T Get(const std::string& key) const
   {
     T temp = tree.get<T>(key);
     if(boost::optional<std::string> unit = tree.get_optional<std::string>(key+".unit"))
@@ -41,7 +41,7 @@ private:
 
 
 template<> inline
-std::string G4SolConfig::Get(const std::string& key)
+std::string G4SolConfig::Get(const std::string& key) const
 {
   return tree.get<std::string>(key);
 }
