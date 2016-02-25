@@ -56,11 +56,13 @@ G4ThreadLocal G4FieldManager* KnuclDetectorConstruction::fFieldMgr = 0;
 // ====================================================================
 
 //////////////////////////////////////////////////////
-KnuclDetectorConstruction::KnuclDetectorConstruction()//KnuclAnaManager* ana)
-  :  experimentalHall_box(0), experimentalHall_log(0), experimentalHall_phys(0),
-     Kurama_box(0),           Kurama_log(0),           Kurama_phys(0),
-     TOF_box(0),              TOF_log(0),              TOF_phys(0),
-     CDS_tube(0),             CDS_log(0),              CDS_phys(0)
+KnuclDetectorConstruction::KnuclDetectorConstruction(const G4SolConfig& conf)//KnuclAnaManager* ana)
+  : Par(conf),
+    experimentalHall_box(0), experimentalHall_log(0), experimentalHall_phys(0),
+    Kurama_box(0),           Kurama_log(0),           Kurama_phys(0),
+    TOF_box(0),              TOF_log(0),              TOF_phys(0),
+    CDS_tube(0),             CDS_log(0),              CDS_phys(0)
+     
      //////////////////////////////////////////////////////
 {
   TofRefPos           = 0.;//ana->GetTofRefPos(); 

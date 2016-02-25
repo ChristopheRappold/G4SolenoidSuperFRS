@@ -84,14 +84,14 @@ int main(int argc,char** argv)
 
   
   // Mandatory user initialization classes
-  runManager->SetUserInitialization(new KnuclDetectorConstruction());
+  runManager->SetUserInitialization(new KnuclDetectorConstruction(config));
 
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
   physicsList->RegisterPhysics(new G4StepLimiterPhysics());
   runManager->SetUserInitialization(physicsList);
 
   // User action initialization
-  runManager->SetUserInitialization(new G4SolSimpleActionInitialization());
+  runManager->SetUserInitialization(new G4SolSimpleActionInitialization(config));
 
 #ifdef G4VIS_USE
   // Visualization manager construction

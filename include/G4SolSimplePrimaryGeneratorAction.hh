@@ -29,6 +29,7 @@
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
+#include "G4SolConfig.hh"
 
 class G4ParticleGun;
 class G4GenericMessenger;
@@ -47,7 +48,7 @@ class G4ParticleDefinition;
 class G4SolSimplePrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-  G4SolSimplePrimaryGeneratorAction();
+  explicit G4SolSimplePrimaryGeneratorAction(const G4SolConfig& conf);
   virtual ~G4SolSimplePrimaryGeneratorAction();
     
   virtual void GeneratePrimaries(G4Event*);
@@ -79,6 +80,8 @@ private:
   G4double fSigmaMomentum;
   G4double fSigmaAngle;
   G4bool fRandomizePrimary[3] = {true,true,true};
+
+  const G4SolConfig& Par;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

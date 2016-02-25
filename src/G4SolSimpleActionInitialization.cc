@@ -35,7 +35,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolSimpleActionInitialization::G4SolSimpleActionInitialization() : G4VUserActionInitialization()
+G4SolSimpleActionInitialization::G4SolSimpleActionInitialization(const G4SolConfig& conf) : G4VUserActionInitialization(),Conf(conf)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -55,7 +55,7 @@ void G4SolSimpleActionInitialization::BuildForMaster() const
 
 void G4SolSimpleActionInitialization::Build() const
 {
-  SetUserAction(new G4SolSimplePrimaryGeneratorAction);
+  SetUserAction(new G4SolSimplePrimaryGeneratorAction(Conf));
 
   //G4SolSimpleEventAction* eventAction = new G4SolSimpleEventAction;
   //SetUserAction(eventAction);

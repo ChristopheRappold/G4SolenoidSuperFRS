@@ -14,6 +14,7 @@
 #include "G4FieldManager.hh"
 
 #include "G4Color.hh"
+#include "G4SolConfig.hh"
 
 //class HypHIFrsMagneticField;
 //class THypHi_Par;
@@ -75,9 +76,11 @@ private:
   void DefineCommands();
   G4GenericMessenger* fMessenger;
 
+  const G4SolConfig& Par;
+  
 public:
   //explicit KnuclDetectorConstruction();//const THypHi_Par& _par);
-  KnuclDetectorConstruction();//KnuclAnaManager* ana);
+  explicit KnuclDetectorConstruction(const G4SolConfig& conf);//KnuclAnaManager* ana);
   ~KnuclDetectorConstruction();
 
   void ConstructMaterials();

@@ -38,10 +38,12 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(): G4VUserPrimaryGeneratorAction(),
-									fParticleGun(0), fMessenger(0),
-									nameParticle("pi-"),fMomentum(1000.*MeV), fSigmaMomentum(50.*MeV), fSigmaAngle(2.*deg)
-									
+G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4SolConfig& conf): G4VUserPrimaryGeneratorAction(),
+											       fParticleGun(0), fMessenger(0),
+											       nameParticle("pi-"),fMomentum(1000.*MeV),
+											       fSigmaMomentum(50.*MeV), fSigmaAngle(2.*deg),
+											       Par(conf)
+											       
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
