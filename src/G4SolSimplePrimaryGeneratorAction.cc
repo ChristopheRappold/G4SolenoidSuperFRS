@@ -47,13 +47,33 @@ G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4Sol
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
-  
-  ConstParticle = GetParticle("pi-");
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,-2.*m));
+  nameParticle = Par.Get<std::string>("Particle");
+    
+  fMomentum = Par.Get<double>("Beam_Momentum");
+  fSigmaMomentum = Par.Get<double>("Beam_MomentumSigma");
+  //fSigmaAngle;
+  fDirX = Par.Get<double>("Beam_MomentumX");
+  fDirY = Par.Get<double>("Beam_MomentumY");
+  fDirZ = Par.Get<double>("Beam_MomentumZ");
+
+  fDirXSigma = Par.Get<double>("Beam_MomentumXsigma");
+  fDirYSigma = Par.Get<double>("Beam_MomentumYsigma");
+  fDirZSigma = Par.Get<double>("Beam_MomentumZsigma");
+  
+  fPosX = Par.Get<double>("Target_PosX");
+  fPosY = Par.Get<double>("Target_PosY");
+  fPosZ = Par.Get<double>("Target_PosZ");
+
+  fSpotSizeSigma = Par.Get<double>("Beam_SpotSizeSigma");
+  fTargetSize = Par.Get<double>("Target_Size");
+  
+  ConstParticle = GetParticle(nameParticle);
+
+  fParticleGun->SetParticlePosition(G4ThreeVector(fPosX,fPosY,fPosZ));
   fParticleGun->SetParticleDefinition(ConstParticle);
   fParticleGun->SetParticleEnergy(fMomentum);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(fDirX,fDirY,fDirZ));
   
   // define commands for this class
   DefineCommands();
@@ -78,10 +98,10 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
   G4double mom;
   
-  G4double pos_x = 0.;//Par.Get_Geometry_TargetPosX();
-  G4double pos_y = 0.;//Par.Get_Geometry_TargetPosY();
-  G4double pos_z = -20.*cm;//Par.Get_Geometry_TargetPosZ();
-  G4double sigma = 1.*cm;//Par.Get_Beam_SpotSizeSigma();
+  G4double pos_x = fPosX;//Par.Get_Geometry_TargetPosX();
+  G4double pos_y = fPosY;//Par.Get_Geometry_TargetPosY();
+  G4double pos_z = fPosZ;//Par.Get_Geometry_TargetPosZ();
+  G4double sigma = fSpotSizeSigma;//Par.Get_Beam_SpotSizeSigma();
 
   
   if(fRandomizePrimary[0])
@@ -98,9 +118,9 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  G4double phi = 2.0*CLHEP::pi*G4UniformRand();
 	  ofpos_x = r0*cos(phi);
 	  ofpos_y = r0*sin(phi);
-	  ofpos_z = 2*cm;//Par.Get_Geometry_TargetThickness() * (0.5 - G4UniformRand());
+	  ofpos_z = fTargetSize * (0.5 - G4UniformRand());
 	  
-	  if(std::abs(ofpos_x)<=2.*cm && std::abs(ofpos_y)<=2.*cm)//Par.Get_Geometry_TargetLength()/2.0 && std::abs(ofpos_y)<=Par.Get_Geometry_TargetHeight()/2.0)
+	  if(std::abs(ofpos_x)<=fTargetSize && std::abs(ofpos_y)<=fTargetSize && std::abs(ofpos_z)<=fTargetSize)//Par.Get_Geometry_TargetLength()/2.0 && std::abs(ofpos_y)<=Par.Get_Geometry_TargetHeight()/2.0)
 	    not_acc_position = false;
 	  
 	  //  std::cout<<"r0= "<<r0<<" "<<ofpos_x<<" "<<ofpos_y<<" "<<ofpos_z<<" "<< sqrt(ofpos_x*ofpos_x+ofpos_y*ofpos_y+ofpos_z*ofpos_z)<<std::endl;
@@ -119,39 +139,38 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   
   fParticleGun->SetParticleDefinition(ConstParticle);
 
-    if(fRandomizePrimary[2])
-      {
-	// double xdir = Par.Get_Beam_MomentumDirectionX();
-	// double ydir = Par.Get_Beam_MomentumDirectionY();
-	// double zdir = Par.Get_Beam_MomentumDirectionZ();
+  if(fRandomizePrimary[2])
+    {
+      double xdir = fDirX;//Par.Get_Beam_MomentumDirectionX();
+      double ydir = fDirY;//Par.Get_Beam_MomentumDirectionY();
+      double zdir = fDirZ;//Par.Get_Beam_MomentumDirectionZ();
 	  
-	// xdir +=0.05*std::sqrt(-std::log(G4UniformRand()));
-	// ydir +=0.05*std::sqrt(-std::log(G4UniformRand()));
-	// zdir = sqrt(1.0-ydir*ydir-xdir*xdir);
-	//std::cout<<xdir<<" "<<ydir<<" "<<zdir<<std::endl;
+      xdir +=fDirXSigma*std::sqrt(-std::log(G4UniformRand()));
+      ydir +=fDirZSigma*std::sqrt(-std::log(G4UniformRand()));
+      zdir = sqrt(1.0-ydir*ydir-xdir*xdir);
+      //std::cout<<xdir<<" "<<ydir<<" "<<zdir<<std::endl;
 
-	//fParticleGun->SetParticleMomentumDirection(G4ThreeVector(xdir,ydir,zdir));
+      fParticleGun->SetParticleMomentumDirection(G4ThreeVector(xdir,ydir,zdir));
 
-	G4double angle = (G4UniformRand()-0.5)*fSigmaAngle;
-	fParticleGun->SetParticleMomentumDirection(G4ThreeVector(std::sin(angle),0.,std::cos(angle)));
+      //G4double angle = (G4UniformRand()-0.5)*fSigmaAngle;
+      //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(std::sin(angle),0.,std::cos(angle)));
 
-      }
-    else
-      {
-	fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+    }
+  else
+    {
+      fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
 	  
-      }
+    }
 
-    G4double pp = mom;
-    G4double mass = ConstParticle->GetPDGMass();
-    G4double Ekin = std::sqrt(pp*pp+mass*mass)-mass;
-    fParticleGun->SetParticleEnergy(Ekin);
+  G4double pp = mom;
+  G4double mass = ConstParticle->GetPDGMass();
+  G4double Ekin = std::sqrt(pp*pp+mass*mass)-mass;
+  fParticleGun->SetParticleEnergy(Ekin);
 
-    fParticleGun->SetParticlePosition(G4ThreeVector(pos_x,pos_y,pos_z));
-    fParticleGun->GeneratePrimaryVertex(anEvent);
+  fParticleGun->SetParticlePosition(G4ThreeVector(pos_x,pos_y,pos_z));
+  fParticleGun->GeneratePrimaryVertex(anEvent);
     
-        
-
+       
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -260,7 +279,7 @@ G4ParticleDefinition* G4SolSimplePrimaryGeneratorAction::GetParticle(const G4Str
 	      std::cout << " Z1A20E5.11\n";
 	      std::exit(1);
 	    }
-	    //
+	  //
 	  G4double E = 0;
 	  G4int endl = particleName.size();
 	  if(Epos!=(G4int)G4String::npos)

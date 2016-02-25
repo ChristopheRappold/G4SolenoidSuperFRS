@@ -79,6 +79,18 @@ private:
   G4double fMomentum;
   G4double fSigmaMomentum;
   G4double fSigmaAngle;
+  G4double fDirX;
+  G4double fDirY;
+  G4double fDirZ;
+  G4double fDirXSigma;
+  G4double fDirYSigma;
+  G4double fDirZSigma;
+  G4double fPosX;
+  G4double fPosY;
+  G4double fPosZ;
+  G4double fSpotSizeSigma;
+  G4double fTargetSize;
+  
   G4bool fRandomizePrimary[3] = {true,true,true};
 
   const G4SolConfig& Par;
