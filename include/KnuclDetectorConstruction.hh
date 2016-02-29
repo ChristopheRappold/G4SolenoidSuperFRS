@@ -127,8 +127,7 @@ public:
   G4LogicalVolume* HypHI_InTracker_log;
   G4PVPlacement*   HypHI_InTracker_phys;
 
-  G4LogicalVolume* HypHI_InSi_log;
-
+  //G4LogicalVolume* HypHI_InSi_log;
   
   G4VSolid*        HypHI_Endcap;
   G4LogicalVolume* HypHI_Endcap_log;

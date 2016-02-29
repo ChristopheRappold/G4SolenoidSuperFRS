@@ -306,6 +306,9 @@ void KnuclDetectorConstruction::ConstructSDandField()
   //sSDC1_log->SetSensitiveDetector(chamberSD);
   //sSDC2_log->SetSensitiveDetector(chamberSD);
 
+  
+
+  
   // ==============================================================
   // magnetic field
   // ==============================================================
@@ -1745,13 +1748,16 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
   G4int nb_panel = 16;
   G4VSolid* HypHI_SiliciumSeg = new G4Tubs("HypHI_SiSeg",1*cm,14*cm, 3*mm,
 					   -CLHEP::twopi/static_cast<double>(2*nb_panel),2.*CLHEP::twopi/static_cast<double>(2*nb_panel)); 
-  HypHI_InSi_log = new G4LogicalVolume(HypHI_SiliciumSeg,Si,"HypHI_InSi_log", 0,0,0);
-  NameDetectorSD.push_back(HypHI_InSi_log->GetName());
 
   std::vector<double> posZ = {cds_z*(RelativePos+0.1),cds_z*(RelativePos+0.2),cds_z*(RelativePos+0.3),cds_z*(RelativePos+0.4)};
   G4int nb = 0;
   for(size_t idLayer = 0;idLayer<posZ.size();++idLayer)
     {
+      std::string name_Si("HypHI_InSi_log");
+      name_Si+=idLayer;
+      G4LogicalVolume* HypHI_InSi_log = new G4LogicalVolume(HypHI_SiliciumSeg,Si,name_Si, 0,0,0);
+      NameDetectorSD.push_back(HypHI_InSi_log->GetName());
+
       for(G4int IdSi = 0 ; IdSi<nb_panel;++IdSi)
 	{
 	  G4RotationMatrix* rotSi = new G4RotationMatrix;
