@@ -267,6 +267,20 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   for(auto NameD : NameDetectorsSD)
     std::cout<<NameD<<std::endl;
 
+  G4Region* aDetectorRegion = new G4Region("DetectorRegion");
+  
+  for(auto& CurrentName : NameDetectorsSD)
+    {
+      G4LogicalVolume* Det = FindVolume(CurrentName);
+
+      Det->SetRegion(aDetectorRegion);
+      aDetectorRegion->AddRootLogicalVolume(Det);
+    }
+
+  G4Region* aTargetRegion = new G4Region("TargetRegion");
+  HypHI_Target_log->SetRegion(aTargetRegion);
+  aTargetRegion->AddRootLogicalVolume(HypHI_Target_log);
+
   return experimentalHall_phys;
 }
 
