@@ -36,6 +36,12 @@
 //#include "KnuclFieldSetup.hh"
 //#include "KnuclCommon.h"
 #include "G4SolSimpleMagneticField.hh"
+#include "G4SolSensitiveD.hh"
+
+//#include "G4PhysicalVolumeStore.hh"
+#include "G4LogicalVolumeStore.hh"
+//#include "G4SolidStore.hh"
+
 
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
@@ -258,12 +264,28 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   G4cout << "KnuclDetectorConstruction completed" << G4endl;
 
   std::cout<<" Sensitive Detectors :"<<std::endl;
-  for(auto NameD : NameDetectorSD)
+  for(auto NameD : NameDetectorsSD)
     std::cout<<NameD<<std::endl;
-  
+
   return experimentalHall_phys;
 }
 
+G4LogicalVolume* KnuclDetectorConstruction::FindVolume(const G4String& name)
+{
+  G4LogicalVolumeStore* lvStore = G4LogicalVolumeStore::GetInstance();
+  
+  for (G4int i=0; i<G4int(lvStore->size()); i++) 
+    {
+      G4LogicalVolume* lv = (*lvStore)[i];
+      if (lv->GetName() == name) 
+        return lv;
+    }
+
+  G4String text = "G4SolDetectorConstruction:: FindVolume:\n"; 
+  text = text + "    Logical volume " + name + " does not exist.";
+  std::cerr << text << G4endl;
+  return 0;
+} 
 
 void KnuclDetectorConstruction::ConstructSDandField()
 { 
@@ -307,6 +329,17 @@ void KnuclDetectorConstruction::ConstructSDandField()
   //sSDC2_log->SetSensitiveDetector(chamberSD);
 
   
+  G4SDManager *SDman = G4SDManager::GetSDMpointer();
+
+  for(auto& CurrentName : NameDetectorsSD)
+    {
+      G4LogicalVolume* Det = FindVolume(CurrentName);
+      G4Sol_SD_Det* SD = new G4Sol_SD_Det(CurrentName);
+      //SD->Init();
+      SDman->AddNewDetector(SD);
+      Det->SetSensitiveDetector(SD);
+    }  
+
 
   
   // ==============================================================
@@ -940,7 +973,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       G4VSolid* HypHI_TrackerFwd = new G4Tubs("HypHI_TrackerFwd",cds_endcap_rmin, HypHI_rmax, 1*cm, 0,CLHEP::twopi);
       HypHI_TrackerFwd_log = new G4LogicalVolume(HypHI_TrackerFwd,Air,"HypHI_TrackFwd_log",0,0,0);
 
-      NameDetectorSD.push_back(HypHI_TrackerFwd_log->GetName());
+      NameDetectorsSD.push_back(HypHI_TrackerFwd_log->GetName());
       
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0, 0, -9*cm),
 						   HypHI_TrackerFwd_log, "HypHI_TrackerFwd0", HypHI_Endcap_log, false,0));
@@ -954,10 +987,10 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 
       G4VSolid* HypHI_RPC_l = new G4Tubs("HypHI_RPC_segment_L",cds_endcap_rmin, HypHI_rmax/2., 5*cm, -CLHEP::twopi/16.,2.*CLHEP::twopi/16.);
       HypHI_RPC_l_log = new G4LogicalVolume(HypHI_RPC_l, Air, "HYpHI_RPC_l_log",0,0,0);
-      NameDetectorSD.push_back(HypHI_RPC_l_log->GetName());
+      NameDetectorsSD.push_back(HypHI_RPC_l_log->GetName());
       G4VSolid* HypHI_RPC_h = new G4Tubs("HypHI_RPC_segment_H",HypHI_rmax/2., HypHI_rmax, 5*cm, -CLHEP::twopi/16.,2.*CLHEP::twopi/16.);
       HypHI_RPC_h_log = new G4LogicalVolume(HypHI_RPC_h, Air, "HYpHI_RPC_h_log",0,0,0);
-      NameDetectorSD.push_back(HypHI_RPC_h_log->GetName());
+      NameDetectorsSD.push_back(HypHI_RPC_h_log->GetName());
       
       for(int idRPC = 0; idRPC < 8 ;++idRPC)
 	{
@@ -1363,7 +1396,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
     }
 
   for(auto Vlog : CDC_log)
-    NameDetectorSD.push_back(Vlog->GetName());
+    NameDetectorsSD.push_back(Vlog->GetName());
 
 
   
@@ -1728,6 +1761,7 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
 
   G4Material* Carbon = materialMgr->FindOrBuildMaterial("G4_C");//"Plastic");
 
+  G4VisAttributes *Si_att = new G4VisAttributes(Pink);
   
   
   
@@ -1754,9 +1788,9 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
   for(size_t idLayer = 0;idLayer<posZ.size();++idLayer)
     {
       std::string name_Si("HypHI_InSi_log");
-      name_Si+=idLayer;
+      name_Si+=std::to_string(idLayer);
       G4LogicalVolume* HypHI_InSi_log = new G4LogicalVolume(HypHI_SiliciumSeg,Si,name_Si, 0,0,0);
-      NameDetectorSD.push_back(HypHI_InSi_log->GetName());
+      NameDetectorsSD.push_back(HypHI_InSi_log->GetName());
 
       for(G4int IdSi = 0 ; IdSi<nb_panel;++IdSi)
 	{
@@ -1771,11 +1805,11 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
 						       HypHI_InSi_log, nameSi, HypHI_InTracker_log, false, nb));
 	  ++nb;
 	}
+
+      Si_att->SetForceWireframe(false);
+      HypHI_InSi_log->SetVisAttributes(Si_att);
     }
 
-  G4VisAttributes *Si_att = new G4VisAttributes(Pink);
-  Si_att->SetForceWireframe(false);
-  HypHI_InSi_log->SetVisAttributes(Si_att);
   
 }
 
@@ -1830,7 +1864,7 @@ void KnuclDetectorConstruction::ConstructCDH()
 
   G4Tubs* CDH_tube= new G4Tubs("CDH_tube", cdh_rmin, cdh_rmax, cdh_z, 0, CLHEP::twopi/(double)Ncdh);
   G4LogicalVolume* CDH_log = new G4LogicalVolume(CDH_tube, Scinti,"CDH_log", 0,0,0);
-  NameDetectorSD.push_back(CDH_log->GetName());
+  NameDetectorsSD.push_back(CDH_log->GetName());
 
   std::vector<G4PVPlacement*> CDH_phys(Ncdh,nullptr);
   for (G4int i=0; i<Ncdh; i++)
