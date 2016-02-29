@@ -140,6 +140,8 @@ public:
   
   std::vector<G4PVPlacement*> AllPlacements;
   
+  std::vector<G4String> NameDetectorSD;
+  
   double FieldInCDC;         
   double FieldInKurama;      
   double TofRefPos;          
