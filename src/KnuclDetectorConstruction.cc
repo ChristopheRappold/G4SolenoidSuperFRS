@@ -123,11 +123,18 @@ KnuclDetectorConstruction::~KnuclDetectorConstruction()
 
 void KnuclDetectorConstruction::ConstructMaterials()
 {
-  // G4NistManager* materialMgr = G4NistManager::Instance();
+  G4NistManager* materialMgr = G4NistManager::Instance();
   // G4Material* He4 = materialMgr->FindOrBuildMaterial("G4_He");
+  G4Material* Argon = materialMgr->FindOrBuildMaterial("G4_Ar");
+  double density = 2.67*mg/cm3;
+  std::vector<G4String> nameEl = {"C","H"};
+  std::vector<G4int> atoms = {4,10}; 
+  G4Material* isobutane = materialMgr->ConstructNewMaterial("isoC4H10",nameEl,atoms,density,true,kStateGas);
   
-  // double density = 
-  // G4Material* HeEthan_50_50 = new G4Material(name="Water", density, ncomponents=2);
+  density = 1.74514 * mg/cm3;
+  ArIsoButane = std::make_unique<G4Material>("ArIsoButane", density,2);
+  ArIsoButane->AddMaterial( Argon, 0.90 );
+  ArIsoButane->AddMaterial( isobutane, 0.10 );
   
   // G4Material* HeEthan_50_50 = materialMgr-> GetMaterial("He_Ethan_50_50");
   // G4Material* ArCH4_90_10  = materialMgr-> GetMaterial("ArCH4_90_10");
@@ -411,9 +418,9 @@ void KnuclDetectorConstruction::ConstructKurama()
   //G4Material* D2Gas = materialMgr->FindOrBuildMaterial("DeuteriumGas");
   //G4Material* SUS = materialMgr->FindOrBuildMaterial("SUS");
   //G4Material* Ar = materialMgr-> GetMaterial("ArgonGas");
+  
 
-
-  G4Material* ChamberGas=Vacuum;
+  G4Material* ChamberGas= ArIsoButane.get();
 
 
   G4double kurama_x = 1.4/2.*m;
@@ -919,7 +926,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   //G4Material* SUS = materialMgr->FindOrBuildMaterial("SUS");
   //G4Material* Ar = materialMgr-> GetMaterial("ArgonGas");
 
-  G4Material* ChamberGas=Vacuum;
+  G4Material* ChamberGas=ArIsoButane.get();
 
   //***********//
   //*** CDS ***//
@@ -1798,7 +1805,6 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
 					   -CLHEP::twopi/static_cast<double>(2*nb_panel),2.*CLHEP::twopi/static_cast<double>(2*nb_panel)); 
 
   std::vector<double> posZ = {cds_z*(RelativePos+0.1),cds_z*(RelativePos+0.2),cds_z*(RelativePos+0.3),cds_z*(RelativePos+0.4)};
-  G4int nb = 0;
   for(size_t idLayer = 0;idLayer<posZ.size();++idLayer)
     {
       std::string name_Si("HypHI_InSi_log");
@@ -1816,8 +1822,7 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
 	  nameSi += "_SiSeg_";
 	  nameSi += std::to_string(IdSi);
 	  AllPlacements.emplace_back(new G4PVPlacement(rotSi, G4ThreeVector(0, 0, TargetLength + posZ[idLayer]),
-						       HypHI_InSi_log, nameSi, HypHI_InTracker_log, false, nb));
-	  ++nb;
+						       HypHI_InSi_log, nameSi, HypHI_InTracker_log, false, IdSi));
 	}
 
       Si_att->SetForceWireframe(false);
@@ -1935,7 +1940,7 @@ void KnuclDetectorConstruction::ConstructTargetChamber(G4double cdsPos_x, G4doub
   //G4Material* SUS = materialMgr->FindOrBuildMaterial("SUS");
   //G4Material* Ar = materialMgr-> GetMaterial("ArgonGas");
 
-  G4Material* ChamberGas=Vacuum;
+  G4Material* ChamberGas=ArIsoButane.get();
 
   //**********************//
   //*** Target-Chamber ***//
@@ -2695,7 +2700,7 @@ void KnuclDetectorConstruction::ConstructAC(G4double cds_z, G4double CDS_AC_spac
   //G4Material* SUS = materialMgr->FindOrBuildMaterial("SUS");
   //G4Material* Ar = materialMgr-> GetMaterial("ArgonGas");
 
-  G4Material* ChamberGas=Vacuum;
+  G4Material* ChamberGas=ArIsoButane.get();
 
   // ==============================================================
   // AC

@@ -87,7 +87,7 @@ public:
   void ConstructMaterials();
   G4VPhysicalVolume* Construct();
   virtual void ConstructSDandField();
-  std::vector<G4String> GetNameDetectors() const {return NameDetectorsSD;}
+  const std::vector<G4String>& GetNameDetectors() const { return NameDetectorsSD;}
   bool DoKurama;
   bool DoTOFn;
   bool DoTOFp;
@@ -212,7 +212,7 @@ public:
   const double CDH_Z = 790.0; // unit :: mm
 
 
-
+  std::unique_ptr<G4Material> ArIsoButane;
   
   
 };
