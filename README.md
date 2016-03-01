@@ -3,6 +3,7 @@ Simple Geant4 Simulation for Solenoid setup of SuperFRS
 Needed : 
 * cmake (> 3.1)
 * Geant4 (last version)
+* ROOT6 (last version)
 
 Build : (classic cmake build)
 
