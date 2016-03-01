@@ -3,7 +3,7 @@
 
 #include "G4VSensitiveDetector.hh"
 #include "G4SolHit.hh"
-#include <map>
+#include <unordered_map>
 
 class G4Step;
 class G4HCofThisEvent;
@@ -24,7 +24,7 @@ public:
   G4SolHitsCollection* fHitsCollection;
   G4int fHCID;
 
-  std::map< int, std::map<int,int> > mapTrackID_Hits;
+  std::unordered_map< int, std::unordered_map<int,int> > mapTrackID_Hits;
 
 };
 

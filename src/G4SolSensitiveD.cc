@@ -51,20 +51,25 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step*aStep, G4TouchableHistory*)
   
   G4double energ_depos = aStep->GetTotalEnergyDeposit();
   //
-  //G4cout<<" Current SD :"<<SensitiveDetectorName<<" "<<energ_depos<<G4endl;
+  //std::cout<<" Current SD :"<<SensitiveDetectorName<<" "<<energ_depos<<std::endl;
   if(energ_depos < 1e-4) 
     return true;
   
   G4String PhysName (aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName());
-  //G4cout<<" ->"<<PhysName<<G4endl;
+  //std::cout<<" ->"<<PhysName<<std::endl;
   
-  if(PhysName!=SensitiveDetectorName)
-    return true;
+  // if(PhysName!=SensitiveDetectorName)
+  //   return true;
 
   const G4TouchableHistory* touchable = dynamic_cast<const G4TouchableHistory*>(aStep->GetPreStepPoint()->GetTouchable());
-  G4VPhysicalVolume* motherPhysical = touchable->GetVolume(1); // mother                                                                                              
-  G4int copyNo = motherPhysical->GetCopyNo();
+  //G4VPhysicalVolume* motherPhysical = touchable->GetVolume(1); // mother
+  G4VPhysicalVolume* currentPhysical = touchable->GetVolume(0);
+  //G4int copyNo = motherPhysical->GetCopyNo();
+  G4int copyNo = currentPhysical->GetCopyNo();
+  
   int CurrentTrack = aStep->GetTrack()->GetTrackID();
+  
+  //std::cout<<" -> mother :"<<motherPhysical->GetName()<<" "<<copyNo<<" | "<<currentPhysical->GetName()<<" "<<copyNo2<<std::endl;
   
   auto it_layer = mapTrackID_Hits.find(copyNo);
   if(it_layer == mapTrackID_Hits.end())
@@ -88,7 +93,7 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step*aStep, G4TouchableHistory*)
       newHit->Mass = aStep->GetTrack()->GetDefinition()->GetPDGMass();
       newHit->LayerID = copyNo;
       
-      mapTrackID_Hits.insert(std::pair<int,std::map<int,int> >(copyNo,{{CurrentTrack,IdHit}}));
+      mapTrackID_Hits.insert(std::pair<int,std::unordered_map<int,int> >(copyNo,{{CurrentTrack,IdHit}}));
       
       fHitsCollection->insert(newHit);
     }
