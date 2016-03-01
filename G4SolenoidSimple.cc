@@ -8,6 +8,9 @@
 // * LICENSE and available at  http://cern.ch/geant4/license .  These *
 // * include a list of copyright holders.                             *
 // *                                                                  *
+
+
+
 // * Neither the authors of this software system, nor their employing *
 // * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
@@ -27,6 +30,7 @@
 
 #include "KnuclDetectorConstruction.hh"
 #include "G4SolSimpleActionInitialization.hh"
+#include "G4SolActionInitialization.hh"
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -82,17 +86,20 @@ int main(int argc,char** argv)
   // std::cout<<" get:"<<nameP<<" "<<sizeTarget/unitVal<<" "<<unit<<" ("<<unitVal<<" "<<sizeTarget<<")"<<std::endl;
   // std::cout<<" done !"<<std::endl;
 
-  
+  KnuclDetectorConstruction* Geometry = new KnuclDetectorConstruction(config); 
   // Mandatory user initialization classes
-  runManager->SetUserInitialization(new KnuclDetectorConstruction(config));
+  runManager->SetUserInitialization(Geometry);
 
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
   physicsList->RegisterPhysics(new G4StepLimiterPhysics());
   runManager->SetUserInitialization(physicsList);
 
   // User action initialization
-  runManager->SetUserInitialization(new G4SolSimpleActionInitialization(config));
-
+  if(config.Get<bool>("SimpleGeo")==true)
+    runManager->SetUserInitialization(new G4SolSimpleActionInitialization(config));
+  else
+    runManager->SetUserInitialization(new G4SolActionInitialization(*Geometry,config));
+ 
 #ifdef G4VIS_USE
   // Visualization manager construction
   G4VisManager* visManager = new G4VisExecutive;

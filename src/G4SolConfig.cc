@@ -142,5 +142,7 @@ void G4SolConfig::SetDefault()
 
   tree.put("CDS_RelativePosTarget",-0.7);
 
-  
+  tree.put("Output_Namefile","Default_Output.root");
+
+  tree.put("SimpleGeo",1);
 }
