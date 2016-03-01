@@ -87,7 +87,7 @@ public:
   void ConstructMaterials();
   G4VPhysicalVolume* Construct();
   virtual void ConstructSDandField();
-
+  std::vector<G4String> GetNameDetectors() const {return NameDetectorsSD;}
   bool DoKurama;
   bool DoTOFn;
   bool DoTOFp;
