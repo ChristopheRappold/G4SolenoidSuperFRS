@@ -92,13 +92,14 @@ int main(int argc,char** argv)
 
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
   physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+  //physicsList->SetVerboseLevel(0);
   runManager->SetUserInitialization(physicsList);
 
   // User action initialization
   if(config.Get<bool>("SimpleGeo")==true)
     runManager->SetUserInitialization(new G4SolSimpleActionInitialization(config));
   else
-    runManager->SetUserInitialization(new G4SolActionInitialization(*Geometry,config));
+    runManager->SetUserInitialization(new G4SolActionInitialization(Geometry,config));
  
 #ifdef G4VIS_USE
   // Visualization manager construction
