@@ -8,11 +8,16 @@
 
 namespace pt = boost::property_tree;
 
+
+
 class G4SolConfig
 {
 public:
-  G4SolConfig(const std::string& namefile);
+  G4SolConfig();
+  G4SolConfig(int argc,char** argv);
   ~G4SolConfig();
+  void ParseConfig(const std::string& namefile);
+  int ProperConf() {return status;}
 
   template<typename T>
   T Get(const std::string& key) const
@@ -31,11 +36,12 @@ public:
   void CheckConfig();
 private:
   pt::ptree tree;
+  int status;
 
+  int ParseCmd(int argc,char** argv);
   void display(const int depth, const pt::ptree& t);
   double GetDimension(const std::string&);
   void SetDefault();
-  
 };
 
 
@@ -44,6 +50,11 @@ template<> inline
 std::string G4SolConfig::Get(const std::string& key) const
 {
   return tree.get<std::string>(key);
+}
+template<> inline
+boost::optional<std::string> G4SolConfig::Get(const std::string& key) const
+{
+  return tree.get_optional<std::string>(key);
 }
 
 

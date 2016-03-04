@@ -5,10 +5,28 @@
 
 #include "G4SystemOfUnits.hh"
 
+#include <getopt.h>
 
-G4SolConfig::G4SolConfig(const std::string& namefile)
+static struct option optlong[] = 
+  {
+    {"help",0,NULL,'h'},
+    {"mac",1,NULL,'m'},
+    {"input",1,NULL,'i'},
+    {"config",1,NULL,'c'},
+  };
+G4SolConfig::G4SolConfig()
 {
   SetDefault();
+}
+
+G4SolConfig::G4SolConfig(int argc,char** argv)
+{
+  SetDefault();
+  status = ParseCmd(argc,argv);
+}
+
+void G4SolConfig::ParseConfig(const std::string& namefile)
+{
   std::cout<<"start reading"<<std::endl;
   std::ifstream ifs ( namefile.c_str() );
   if(ifs.is_open())
@@ -45,6 +63,55 @@ G4SolConfig::G4SolConfig(const std::string& namefile)
 }
 G4SolConfig::~G4SolConfig()
 {
+  
+}
+
+int G4SolConfig::ParseCmd(int argc,char** argv)
+{
+
+  auto print_help = [&argv] () {
+    std::cout << "!> Wrong number of parameters!\n";
+    std::cout << "!> Example of use:\n";
+    std::cout << "!> " << argv[0];
+    std::cout << "!> [-h] [--help] [-i inputfile] [--input inputfile] [-m run.mac] [--mac run.mac] [-c config.par] [--config config.par] Outputfile.root \n";
+    std::cout << " \n";
+  };
+  
+  if (argc < 2)
+    {
+      print_help();
+      return -1;
+    }
+  int option_char;
+  std::string nameI, nameM, nameC("testconfig.par");
+  while ((option_char = getopt_long (argc,argv,"+hgm:i:c:",optlong,NULL)) != EOF)
+    switch (option_char)
+      {  
+      case 'h': print_help(); return -1; break;
+      case 'g': std::cout<<"Gui mode "<<std::endl; tree.put("Gui",1); break; 
+      case 'i': std::cout<<"Inputfile of Event :"<<optarg<<std::endl; nameI=optarg; tree.put("InputFile",nameI); break;
+      case 'm': std::cout<<"Macro File :"<<optarg<<std::endl; nameM=optarg; tree.put("MacroFile",nameM); break;
+      case 'c': std::cout<<"Configuration File :"<<optarg<<std::endl; nameC=optarg; tree.put("Config",nameC); break;
+      case '?': print_help(); return -1;
+      }
+
+  std::string name_out;
+
+  if(optind == argc)
+    {
+      print_help();
+      return -1;
+    }
+  else
+    {
+      name_out = argv[optind];
+      tree.put("Output_Namefile",name_out);
+    }
+
+  ParseConfig(nameC);
+  
+  return 0;
+  
   
 }
 
@@ -102,6 +169,8 @@ double G4SolConfig::GetDimension(const std::string& dimension)
 
 void G4SolConfig::SetDefault()
 {
+  tree.put("Gui",0);
+  
   tree.put("Particle","proton");
 
   tree.put("Beam_SpotSizeSigma",1);

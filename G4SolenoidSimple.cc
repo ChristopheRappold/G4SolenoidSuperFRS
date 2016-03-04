@@ -56,11 +56,20 @@
 
 int main(int argc,char** argv)
 {
+
+  std::cout<<" Config :"<<std::endl;
+  G4SolConfig config(argc,argv);
+  if(config.ProperConf()!=0)
+    return -1;
+  config.CheckConfig();
+
+  int guimode = config.Get<int>("Gui"); 
+  
 #ifdef G4UI_USE
   // Detect interactive mode (if no arguments) and define UI session
   //
   G4UIExecutive* ui = 0;
-  if ( argc == 1 )
+  if ( guimode )
     {
       ui = new G4UIExecutive(argc, argv);
     }
@@ -74,9 +83,6 @@ int main(int argc,char** argv)
   G4RunManager* runManager = new G4RunManager;
 #endif
 
-  std::cout<<" Config :"<<std::endl;
-  G4SolConfig config("testconfig.par");
-  config.CheckConfig();
   // std::string nameP = config.Get<std::string>("Particle");
   // double sizeTarget = config.Get<double>("Target_Size");
   // std::string unit = config.Get<std::string>("Target_Size.unit");
@@ -112,11 +118,13 @@ int main(int argc,char** argv)
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
-  if ( argc != 1 )
+  boost::optional<std::string> macro = config.Get<boost::optional<std::string> >("MacroFile"); 
+  
+  if ( macro )
     {
       // execute an argument macro file if exist
       G4String command = "/control/execute ";
-      G4String fileName = argv[1];
+      G4String fileName(*macro);
       UImanager->ApplyCommand(command+fileName);
     }
   else
