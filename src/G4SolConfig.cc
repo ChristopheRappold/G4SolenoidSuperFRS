@@ -10,6 +10,7 @@
 static struct option optlong[] = 
   {
     {"help",0,NULL,'h'},
+    {"gui",0,NULL,'g'},
     {"mac",1,NULL,'m'},
     {"input",1,NULL,'i'},
     {"config",1,NULL,'c'},
@@ -73,7 +74,7 @@ int G4SolConfig::ParseCmd(int argc,char** argv)
     std::cout << "!> Wrong number of parameters!\n";
     std::cout << "!> Example of use:\n";
     std::cout << "!> " << argv[0];
-    std::cout << "!> [-h] [--help] [-i inputfile] [--input inputfile] [-m run.mac] [--mac run.mac] [-c config.par] [--config config.par] Outputfile.root \n";
+    std::cout << "!> [-h] [--help] [-g] [--gui] [-i inputfile] [--input inputfile] [-m run.mac] [--mac run.mac] [-c config.par] [--config config.par] Outputfile.root \n";
     std::cout << " \n";
   };
   
