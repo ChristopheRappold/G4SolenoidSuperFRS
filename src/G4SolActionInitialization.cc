@@ -29,12 +29,14 @@
 /// \brief Implementation of the G4SolActionInitialization class
 
 #include "G4SolActionInitialization.hh"
+#include "HypHIPrimaryGeneratorAction.hh"
 #include "G4SolSimplePrimaryGeneratorAction.hh"
 #include "G4SolRunAction.hh"
 #include "G4SolEventAction.hh"
 //#include "G4SolStackingAction.hh"
 #include "KnuclDetectorConstruction.hh"
 
+#include <memory>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4SolActionInitialization::G4SolActionInitialization (KnuclDetectorConstruction* geoControl, const G4SolConfig& ConfFile) : G4VUserActionInitialization(),fGeoController(geoControl),Conf(ConfFile)
@@ -66,9 +68,12 @@ void G4SolActionInitialization::Build() const
   std::vector<G4String> nameD = fGeoController->GetNameDetectors();
   std::cout<<"!> G4SolActionInitialization Build:"<<nameD.size()<<" "<<fGeoController->GetNameDetectors().size()<<std::endl;
 
-  //SetUserAction(new G4SolPrimaryGeneratorAction(Par,InputCIN));
-  SetUserAction(new G4SolSimplePrimaryGeneratorAction(Conf));
-
+  std::unique_ptr<HypHIPrimaryGeneratorAction> newPrimGen = std::make_unique<HypHIPrimaryGeneratorAction>(Conf);
+  if(newPrimGen->GetStatus()!=0)
+    SetUserAction(new G4SolSimplePrimaryGeneratorAction(Conf));
+  else
+    SetUserAction(newPrimGen.release());
+    
   SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors()));
   
   G4SolEventAction* eventAction = new G4SolEventAction( fGeoController->GetNameDetectors());
