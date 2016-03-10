@@ -29,6 +29,7 @@
 #include "G4UserLimits.hh"
 #include "G4Region.hh"
 #include "G4RegionStore.hh"
+#include "G4ProductionCuts.hh"
 
 #include "G4SystemOfUnits.hh"
 #include "G4NistManager.hh"
@@ -108,8 +109,19 @@ KnuclDetectorConstruction::KnuclDetectorConstruction(const G4SolConfig& conf)//K
   DoModHypHI = true;
 
   DoOnlySense = 0;
-
+  ReductionRadius = 1.;
   
+  if(Par.IsAvailable("ReductionFactor"))
+    {
+      ReductionRadius = Par.Get<double>("ReductionFactor");
+      if(std::abs(ReductionRadius -1.)>1e-4)
+	{
+	  CDC_RMIN *= ReductionRadius;
+	  CDC_RMAX *= ReductionRadius;
+	  for(auto& layerR : CDC_RADIUS)
+	    layerR*= ReductionRadius;
+	}
+    }
   DefineCommands();
 }
 
@@ -270,24 +282,8 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
 
   G4cout << "KnuclDetectorConstruction completed" << G4endl;
 
-  std::cout<<" Sensitive Detectors :"<<std::endl;
-  for(auto NameD : NameDetectorsSD)
-    std::cout<<NameD<<std::endl;
 
-  G4Region* aDetectorRegion = new G4Region("DetectorRegion");
   
-  for(auto& CurrentName : NameDetectorsSD)
-    {
-      G4LogicalVolume* Det = FindVolume(CurrentName);
-
-      Det->SetRegion(aDetectorRegion);
-      aDetectorRegion->AddRootLogicalVolume(Det);
-    }
-
-  G4Region* aTargetRegion = new G4Region("TargetRegion");
-  HypHI_Target_log->SetRegion(aTargetRegion);
-  aTargetRegion->AddRootLogicalVolume(HypHI_Target_log);
-
   return experimentalHall_phys;
 }
 
@@ -361,14 +357,43 @@ void KnuclDetectorConstruction::ConstructSDandField()
       Det->SetSensitiveDetector(SD);
     }  
 
+  std::cout<<" Sensitive Detectors :"<<std::endl;
+  for(auto NameD : NameDetectorsSD)
+    std::cout<<NameD<<std::endl;
+
+  G4Region* aDetectorRegion = new G4Region("DetectorRegion");
+  
+  for(auto& CurrentName : NameDetectorsSD)
+    {
+      G4LogicalVolume* Det = FindVolume(CurrentName);
+      Det->SetRegion(aDetectorRegion);
+      aDetectorRegion->AddRootLogicalVolume(Det);
+    }
+  std::vector<double> cutsDet (4,Par.Get<double>("DetectorRegionCut"));
+  aDetectorRegion->SetProductionCuts(new G4ProductionCuts());
+  aDetectorRegion->GetProductionCuts()->SetProductionCuts(cutsDet);
+
+  G4Region* aTargetRegion = new G4Region("TargetRegion");
+  HypHI_Target_log->SetRegion(aTargetRegion);
+  aTargetRegion->AddRootLogicalVolume(HypHI_Target_log);
+  std::vector<double> cutsTarget (4,Par.Get<double>("TargetRegionCut"));
+  aTargetRegion->SetProductionCuts(new G4ProductionCuts());
+  aTargetRegion->GetProductionCuts()->SetProductionCuts(cutsTarget);
+
+
 
   
+  experimentalHall_log->SetUserLimits( new G4UserLimits(DBL_MAX,2*m,10*s,0.,0.) );  
   // ==============================================================
   // magnetic field
   // ==============================================================
 
+  
   G4double fCDSField    = -FieldInCDC   *tesla;  
   G4double fKuramaField =  FieldInKurama*tesla;  
+
+  if(Par.IsAvailable("Field_CDS_Bz"))
+    fCDSField = Par.Get<double>("Field_CDS_Bz");
 
   G4ThreeVector fKURAMA(0.0, fKuramaField, 0.0      );
   G4ThreeVector fCDC   (0.0, 0.0,          fCDSField);  
@@ -387,7 +412,9 @@ void KnuclDetectorConstruction::ConstructSDandField()
   //KuramaAperture_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   CDS_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   CDS_endcap_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
-
+  if(DoModHypHI)
+    HypHI_InTracker_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
+  
   G4AutoDelete::Register(fMagneticField);
   G4AutoDelete::Register(fFieldMgr);
     
@@ -933,8 +960,8 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   //***********//
 
   //G4FieldManager* CDCFieldMgr = fEmFieldSetupCDC->GetFieldManager();
- 
-  CDS_tube = new G4Tubs("CDS_tube", 0.0, cds_rmax, cds_z, 0.0, CLHEP::twopi);
+  double cds_rmin = CDC_RMIN*0.95*mm; 
+  CDS_tube = new G4Tubs("CDS_tube", cds_rmin, cds_rmax, cds_z, 0.0, CLHEP::twopi);
   CDS_log  = new G4LogicalVolume(CDS_tube, Air, "CDS_log",0,0,0);// CDCFieldMgr,0,0);
   CDS_phys = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CDS_log, "CDS", experimentalHall_log, false,0);
   //--- Visualization ---//
@@ -1060,8 +1087,9 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   //G4PVPlacement* CDC_body_phys=
   AllPlacements.emplace_back( new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), CDC_body_log, "CDC_body_phys", CDS_log, false, 0));  
 
-  const G4double cdc_wire_dist = 0.45*cm;
+  const G4double cdc_wire_dist = 0.45*ReductionRadius*cm;
   const G4double cdc_off = cdc_wire_dist;
+  
 
   G4double rmin = 0.0;
   G4double rmax = 0.0;
@@ -1474,7 +1502,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   //*****************//
   //*** CDC wires ***//
   //*****************//
-  G4double r0 = 17.5*cm;
+  G4double r0 = 17.5*ReductionRadius*cm;
 
   G4double  radius[67];
   G4int     nwires[67];
@@ -1487,7 +1515,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	radius[i] = radius[i-1]+cdc_wire_dist;
 
       if(i==1 || i==12 || i==13 || i==21 || i==22 || i==30 || i==31 || i==39 || i==40 || i==48 || i==49 || i==57 || i==58 || i==66)
-	radius[i] += 0.2*cm;
+	radius[i] += 0.2*ReductionRadius*cm;
     
       if(i<12)
 	{
@@ -1772,7 +1800,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   
 }
 
-void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double RelativePos, G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z)
+void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double RelativePos, G4double TargetPos_x, G4double TargetPos_y, G4double TargetPos_z)
 {
   G4NistManager* materialMgr = G4NistManager::Instance();
     
@@ -1785,26 +1813,37 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
   G4VisAttributes *Si_att = new G4VisAttributes(Pink);
   
   
-  
-  HypHI_InTracker = new G4Tubs("HypHI_InTracker", 0, 14.*cm, cds_z, 0, CLHEP::twopi);
+  double cdc_rmin = CDC_RMIN*0.95*mm;
+  HypHI_InTracker = new G4Tubs("HypHI_InTracker", 0, cdc_rmin, std::abs(RelativePos)*cds_z + 5.*TargetLength, 0, CLHEP::twopi);
   HypHI_InTracker_log = new G4LogicalVolume(HypHI_InTracker, Vacuum,"HypHI_InTracker_log", 0,0,0);
-  HypHI_InTracker_phys = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), HypHI_InTracker_log, "HypHI_InTracker_Phys",
-					   CDS_log, false,0);
+  HypHI_InTracker_phys = new G4PVPlacement(0, G4ThreeVector(TargetPos_x, TargetPos_y, TargetPos_z-RelativePos*cds_z), HypHI_InTracker_log, "HypHI_InTracker_Phys",
+					   experimentalHall_log, false,0);
 
   //--- Visualization ---//
   HypHI_InTracker_log->SetVisAttributes(G4VisAttributes::Invisible);
 
-  HypHI_Target = new G4Box("HypHI_Target", 2.*cm, 2.*cm, 2.*cm);
+  HypHI_Target = new G4Box("HypHI_Target", TargetLength, TargetLength, TargetLength);
   HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
-  HypHI_Target_phys = new G4PVPlacement(0, G4ThreeVector(0, 0 , cds_z*RelativePos), HypHI_Target_log, "HypHI_Target_Phys",
+  HypHI_Target_phys = new G4PVPlacement(0, G4ThreeVector(0, 0 , TargetPos_z+RelativePos*cds_z), HypHI_Target_log, "HypHI_Target_Phys",
 					   HypHI_InTracker_log, false,0);
 
 
   G4int nb_panel = 16;
-  G4VSolid* HypHI_SiliciumSeg = new G4Tubs("HypHI_SiSeg",1*cm,14*cm, 3*mm,
+  G4VSolid* HypHI_SiliciumSeg = new G4Tubs("HypHI_SiSeg",1*cm,cdc_rmin, 3*mm,
 					   -CLHEP::twopi/static_cast<double>(2*nb_panel),2.*CLHEP::twopi/static_cast<double>(2*nb_panel)); 
 
-  std::vector<double> posZ = {cds_z*(RelativePos+0.1),cds_z*(RelativePos+0.2),cds_z*(RelativePos+0.3),cds_z*(RelativePos+0.4)};
+  
+  std::vector<double> posZ = {20.*cm, 25.*cm,30.*cm,40.*cm};
+  if(Par.IsAvailable("HypHI_InnerTracker_Spec"))
+    {
+      double PosZInTracker = Par.Get<double>("HypHI_InnerTracker_PosZ");
+      int NbInTracker = Par.Get<int>("HypHI_InnerTracker_Nb");
+      double DistInTracker = Par.Get<double>("HypHI_InnerTracker_Spacing");
+      posZ.resize(NbInTracker);
+      for(size_t idL = 0; idL < posZ.size();++idL)
+	posZ[idL] = TargetLength + TargetPos_z+RelativePos*cds_z+PosZInTracker+static_cast<double>(idL)*DistInTracker;
+    }
+  
   for(size_t idLayer = 0;idLayer<posZ.size();++idLayer)
     {
       std::string name_Si("HypHI_InSi_log");
@@ -1821,7 +1860,7 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
 	  nameSi += std::to_string(idLayer);
 	  nameSi += "_SiSeg_";
 	  nameSi += std::to_string(IdSi);
-	  AllPlacements.emplace_back(new G4PVPlacement(rotSi, G4ThreeVector(0, 0, TargetLength + posZ[idLayer]),
+	  AllPlacements.emplace_back(new G4PVPlacement(rotSi, G4ThreeVector(0, 0, posZ[idLayer]),
 						       HypHI_InSi_log, nameSi, HypHI_InTracker_log, false, IdSi));
 	}
 

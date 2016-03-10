@@ -71,7 +71,7 @@ private:
   void ConstructTargetChamber(G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z, G4double tarCham_rmax, G4double tarCham_z, G4double tarChamPos_x, G4double tarChamPos_y, G4double tarChamPos_z);
   void ConstructKaonVeto(G4double cdsPos_x, G4double cdsPos_y, G4double tarCham_rmax);
   void ConstructAC(G4double cds_z, G4double CDS_AC_space, G4double AC_STC_space, G4double STC_BLC_space, G4double BLC_BLC_space);
-  void ConstructInnerTracker(G4double cds_z, G4double RelativePos, G4double cdsPos_x, G4double cdsPos_y, G4double cdsPos_z);
+  void ConstructInnerTracker(G4double cds_z, G4double RelativePos, G4double TargetPos_x, G4double TargetPos_y, G4double TargetPos_z);
   G4LogicalVolume* FindVolume(const G4String& name);
 
   void DefineCommands();
@@ -181,13 +181,13 @@ public:
   const double ZVC_R = 130.0; // unit :: mm
   
   //### constant for CDC ###//
-  const double CDC_RMIN = 150.0; // unit :: mm
-  const double CDC_RMAX = 530.0; // unit :: mm
-  const double CDC_RADIUS[15] = {190.5, 204.0, 217.5,
-				 248.5, 262.0, 293.0, 306.5,
-				 337.5, 351.0,
-				 382.0, 395.5, 426.5, 440.0,
-				 471.0, 484.5}; // unit :: mm
+  double CDC_RMIN = 150.0; // unit :: mm
+  double CDC_RMAX = 530.0; // unit :: mm
+  double CDC_RADIUS[15] = {190.5, 204.0, 217.5,
+			   248.5, 262.0, 293.0, 306.5,
+			   337.5, 351.0,
+			   382.0, 395.5, 426.5, 440.0,
+			   471.0, 484.5}; // unit :: mm
   const int N_CDC_CELL[15] = {72, 72, 72,
 			      90, 90, 100, 100,
 			      120, 120,
@@ -211,7 +211,8 @@ public:
   const double CDH_RMIN = 574.0; // unit :: mm
   const double CDH_Z = 790.0; // unit :: mm
 
-
+  double ReductionRadius;
+  
   std::unique_ptr<G4Material> ArIsoButane;
   
   
