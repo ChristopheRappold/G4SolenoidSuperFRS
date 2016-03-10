@@ -33,7 +33,7 @@
 #include "G4SolSimplePrimaryGeneratorAction.hh"
 #include "G4SolRunAction.hh"
 #include "G4SolEventAction.hh"
-//#include "G4SolStackingAction.hh"
+#include "G4SolStackingAction.hh"
 #include "KnuclDetectorConstruction.hh"
 
 #include <memory>
@@ -79,7 +79,7 @@ void G4SolActionInitialization::Build() const
   G4SolEventAction* eventAction = new G4SolEventAction( fGeoController->GetNameDetectors());
   SetUserAction(eventAction);
 
-//SetUserAction(new G4SolStackingAction());
+  SetUserAction(new G4SolStackingAction());
 }  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
