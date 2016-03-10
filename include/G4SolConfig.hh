@@ -32,7 +32,14 @@ public:
     else
       return temp;
   }
-    
+  bool IsAvailable(const std::string& key) const
+  {
+    size_t count = tree.count(key);
+    if(count>0)
+      return true;
+    else
+      return false;
+  }
   void CheckConfig();
 private:
   pt::ptree tree;

@@ -215,4 +215,64 @@ void G4SolConfig::SetDefault()
   tree.put("Output_Namefile","Default_Output.root");
 
   tree.put("SimpleGeo",1);
+
+  tree.put("Physicslist","G4Default_FTFP_BERT");
+
+  tree.put("HyperNuclei_H4L_br_mode1",0.); 
+  tree.put("HyperNuclei_H4L_br_mode2",1.); 
+  tree.put("HyperNuclei_H4L_br_mode3",0.); 
+  tree.put("HyperNuclei_H4L_br_mode4",0.); 
+
+  tree.put("HyperNuclei_H4LT12",0.194);
+  tree.put("HyperNuclei_H4LT12.unit","ns");
+  tree.put("HyperNuclei_H4LT12.unit.ns",1.*ns);
+  
+  tree.put("HyperNuclei_H3L_br_mode1",0); 
+  tree.put("HyperNuclei_H3L_br_mode2",1); 
+  tree.put("HyperNuclei_H3L_br_mode3",0); 
+  tree.put("HyperNuclei_H3L_br_mode4",0); 
+  tree.put("HyperNuclei_H3L_br_mode5",0);
+
+  tree.put("HyperNuclei_H3L_T12",0.246);
+  tree.put("HyperNuclei_H3L_T12.unit","ns");
+  tree.put("HyperNuclei_H3L_T12.unit.ns",1.*ns);
+
+  tree.put("HyperNuclei_He4L_br_mode1",0); 
+  tree.put("HyperNuclei_He4L_br_mode2",1); 
+  tree.put("HyperNuclei_He4L_br_mode3",0); 
+  tree.put("HyperNuclei_He4L_br_mode4",0); 
+  tree.put("HyperNuclei_He4L_br_mode5",0); 
+  tree.put("HyperNuclei_He4L_br_mode6",0); 
+  tree.put("HyperNuclei_He4L_br_mode7",0);
+
+  tree.put("HyperNuclei_He4L_T12",0.256);
+  tree.put("HyperNuclei_He4L_T12.unit","ns");
+  tree.put("HyperNuclei_He4L_T12.unit.ns",1.*ns);
+
+  tree.put("HyperNuclei_He5L_br_mode1",1); 
+  tree.put("HyperNuclei_He5L_br_mode2",0);
+
+  tree.put("HyperNuclei_He5L_T12",0.256);
+  tree.put("HyperNuclei_He5L_T12.unit","ns");
+  tree.put("HyperNuclei_He5L_T12.unit.ns",1.*ns);
+
+  tree.put("HyperNuclei_nnL_br_mode1",1);
+  tree.put("HyperNuclei_nnL_br_mode2",0);
+
+  tree.put("HyperNuclei_nnL_T12",0.256);
+  tree.put("HyperNuclei_nnL_T12.unit","ns");
+  tree.put("HyperNuclei_nnL_T12.unit.ns",1.*ns);
+
+  tree.put("DefaultRegionCut",10.);
+  tree.put("DefaultRegionCut.unit","mm");
+  tree.put("DefaultRegionCut.unit.mm",1.*mm);
+
+  tree.put("DetectorRegionCut",50.);
+  tree.put("DetectorRegionCut.unit","mm");
+  tree.put("DetectorRegionCut.unit.mm",1.*mm);
+    
+  tree.put("TargetRegionCut",10.);
+  tree.put("TargetRegionCut.unit","mm");
+  tree.put("TargetRegionCut.unit.mm",1.*mm);
+  
 }
