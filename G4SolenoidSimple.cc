@@ -40,6 +40,13 @@
 
 #include "G4UImanager.hh"
 #include "FTFP_BERT.hh"
+#include "FTFP_BERT_HP.hh"
+#include "QGSP_FTFP_BERT.hh"
+//#include "HypHIFrsPhysicsList.hh"
+#include "HypernuclearPhysics.hh"
+
+#include "G4RegionStore.hh"
+
 #include "G4StepLimiterPhysics.hh"
 
 #include "G4SolConfig.hh"
@@ -96,11 +103,54 @@ int main(int argc,char** argv)
   // Mandatory user initialization classes
   runManager->SetUserInitialization(Geometry);
 
-  G4VModularPhysicsList* physicsList = new FTFP_BERT;
-  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
-  //physicsList->SetVerboseLevel(0);
-  runManager->SetUserInitialization(physicsList);
+  G4RegionStore* regionStore = G4RegionStore::GetInstance();
+  for(auto& region : *regionStore)
+    {
+      std::cout<<" Region :"<<region->GetName()<<std::endl;
+    }
 
+  
+  boost::optional<std::string> NamePhys = config.Get<boost::optional<std::string> >("Physicslist");
+  G4VModularPhysicsList* physicsList = nullptr;
+  if(NamePhys)
+    {
+      std::string namePhysList(*NamePhys);
+      if(namePhysList == "G4Default_FTFP_BERT")
+	{
+	  physicsList = new FTFP_BERT;
+	  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+	  physicsList->RegisterPhysics(new HypernuclearPhysics("Hypernuclear",config));
+	  physicsList->SetDefaultCutValue(config.Get<double>("DefaultRegionCut"));
+	  // physicsList->SetCutsForRegion(config.Get<double>("DetectorRegionCut"), "DetectorRegion");
+	  // physicsList->SetCutsForRegion(config.Get<double>("TargetRegionCut"), "TargetRegion");
+	}
+      else if(namePhysList == "G4_FTFP_BERT_HP")
+	{
+	  physicsList = new FTFP_BERT_HP;
+	  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+	  physicsList->RegisterPhysics(new HypernuclearPhysics("Hypernuclear",config));
+	  physicsList->SetDefaultCutValue(config.Get<double>("DefaultRegionCut"));
+	  //physicsList->SetCutsForRegion(config.Get<double>("DetectorRegionCut"), "DetectorRegion");
+	  //physicsList->SetCutsForRegion(config.Get<double>("TargetRegionCut"), "TargetRegion");
+	 }
+      else if(namePhysList == "G4_QGSP_FTFP_BERT")
+	{
+	  physicsList = new QGSP_FTFP_BERT;
+	  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+	  physicsList->RegisterPhysics(new HypernuclearPhysics("Hypernuclear",config));
+	}
+      //else if(namePhysList == "NewHypHIFrsList")
+	//physicsList = new HypHIFrsPhysicsList(config);
+    }
+  else
+    {
+      physicsList = new FTFP_BERT;
+      physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+      //physicsList->SetVerboseLevel(0);
+    }
+
+  runManager->SetUserInitialization(physicsList);
+	
   // User action initialization
   if(config.Get<bool>("SimpleGeo")==true)
     runManager->SetUserInitialization(new G4SolSimpleActionInitialization(config));
