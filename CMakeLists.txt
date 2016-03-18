@@ -20,6 +20,12 @@ find_package(ROOT REQUIRED)
 message(STATUS "ROOT Config :" ${ROOT_USE_FILE})
 message(STATUS "PATH: " $ENV{PATH})
 
+find_package(Boost 1.54.0 REQUIRED)
+if(Boost_FOUND)
+  message(STATUS "BOOST :" ${Boost_INCLUDE_DIRS})
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
+  
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
