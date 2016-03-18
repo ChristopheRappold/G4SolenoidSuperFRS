@@ -68,7 +68,7 @@ void G4SolActionInitialization::Build() const
   std::vector<G4String> nameD = fGeoController->GetNameDetectors();
   std::cout<<"!> G4SolActionInitialization Build:"<<nameD.size()<<" "<<fGeoController->GetNameDetectors().size()<<std::endl;
 
-  std::unique_ptr<HypHIPrimaryGeneratorAction> newPrimGen = std::make_unique<HypHIPrimaryGeneratorAction>(Conf);
+  std::unique_ptr<HypHIPrimaryGeneratorAction> newPrimGen (new HypHIPrimaryGeneratorAction(Conf));//= std::make_unique<HypHIPrimaryGeneratorAction>(Conf);
   if(newPrimGen->GetStatus()!=0)
     SetUserAction(new G4SolSimplePrimaryGeneratorAction(Conf));
   else
