@@ -144,7 +144,7 @@ void KnuclDetectorConstruction::ConstructMaterials()
   G4Material* isobutane = materialMgr->ConstructNewMaterial("isoC4H10",nameEl,atoms,density,true,kStateGas);
   
   density = 1.74514 * mg/cm3;
-  ArIsoButane = std::make_unique<G4Material>("ArIsoButane", density,2);
+  ArIsoButane = std::unique_ptr<G4Material>(new G4Material("ArIsoButane", density,2));//std::make_unique<G4Material>("ArIsoButane", density,2);
   ArIsoButane->AddMaterial( Argon, 0.90 );
   ArIsoButane->AddMaterial( isobutane, 0.10 );
   
