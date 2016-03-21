@@ -58,9 +58,7 @@ HypHIPrimaryGeneratorAction::HypHIPrimaryGeneratorAction(const G4SolConfig& conf
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
   boost::optional<std::string> tempName = Par.Get<boost::optional<std::string> >("InputFile");
-  if(tempName==false)
-    status = -2;
-  else
+  if(tempName) 
     {
       nameInputFile = Par.Get<std::string>("InputFile");
     
@@ -91,6 +89,9 @@ HypHIPrimaryGeneratorAction::HypHIPrimaryGeneratorAction(const G4SolConfig& conf
 
       DefineCommands();
     }
+  else
+    status = -2;
+
   // define commands for this class
 }
 
