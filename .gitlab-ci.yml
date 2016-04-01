@@ -1,7 +1,13 @@
 image : cern/cc7-base:latest
   
 before_script:
-  - yum -y install boost-devel
+  - uname -a
+  - g++ --version
+  - whereis cmake
+  - whereis boost 
+  - wget https://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.tar.gz
+  - tar xf boost_1_54_0.tar.gz
+  - rm boost_1_54_0.tar.gz
   - yum -y install cmake
   - wget http://geant4.cern.ch/support/source/lib4.10.2.p01/Linux-g++4.8.5-CC7.tar.gz
   - wget http://geant4.cern.ch/support/source/G4NDL.4.5.tar.gz
@@ -16,6 +22,7 @@ before_script:
   - wget http://geant4.cern.ch/support/source/G4ENSDFSTATE.1.2.1.tar.gz
   - wget http://geant4.cern.ch/support/source/G4TENDL.1.0.tar.gz
   - tar xf Linux-g++4.8.5-CC7.tar.gz
+  - rm Linux-g++4.8.5-CC7.tar.gz
   - mkdir Geant4-10.2.1-Linux/share/Geant4-10.2.1/data
   - tar xf G4NDL.4.5.tar.gz
   - mv G4NDL4.5 Geant4-10.2.1-Linux/share/Geant4-10.2.1/data
@@ -40,6 +47,8 @@ before_script:
   - tar xf G4TENDL.1.0.tar.gz
   - mv G4TENDL1.0 Geant4-10.2.1-Linux/share/Geant4-10.2.1/data
   - wget https://root.cern.ch/download/root_v6.04.16.Linux-centos7-x86_64-gcc4.9.tar.gz
+  - tar xf root_v6.04.16.Linux-centos7-x86_64-gcc4.9.tar.gz
+  - rm root_v6.04.16.Linux-centos7-x86_64-gcc4.9.tar.gz
   - mv root root-6
   - cd root-6/bin
   - source ./thisroot.sh
