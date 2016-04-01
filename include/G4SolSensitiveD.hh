@@ -1,3 +1,8 @@
+// ------------------------------------------------- 
+// Definition of the G4Sol_SD_Det class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------
+
 #ifndef G4Sol_SensetiveD_H
 #define G4Sol_SensetiveD_H 1
 

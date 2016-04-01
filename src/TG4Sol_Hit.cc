@@ -1,3 +1,8 @@
+// ------------------------------------------------------------- 
+// Implementation of the TG4Sol_Hit class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
+
 #include "TG4Sol_Hit.hh"
 #include <iostream>
 

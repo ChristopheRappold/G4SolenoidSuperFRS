@@ -1,3 +1,8 @@
+// ----------------------------------------------------- 
+// Definition of the THe4L class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
+
 #ifndef THe4L_h
 #define THe4L_h 1
 

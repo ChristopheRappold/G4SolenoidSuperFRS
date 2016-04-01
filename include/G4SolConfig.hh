@@ -1,3 +1,9 @@
+// ------------------------------------------------- 
+// Definition of the G4SolConfig class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------
+
+
 #ifndef SOLCONFIG_h
 #define SOLCONFIG_h
 

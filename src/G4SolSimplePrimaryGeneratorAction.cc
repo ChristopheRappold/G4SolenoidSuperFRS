@@ -23,6 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+// ------------------------------------------------------------- 
+// Implementation of the G4SolSimplePrimaryGeneratorAction class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
 
 #include "G4SolSimplePrimaryGeneratorAction.hh"
 

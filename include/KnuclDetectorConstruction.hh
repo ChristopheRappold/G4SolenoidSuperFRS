@@ -1,3 +1,9 @@
+// --------------------------------------------------------- 
+// Definition of the KnuclDetectorConstruction class
+// Created by C.Rappold (c.rappold@gsi.de)
+//----------------------------------------------------------
+
+
 #ifndef KNUCLDET_h
 #define KNUCLDET_h
 

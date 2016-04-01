@@ -1,3 +1,9 @@
+// -------------------------------------------------------------------- 
+// Implementation of the KnuclDetectorConstruction class
+// Based on version given by H.Fujioka (fujioka@scphys.kyoto-u.ac.jp) 
+// Modified by C.Rappold (c.rappold@gsi.de)
+//---------------------------------------------------------------------
+
 // ====================================================================
 //    KnuclDetectorConstruction.cc
 //

@@ -1,3 +1,8 @@
+// ------------------------------------------------------- 
+// Implementation of the G4SolConfig class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------
+
 #include "G4SolConfig.hh"
 #include <fstream>
 #include <sstream>

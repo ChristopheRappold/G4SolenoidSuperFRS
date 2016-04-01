@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: G4SolRunData.cc 69223 2013-04-23 12:36:10Z gcosmo $
-//
-/// \file G4SolRunData.cc
-/// \brief Implementation of the G4SolRunData class
+// ------------------------------------------------------- 
+// Implementation of the G4SolRunData class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------
 
 #include "G4SolRunData.hh"
 //#include "G4SolAnalysis.hh"

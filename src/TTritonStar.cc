@@ -1,3 +1,8 @@
+// ------------------------------------------------------------- 
+// Implementation of the TTritonStar class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
+
 #include "TTritonStar.hh"
 #include "G4ParticleTable.hh"
 #include "G4DecayTable.hh"

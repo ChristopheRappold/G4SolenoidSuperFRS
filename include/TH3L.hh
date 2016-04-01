@@ -1,3 +1,8 @@
+// ----------------------------------------------------- 
+// Definition of the TH3L class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
+
 #ifndef TH3L_h
 #define TH3L_h 1
 

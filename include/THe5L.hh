@@ -1,3 +1,8 @@
+// ----------------------------------------------------- 
+// Definition of the THe5L class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
+
 #ifndef THe5L_h
 #define THe5L_h 1
 

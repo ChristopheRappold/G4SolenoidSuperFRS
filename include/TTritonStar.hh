@@ -1,3 +1,8 @@
+// ----------------------------------------------------- 
+// Definition of the TTritonStar class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
+
 #ifndef TTritonStar_h
 #define TTritonStar_h 1
 

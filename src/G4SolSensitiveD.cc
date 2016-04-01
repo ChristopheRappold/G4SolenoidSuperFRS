@@ -1,3 +1,8 @@
+// ------------------------------------------------------- 
+// Implementation of the G4Sol_SD_Det class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------
+
 #include "G4SolSensitiveD.hh"
 #include "G4ParticleTypes.hh"
 #include "G4Step.hh"

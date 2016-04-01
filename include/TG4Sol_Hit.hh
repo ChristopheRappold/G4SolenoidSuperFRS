@@ -1,3 +1,8 @@
+// ----------------------------------------------------- 
+// Definition of the TG4Sol_Hit class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
+
 #ifndef TG4SOL_HIT_H
 #define TG4SOL_HIT_H
 

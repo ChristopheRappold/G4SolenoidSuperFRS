@@ -1,3 +1,9 @@
+// ------------------------------------------------- 
+// Definition of the G4SolHit class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------
+
+
 #ifndef G4SOL_HIT_H
 #define G4SOL_HIT_H
 

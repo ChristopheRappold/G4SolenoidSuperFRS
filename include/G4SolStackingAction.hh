@@ -24,8 +24,10 @@
 // ********************************************************************
 //
 //
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// ------------------------------------------------- 
+// Definition of the G4SolStackingAction class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------
 
 #ifndef G4SolStackingAction_H
 #define G4SolStackingAction_H 1

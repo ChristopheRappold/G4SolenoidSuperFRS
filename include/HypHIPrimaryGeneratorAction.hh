@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: HypHIPrimaryGeneratorAction.hh 68058 2013-03-13 14:47:43Z gcosmo $
-// 
-/// \file HypHIPrimaryGeneratorAction.hh
-/// \brief Definition of the HypHIPrimaryGeneratorAction class
+// ----------------------------------------------------- 
+// Definition of the HypHIPrimaryGeneratorAction class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
 
 #ifndef HypHIPrimaryGeneratorAction_h
 #define HypHIPrimaryGeneratorAction_h 1

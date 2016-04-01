@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: G4SolSimpleActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
-//
-/// \file G4SolSimpleActionInitialization.cc
-/// \brief Implementation of the G4SolSimpleActionInitialization class
+// ------------------------------------------------------------- 
+// Implementation of the G4SolSimpleActionInitialization class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
 
 #include "G4SolSimpleActionInitialization.hh"
 #include "G4SolSimplePrimaryGeneratorAction.hh"

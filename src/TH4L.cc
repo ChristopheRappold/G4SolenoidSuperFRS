@@ -1,3 +1,8 @@
+// ------------------------------------------------------------- 
+// Implementation of the TH4L class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
+
 #include "TH4L.hh"
 #include "G4ParticleTable.hh"
 #include "G4DecayTable.hh"

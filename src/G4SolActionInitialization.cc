@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: G4SolActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
-//
-/// \file G4SolActionInitialization.cc
-/// \brief Implementation of the G4SolActionInitialization class
+// ------------------------------------------------------- 
+// Implementation of the G4SolActionInitialization class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------
 
 #include "G4SolActionInitialization.hh"
 #include "HypHIPrimaryGeneratorAction.hh"

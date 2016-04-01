@@ -26,6 +26,11 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+//----------------------------------------------
+// G4SolenoidSimple main of the G4 simulation
+// Created by C.Rappold (c.rappold@gsi.de)
+//----------------------------------------------
+
 
 
 #include "KnuclDetectorConstruction.hh"

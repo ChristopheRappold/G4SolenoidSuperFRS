@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id$
-//
-/// \file HypernuclearPhysics.cc
-/// \brief Implementation of the HypernuclearPhysics class
+// ------------------------------------------------------------- 
+// Implementation of the HypernuclearPhysics class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
 
 #include "HypernuclearPhysics.hh"
 

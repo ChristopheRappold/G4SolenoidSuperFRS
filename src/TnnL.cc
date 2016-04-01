@@ -1,3 +1,8 @@
+// ------------------------------------------------------------- 
+// Implementation of the TnnL class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
+
 #include "TnnL.hh"
 #include "G4ParticleTable.hh"
 #include "G4DecayTable.hh"

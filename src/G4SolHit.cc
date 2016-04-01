@@ -1,3 +1,8 @@
+// ------------------------------------------------------- 
+// Implementation of the G4SolHit class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------
+
 #include "G4SolHit.hh"
 
 #include "G4VVisManager.hh"

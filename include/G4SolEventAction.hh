@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: G4SolEventAction.hh 75215 2013-10-29 16:07:06Z gcosmo $
-// 
-/// \file G4SolEventAction.hh
-/// \brief Definition of the G4SolEventAction class
+// ------------------------------------------------- 
+// Definition of the G4SolEventAction class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------
 
 #ifndef G4SolEventAction_h
 #define G4SolEventAction_h 1

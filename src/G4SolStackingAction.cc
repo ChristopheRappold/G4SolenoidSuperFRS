@@ -23,9 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// ------------------------------------------------------------- 
+// Implementation of the G4SolStackingAction class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
 
 #include "G4SolStackingAction.hh"
 

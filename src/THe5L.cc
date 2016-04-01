@@ -1,3 +1,8 @@
+// ------------------------------------------------------------- 
+// Implementation of the THe5L class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------------------
+
 #include "THe5L.hh"
 #include "G4ParticleTable.hh"
 #include "G4DecayTable.hh"

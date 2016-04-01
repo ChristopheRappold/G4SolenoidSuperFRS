@@ -1,3 +1,8 @@
+// ----------------------------------------------------- 
+// Definition of the TnnL class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
+
 #ifndef TnnL_h
 #define TnnL_h 1
 

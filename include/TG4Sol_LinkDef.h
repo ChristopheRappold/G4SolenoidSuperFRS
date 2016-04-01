@@ -1,3 +1,8 @@
+// ----------------------------------------------------------
+// Definition of the linkdef for ROOT dictionnary generation
+// Created by C.Rappold (c.rappold@gsi.de)
+//-----------------------------------------------------------
+
 #ifdef __CINT__
 
 #pragma link off all globals;

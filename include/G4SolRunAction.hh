@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: G4SolRunAction.hh 74265 2013-10-02 14:41:20Z gcosmo $
-// 
-/// \file G4SolRunAction.hh
-/// \brief Definition of the G4SolRunAction class
+// ------------------------------------------------- 
+// Definition of the G4SolRunAction class
+// Created by C.Rappold (c.rappold@gsi.de)
+//--------------------------------------------------
 
 #ifndef G4SolRunAction_h
 #define G4SolRunAction_h 1

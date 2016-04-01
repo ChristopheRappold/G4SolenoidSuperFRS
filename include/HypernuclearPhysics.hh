@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id$
-// 
-/// \file HypernuclearPhysics.hh
-/// \brief Definition of the HypernuclearPhysics class
+// ----------------------------------------------------- 
+// Definition of the HypernuclearPhysics class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
 
 #ifndef HypernuclearPhysics_h
 #define HypernuclearPhysics_h 1

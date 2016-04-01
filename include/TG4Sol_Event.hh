@@ -1,3 +1,8 @@
+// ----------------------------------------------------- 
+// Definition of the TG4Sol_Event class
+// Created by C.Rappold (c.rappold@gsi.de)
+//------------------------------------------------------
+
 #ifndef TG4Sol_Event_header
 #define TG4Sol_Event_header 1
 
