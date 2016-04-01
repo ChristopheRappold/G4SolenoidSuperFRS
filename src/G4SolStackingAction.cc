@@ -141,11 +141,11 @@ void G4SolStackingAction::NewStage()
   // G4cout << "Number of Cerenkov photons produced in this event : "
   //        << fCerenkovCounter << G4endl;
 
-  G4cout<<" Decay in the event :"<<G4endl;
-  for(const auto& elem : mother_daugthersInfo)
-    {
-      elem.second.Print();
-    }
+  // G4cout<<" Decay in the event :"<<G4endl;
+  // for(const auto& elem : mother_daugthersInfo)
+  //   {
+  //     elem.second.Print();
+  //   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

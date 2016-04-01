@@ -147,7 +147,7 @@ void G4SolRunData::FillPerEvent(const G4Event* event)
 		      //G4cout<<" Particle#"<<iParticle<<" "<<PrimParticle->GetParticleDefinition()->GetParticleName()
 		      //<<" "<<PrimParticle->GetTotalEnergy()<<G4endl;
 		      //G4cout<<"Daugther"<<PrimParticle->GetDaughter()<<G4endl;//->Print();
-		      PrimParticle->GetUserInformation();
+		      //PrimParticle->GetUserInformation();
 		      fEvent->BeamNames.push_back(PrimParticle->GetParticleDefinition()->GetParticleName());
 		      fEvent->BeamMasses.push_back(PrimParticle->GetMass()/GeV);
 		      fEvent->BeamCharges.push_back(PrimParticle->GetCharge());
