@@ -2,9 +2,12 @@ image : cern/cc7-base:latest
   
 before_script:
   - uname -a
-  - g++ --version
+  - whereis g++
   - whereis cmake
   - whereis boost 
+  - yum -y install centos-release-scl
+  - yum -y install devtoolset-3
+  - yum -y install python27
   - wget https://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.tar.gz
   - tar xf boost_1_54_0.tar.gz
   - rm boost_1_54_0.tar.gz
