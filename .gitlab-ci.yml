@@ -2,11 +2,12 @@ image : wtakase/geant4:10.1-centos7
   
 before_script:
   - uname -a
-  - whereis g++
-  - whereis cmake
+  - echo $CC $CXX 
+  - cmake --version
   - whereis boost 
   - curl -o /opt/boost_1_54_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.tar.gz
-  - tar zxf /opt/boost_1_54_0.tar.gz
+  - cd /opt/
+  - tar xf boost_1_54_0.tar.gz
   - rm /opt/boost_1_54_0.tar.gz
   - cd /opt/root
   - source bin/thisroot.sh
