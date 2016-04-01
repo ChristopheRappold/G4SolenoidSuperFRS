@@ -1,0 +1,14 @@
+Target_Size 2 cm
+CDS_RelativePosTarget -1.2
+Field_CDS_Bz 0.7 tesla
+chambersize 300 mm
+particle lambda
+momentum 1000 MeV
+SimpleGeo 0
+#Physicslist G4_QGSP_FTFP_BERT
+Physicslist G4Default_FTFP_BERT
+HypHI_InnerTracker_Spec 1
+HypHI_InnerTracker_PosZ 30. cm
+HypHI_InnerTracker_Nb 4
+HypHI_InnerTracker_Spacing 10. cm
+#ReductionFactor 0.8

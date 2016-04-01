@@ -91,6 +91,7 @@ set(G4SOL_SCRIPTS
   init_vis.mac 
   run1.mac 
   run2.mac 
+  runTemplate.mac
   vis.mac
   )
 
