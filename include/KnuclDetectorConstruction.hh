@@ -21,6 +21,7 @@
 
 #include "G4Color.hh"
 #include "G4SolConfig.hh"
+#include "G4VPhysicalVolume.hh"
 
 //class HypHIFrsMagneticField;
 //class THypHi_Par;
@@ -104,10 +105,16 @@ public:
 
   bool DoModHypHI;
   int DoOnlySense;
+
+  bool DoForRoot;
   
   G4VSolid*        experimentalHall_box;
   G4LogicalVolume* experimentalHall_log;
-  G4PVPlacement*   experimentalHall_phys;
+  //G4PVPlacement*   experimentalHall_phys;
+  G4VPhysicalVolume*   experimentalHall_phys;
+
+  G4LogicalVolume* experimentalHall_logOutRoot;
+  G4VPhysicalVolume*   experimentalHall_physOutRoot;
 
   G4VSolid*        Kurama_box;
   G4LogicalVolume* Kurama_log;
@@ -124,9 +131,12 @@ public:
   G4LogicalVolume* CDS_log;
   G4PVPlacement*   CDS_phys;
 
+  G4LogicalVolume* CDS_logOutRoot;
+  G4PVPlacement*   CDS_physOutRoot;
+
   G4LogicalVolume* CDS_endcap_log;
 
-  G4VSolid*         HypHI_Target;
+  G4VSolid*        HypHI_Target;
   G4LogicalVolume* HypHI_Target_log;
   G4PVPlacement*   HypHI_Target_phys;
   
