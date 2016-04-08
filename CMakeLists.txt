@@ -8,17 +8,32 @@ set(HAVE_ISYSTEM true)
 
 set (CMAKE_CXX_STANDARD 14)
 
+SET(VGM_INSTALL $ENV{VGM_INSTALL})
 SET(Geant4_DIR $ENV{GEANT4_DIR})
 SET(ROOT_DIR $ENV{ROOTSYS})
 
+if(${VGM_INSTALL} MATCHES 4\\.2)
+  set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.2.0)
+  message(STATUS "VGM dir 4.2:" ${VGM_DIR})
+elseif(${VGM_INSTALL} MATCHES 4\\.3)
+  set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.3.0)
+  message(STATUS "VGM dir 4.3:" ${VGM_DIR})
+else()
+  message(STATUS "no match for VGM version" ${VGM_INSTALL})
+endif()
+
 set(CMAKE_MODULE_PATH 
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+  ${VGM_DIR}/Modules
   ${CMAKE_MODULE_PATH}) 
 
 
 find_package(ROOT REQUIRED)
 message(STATUS "ROOT Config :" ${ROOT_USE_FILE})
 message(STATUS "PATH: " $ENV{PATH})
+
+find_package(VGM REQUIRED)
+
 
 find_package(Boost 1.54.0 REQUIRED)
 if(Boost_FOUND)
@@ -51,6 +66,7 @@ include(${Geant4_USE_FILE})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include 
                     ${Geant4_INCLUDE_DIR}
                     ${ROOT_INCLUDE_DIRS}
+		    ${VGM_INCLUDE_DIRS}
 		    )
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
@@ -62,7 +78,7 @@ set(library_name vmc_${PROJECT_NAME})
 
 
 add_executable(G4SolenoidSimple G4SolenoidSimple.cc ${sources} ${headers})
-target_link_libraries(G4SolenoidSimple ${library_name} ${ROOT_LIBRARIES} ${Geant4_LIBRARIES})
+target_link_libraries(G4SolenoidSimple ${library_name} ${VGM_LIBRARIES} ${ROOT_LIBRARIES} ${Geant4_LIBRARIES})
 
 ROOT_GENERATE_DICTIONARY(
   ${CMAKE_SHARED_LIBRARY_PREFIX}${library_name}
