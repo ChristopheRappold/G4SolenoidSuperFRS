@@ -8,9 +8,6 @@
 // * LICENSE and available at  http://cern.ch/geant4/license .  These *
 // * include a list of copyright holders.                             *
 // *                                                                  *
-
-
-
 // * Neither the authors of this software system, nor their employing *
 // * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
@@ -55,6 +52,8 @@
 #include "G4StepLimiterPhysics.hh"
 
 #include "G4SolConfig.hh"
+
+#include "G4SolConvertGeo.hh"
 
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
@@ -198,6 +197,18 @@ int main(int argc,char** argv)
       ui->SessionStart();
       delete ui;
 #endif
+    }
+  boost::optional<std::string> NameConvert = config.Get<boost::optional<std::string> >("ConvertRoot");
+  if(NameConvert)
+    {
+      auto* logi = Geometry->experimentalHall_physOutRoot->GetLogicalVolume();
+      if(logi != nullptr)
+	{
+	  std::cout<<logi->GetName()<<std::endl;
+	}
+      std::string nameConvertRoot(*NameConvert);
+      G4SolConvertGeo convertor(Geometry->experimentalHall_physOutRoot);
+      convertor.Convert(nameConvertRoot);
     }
   
   // Job termination
