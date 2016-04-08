@@ -12,3 +12,4 @@ HypHI_InnerTracker_PosZ 30. cm
 HypHI_InnerTracker_Nb 4
 HypHI_InnerTracker_Spacing 10. cm
 #ReductionFactor 0.8
+#ConvertRoot GeoSolenoid.root
