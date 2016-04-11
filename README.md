@@ -5,7 +5,9 @@ Needed :
 * Geant4 (last version)
 * ROOT6 (last version) or ROOT5 (> 5.34/34)
 * boost (> 1.54.0)
-* VGM (> 4.2)
+Optional :
+* VGM (> 4.2) 
+
 Build : (classic cmake build)
 
 $ mkdir build

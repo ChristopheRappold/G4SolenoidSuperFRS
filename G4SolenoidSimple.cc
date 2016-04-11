@@ -53,7 +53,9 @@
 
 #include "G4SolConfig.hh"
 
+#ifdef G4SOLCONVERT
 #include "G4SolConvertGeo.hh"
+#endif
 
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
@@ -198,9 +200,14 @@ int main(int argc,char** argv)
       delete ui;
 #endif
     }
+
+#ifdef G4SOLCONVERT
+  std::cout<<" Doing G4->ROOT convertion ? ";
+  
   boost::optional<std::string> NameConvert = config.Get<boost::optional<std::string> >("ConvertRoot");
   if(NameConvert)
     {
+      std::cout<<" yes"<<std::endl;
       auto* logi = Geometry->experimentalHall_physOutRoot->GetLogicalVolume();
       if(logi != nullptr)
 	{
@@ -210,7 +217,9 @@ int main(int argc,char** argv)
       G4SolConvertGeo convertor(Geometry->experimentalHall_physOutRoot);
       convertor.Convert(nameConvertRoot);
     }
-  
+  else
+    std::cout<<" no"<<std::endl;
+#endif
   // Job termination
   // Free the store: user actions, physics_list and detector_description are
   // owned and deleted by the run manager, so they should not be deleted 

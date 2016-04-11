@@ -32,8 +32,12 @@ find_package(ROOT REQUIRED)
 message(STATUS "ROOT Config :" ${ROOT_USE_FILE})
 message(STATUS "PATH: " $ENV{PATH})
 
-find_package(VGM REQUIRED)
-
+find_package(VGM QUIET)
+if (VGM_FOUND)
+  message(STATUS "VGM :" ${VGM_INCLUDE_DIRS})
+  add_definitions(-DG4SOLCONVERT)
+  include_directories(${VGM_INCLUDE_DIRS})
+endif()
 
 find_package(Boost 1.54.0 REQUIRED)
 if(Boost_FOUND)
@@ -66,7 +70,7 @@ include(${Geant4_USE_FILE})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include 
                     ${Geant4_INCLUDE_DIR}
                     ${ROOT_INCLUDE_DIRS}
-		    ${VGM_INCLUDE_DIRS}
+#		    ${VGM_INCLUDE_DIRS}
 		    )
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)

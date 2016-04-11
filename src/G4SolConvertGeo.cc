@@ -5,8 +5,10 @@
 
 #include "G4SolConvertGeo.hh"
 
+#ifdef G4SOLCONVERT
 #include "Geant4GM/volumes/Factory.h" 
 #include "RootGM/volumes/Factory.h" 
+#endif
 #include "TGeoManager.h"
 #include "TFile.h"
 #include "TROOT.h"                                                        
@@ -20,7 +22,7 @@ G4SolConvertGeo::~G4SolConvertGeo()
 int G4SolConvertGeo::Convert(const std::string& nameOut)
 {
   // Import Geant4 geometry to VGM                       
-  
+#ifdef G4SOLCONVERT  
   Geant4GM::Factory g4Factory;
   g4Factory.Import(physiWorld);                          
   // where physiWorld is of G4VPhysicalVolume* type 
@@ -83,7 +85,7 @@ int G4SolConvertGeo::Convert(const std::string& nameOut)
   f_outGeo->cd();
   gGeoManager->Write();
   f_outGeo->Close();
-
+#endif
   //rtFactory.World();                              
   // returns Root top node, of TGeoNode* type  
   return 1;
