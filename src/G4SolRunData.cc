@@ -41,6 +41,8 @@
 
 #include "TG4Sol_Hit.hh"
 
+#include <map>
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4SolRunData::G4SolRunData(const G4String& name) : G4Run(),namefile(name),fileOut(nullptr),Tree(nullptr),LookCheckFile(false),LookCheckTree(false),CloseDone(false)
@@ -72,7 +74,7 @@ void G4SolRunData::Close()
     }
 }
 
-void G4SolRunData::InitTree(const std::vector<G4String>& nameDet)
+void G4SolRunData::InitTree(const std::vector<G4String>& nameDet, const G4SolConfig& config)
 {
   if(LookCheckTree==false)
     {
@@ -81,8 +83,17 @@ void G4SolRunData::InitTree(const std::vector<G4String>& nameDet)
 	  fileOut = new TFile(namefile,"RECREATE");
 	  LookCheckFile = true;
 	}
+
+      std::map<std::string, double> parameterToFile;
+      parameterToFile.insert(std::make_pair("Target_Size",config.Get<double>("Target_Size")/cm));
+      parameterToFile.insert(std::make_pair("Target_PosX",config.Get<double>("Target_PosX")/cm));
+      parameterToFile.insert(std::make_pair("Target_PosY",config.Get<double>("Target_PosY")/cm));
+      parameterToFile.insert(std::make_pair("Target_PosZ",config.Get<double>("Target_PosZ")/cm));
+      parameterToFile.insert(std::make_pair("Field_CDS_Bz",config.Get<double>("Field_CDS_Bz")/tesla));
       
       fileOut->cd();
+      fileOut->WriteObjectAny(&nameDet, "std::vector<std::string>", "nameDet");
+      fileOut->WriteObjectAny(&parameterToFile, "std::map<std::string,double>", "simParameters");
       Tree = new TTree("G4Tree","Geant4 Tree");
       
       fEvent = new TG4Sol_Event; 
@@ -252,20 +263,21 @@ void G4SolRunData::FillPerEvent(const G4Event* event)
   	      G4SolHit* TempHit = (*TempCol)[ihit];
 	      TG4Sol_Hit *RootHit = dynamic_cast<TG4Sol_Hit*>(TempCArray->ConstructedAt(TempCArray->GetEntries()));
   	    
-	      RootHit->TrackID = TempHit->TrackID; 
-	      RootHit->HitPosX = TempHit->HitPosX; 
-	      RootHit->HitPosY = TempHit->HitPosY; 
-	      RootHit->HitPosZ = TempHit->HitPosZ; 
-	      RootHit->ExitPosX = TempHit->ExitPosX; 
-	      RootHit->ExitPosY = TempHit->ExitPosY; 
-	      RootHit->ExitPosZ = TempHit->ExitPosZ;
-	      RootHit->MomX = TempHit->MomX;
-	      RootHit->MomY = TempHit->MomY; 
-	      RootHit->MomZ = TempHit->MomZ;
-	      RootHit->Energy = TempHit->Energy;
-	      RootHit->Time = TempHit->Time; 
+	      RootHit->TrackID = TempHit->TrackID;
+	      RootHit->LayerID = TempHit->LayerID;
+	      RootHit->HitPosX = TempHit->HitPosX/cm; 
+	      RootHit->HitPosY = TempHit->HitPosY/cm; 
+	      RootHit->HitPosZ = TempHit->HitPosZ/cm; 
+	      RootHit->ExitPosX = TempHit->ExitPosX/cm; 
+	      RootHit->ExitPosY = TempHit->ExitPosY/cm; 
+	      RootHit->ExitPosZ = TempHit->ExitPosZ/cm;
+	      RootHit->MomX = TempHit->MomX/GeV;
+	      RootHit->MomY = TempHit->MomY/GeV; 
+	      RootHit->MomZ = TempHit->MomZ/GeV;
+	      RootHit->Energy = TempHit->Energy/MeV;
+	      RootHit->Time = TempHit->Time/ns; 
 	      RootHit->Pname = TempHit->Pname;
-	      RootHit->Mass = TempHit->Mass;
+	      RootHit->Mass = TempHit->Mass/GeV;
 	    }
   	}
       else

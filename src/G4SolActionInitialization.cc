@@ -57,7 +57,7 @@ void G4SolActionInitialization::BuildForMaster() const
   std::vector<G4String> nameD = fGeoController->GetNameDetectors();
   std::cout<<"!> G4SolActionInitialization BuildForMaster:"<<nameD.size()<<" "<<fGeoController->GetNameDetectors().size()<<std::endl;
   
-  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors()));
+  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors(),Conf));
 
 }
 
@@ -74,7 +74,7 @@ void G4SolActionInitialization::Build() const
   else
     SetUserAction(newPrimGen.release());
     
-  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors()));
+  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors(),Conf));
   
   G4SolEventAction* eventAction = new G4SolEventAction( fGeoController->GetNameDetectors());
   SetUserAction(eventAction);

@@ -39,6 +39,7 @@
 #include "TTree.h"
 #include "TClonesArray.h"
 
+#include "G4SolConfig.hh"
 #include "TG4Sol_Event.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -71,7 +72,7 @@ public:
 
   void Reset();
   void Close();
-  void InitTree(const std::vector<G4String>& nameDet);
+  void InitTree(const std::vector<G4String>& nameDet, const G4SolConfig& config);
 
 private:
 

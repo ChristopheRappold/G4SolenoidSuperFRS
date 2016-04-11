@@ -41,53 +41,15 @@
 //#include "G4SolSensetiveD.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolRunAction::G4SolRunAction(const G4String& name, const std::vector<G4String>& nameSD_Det) : G4UserRunAction(),OutputFileName(name),NameDetectorsSD(nameSD_Det)
+G4SolRunAction::G4SolRunAction(const G4String& name, const std::vector<G4String>& nameSD_Det, const G4SolConfig& config) : G4UserRunAction(),OutputFileName(name),NameDetectorsSD(nameSD_Det),Conf(config)
 { 
   // set printing event number per each event
-  G4RunManager::GetRunManager()->SetPrintProgress(1);     
+  //G4RunManager::GetRunManager()->SetPrintProgress(0);
+
   std::cout<<"!> G4SolRunAction Ctr :"<<OutputFileName<<" "<<NameDetectorsSD.size()<<" "<<nameSD_Det.size()<<std::endl;
-  for(auto& nameD : NameDetectorsSD)
-    std::cout<<"-> "<<nameD<<std::endl;
+  // for(auto& nameD : NameDetectorsSD)
+  //   std::cout<<"-> "<<nameD<<std::endl;
   
-  // Create analysis manager
-  // The choice of analysis technology is done via selectin of a namespace
-  // in G4SolAnalysis.hh
-  
-  // G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  // G4cout << "Using " << analysisManager->GetType() << G4endl;
-
-  // // Create directories 
-  // //analysisManager->SetHistoDirectoryName("histograms");
-  // //analysisManager->SetNtupleDirectoryName("ntuple");
-  // analysisManager->SetVerboseLevel(1);
-  // analysisManager->SetFirstHistoId(1);
-
-  // // Book histograms, ntuple
-  // //
-  
-  // // Creating histograms
-  // analysisManager->CreateH1("1","Edep in absorber", 100, 0., 800*MeV);
-  // analysisManager->CreateH1("2","Edep in gap", 100, 0., 100*MeV);
-  // analysisManager->CreateH1("3","trackL in absorber", 100, 0., 1*m);
-  // analysisManager->CreateH1("4","trackL in gap", 100, 0., 50*cm);
-
-  // // Creating ntuple
-  // //
-  // analysisManager->CreateNtuple("G4Sol", "Edep and TrackL");
-
-  // analysisManager->CreateNtupleIColumn("EventID");
-  // analysisManager->CreateNtupleIColumn("LayerID");
-  // analysisManager->CreateNtupleIColumn("HitID");
-  // analysisManager->CreateNtupleIColumn("TrackID");
-  // analysisManager->CreateNtupleDColumn("posX");
-  // analysisManager->CreateNtupleDColumn("posY");
-  // analysisManager->CreateNtupleDColumn("posZ");
-  // analysisManager->CreateNtupleDColumn("momX");
-  // analysisManager->CreateNtupleDColumn("momY");
-  // analysisManager->CreateNtupleDColumn("momZ");
-  // analysisManager->CreateNtupleDColumn("mass");
-
-  // analysisManager->FinishNtuple();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -129,7 +91,7 @@ void G4SolRunAction::BeginOfRunAction(const G4Run*)
   G4SolRunData* hyprun = dynamic_cast<G4SolRunData*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   
   //const G4SolRunData* hyprun = dynamic_cast<const G4SolRunData*>(run);
-  hyprun->InitTree(NameDetectorsSD);
+  hyprun->InitTree(NameDetectorsSD,Conf);
 
   //inform the runManager to save random number seed
   //G4RunManager::GetRunManager()->SetRandomNumberStore(true);

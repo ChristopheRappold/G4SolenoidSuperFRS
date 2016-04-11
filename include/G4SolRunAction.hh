@@ -32,6 +32,7 @@
 #define G4SolRunAction_h 1
 
 #include "G4UserRunAction.hh"
+#include "G4SolConfig.hh"
 #include "globals.hh"
 
 #include "TFile.h"
@@ -61,7 +62,7 @@ class G4Run;
 class G4SolRunAction : public G4UserRunAction
 {
 public:
-  G4SolRunAction(const G4String& name, const std::vector<G4String>& nameD);
+  G4SolRunAction(const G4String& name, const std::vector<G4String>& nameD, const G4SolConfig& config);
   virtual ~G4SolRunAction();
   
   virtual void BeginOfRunAction(const G4Run*);
@@ -75,6 +76,7 @@ public:
 private :
   const G4String OutputFileName;
   const std::vector<G4String>& NameDetectorsSD;
+  const G4SolConfig& Conf;
 
   // TFile* OutputFile;
   // TTree* OutTree;
