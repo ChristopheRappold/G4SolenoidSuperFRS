@@ -18,7 +18,7 @@ class TG4Sol_Hit : public TObject
   virtual void Print(const Option_t* = "") const;
   
   Int_t TrackID;  
-
+  Int_t LayerID;
   Double32_t HitPosX;
   Double32_t HitPosY;
   Double32_t HitPosZ;

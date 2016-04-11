@@ -6,7 +6,7 @@
 #include "TG4Sol_Hit.hh"
 #include <iostream>
 
-TG4Sol_Hit::TG4Sol_Hit():TrackID(-1), 
+TG4Sol_Hit::TG4Sol_Hit():TrackID(-1), LayerID(-1),
 			 HitPosX(-9999.) , HitPosY(-9999.) , HitPosZ(-9999.) , 
 			 ExitPosX(-9999.), ExitPosY(-9999.), ExitPosZ(-9999.),
 			 MomX(-9999.)    , MomY(-9999.)    , MomZ(-9999.)    ,Mass(-9999.),
@@ -19,7 +19,7 @@ TG4Sol_Hit::~TG4Sol_Hit() {}
 
 void TG4Sol_Hit::Print(const Option_t*) const
 {
-  std::cout<<"The TTG4Sol_Hit #" <<TrackID<<std::endl;
+  std::cout<<"The TTG4Sol_Hit #" <<TrackID<<" Layer:"<<LayerID<<std::endl;
   std::cout<<"Particle name:"<<Pname<<" Edep:"<<Energy<<" Time:"<<Time<<std::endl;
   std::cout<<"Position :"<<HitPosX<<" "<<HitPosY<<" "<<HitPosZ<<std::endl;
   std::cout<<"Exit Position :"<<ExitPosX<<" "<<ExitPosY<<" "<<ExitPosZ<<std::endl;
