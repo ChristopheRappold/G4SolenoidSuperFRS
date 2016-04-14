@@ -111,7 +111,7 @@ KnuclDetectorConstruction::KnuclDetectorConstruction(const G4SolConfig& conf)//K
   DoCDH = true;
   DoTargetChamber = false;
   DoAC = false;
-  
+  DoEndFMF2 = true;
   DoModHypHI = true;
 
   DoOnlySense = 0;
@@ -295,7 +295,10 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   if(DoAC == true)
     ConstructAC(cds_z,CDS_AC_space, AC_STC_space, STC_BLC_space, BLC_BLC_space);	
 
+  if(DoEndFMF2 == true)
+    ConstructEndFMF2();
 
+  
   G4cout << "KnuclDetectorConstruction completed" << G4endl;
 
 
@@ -2958,7 +2961,37 @@ void KnuclDetectorConstruction::ConstructAC(G4double cds_z, G4double CDS_AC_spac
 
 }
 
+void KnuclDetectorConstruction::ConstructEndFMF2()
+{
+  //***********//
+  //*** TOF ***//
+  //***********//
+  G4NistManager* materialMgr = G4NistManager::Instance();
+ 
+  G4Material* Scinti = materialMgr->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");//G4_POLYETHYLENE");//"Plastic");
 
+  G4VSolid* EndFMF2_box = new G4Box("EndFMF2_box",25.*cm,25.*cm,1.*mm);
+  G4LogicalVolume* EndFMF2_log = new G4LogicalVolume(EndFMF2_box, Scinti, "FMF2_log", 0, 0, 0);
+
+  NameDetectorsSD.push_back(EndFMF2_log->GetName());
+    
+  //G4PVPlacement* KDV_phys  =
+  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0., 0., 2.*m), EndFMF2_log, "FMF2_phys", experimentalHall_log,false,0));  
+  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0., 0., 2.*m+1.*cm), EndFMF2_log, "FMF2_phys1", experimentalHall_log,false,1));
+  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0., 0., 2.*m+2.*cm), EndFMF2_log, "FMF2_phys2", experimentalHall_log,false,2));
+
+  if(DoForRoot)
+    {
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0., 0., 2.*m), EndFMF2_log, "FMF2_physR", experimentalHall_logOutRoot,false,0));
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0., 0., 2.*m+1.*cm), EndFMF2_log, "FMF2_physR1", experimentalHall_logOutRoot,false,1));
+      AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0., 0., 2.*m+2.*cm), EndFMF2_log, "FMF2_physR2", experimentalHall_logOutRoot,false,2));
+    }
+  //--- Visualization ---//
+  G4VisAttributes *FMF2_att = new G4VisAttributes(Red);
+  FMF2_att->SetForceWireframe(false);
+  //KDV_att->SetForceSolid(true);
+  EndFMF2_log->SetVisAttributes(FMF2_att);
+}
 
 
 

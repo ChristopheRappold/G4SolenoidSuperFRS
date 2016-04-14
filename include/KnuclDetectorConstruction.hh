@@ -79,6 +79,7 @@ private:
   void ConstructKaonVeto(G4double cdsPos_x, G4double cdsPos_y, G4double tarCham_rmax);
   void ConstructAC(G4double cds_z, G4double CDS_AC_space, G4double AC_STC_space, G4double STC_BLC_space, G4double BLC_BLC_space);
   void ConstructInnerTracker(G4double cds_z, G4double RelativePos, G4double TargetPos_x, G4double TargetPos_y, G4double TargetPos_z);
+  void ConstructEndFMF2();
   G4LogicalVolume* FindVolume(const G4String& name);
 
   void DefineCommands();
@@ -102,7 +103,8 @@ public:
   bool DoCDH;
   bool DoTargetChamber;
   bool DoAC;
-
+  bool DoEndFMF2;
+  
   bool DoModHypHI;
   int DoOnlySense;
 
