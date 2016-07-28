@@ -81,11 +81,13 @@ private:
   G4String nameParticle;
   G4ParticleDefinition* ConstParticle;
   G4double fMomentum;
+  G4double fKineticE;
   G4double fSigmaMomentum;
   G4double fSigmaAngle;
   G4double fDirX;
   G4double fDirY;
   G4double fDirZ;
+  G4ThreeVector fDir;
   G4double fDirXSigma;
   G4double fDirYSigma;
   G4double fDirZSigma;

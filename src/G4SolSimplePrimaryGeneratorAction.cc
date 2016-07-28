@@ -54,12 +54,32 @@ G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4Sol
 
   nameParticle = Par.Get<std::string>("Particle");
     
+  if(Par.IsAvailable("Beam_KineticEnergy"))
+    {
+      fKineticE = Par.Get<double>("Beam_KineticEnergy");
+      G4cout<<"!> Set Primary Generator with beam kinetic energy !\n";
+    }
+  else
+    fKineticE = -1;
+
+  if(Par.IsAvailable("Beam_PosRandom"))
+    fRandomizePrimary[0] = Par.Get<int>("Beam_PosRandom") == 1 ? true : false;
+
+  if(Par.IsAvailable("Beam_TotalMomRandom"))
+    fRandomizePrimary[1] = Par.Get<int>("Beam_TotalMomRandom") == 1 ? true : false;
+
+  if(Par.IsAvailable("Beam_DirMomRandom"))
+    fRandomizePrimary[2] = Par.Get<int>("Beam_DirMomRandom") == 1 ? true : false;
+
+  
   fMomentum = Par.Get<double>("Beam_Momentum");
   fSigmaMomentum = Par.Get<double>("Beam_MomentumSigma");
   //fSigmaAngle;
   fDirX = Par.Get<double>("Beam_MomentumX");
   fDirY = Par.Get<double>("Beam_MomentumY");
   fDirZ = Par.Get<double>("Beam_MomentumZ");
+
+  fDir.set(fDirX,fDirY,fDirZ);
 
   fDirXSigma = Par.Get<double>("Beam_MomentumXsigma");
   fDirYSigma = Par.Get<double>("Beam_MomentumYsigma");
@@ -135,11 +155,6 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       pos_y += ofpos_y;
       pos_z += ofpos_z;
     }
-
-  mom = fMomentum;//Par.Get_Beam_KineticEnergy();
-
-  if(fRandomizePrimary[1])
-    mom += std::sqrt(-std::log(G4UniformRand()))*fSigmaMomentum; 
   
   fParticleGun->SetParticleDefinition(ConstParticle);
 
@@ -150,7 +165,7 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       double zdir = fDirZ;//Par.Get_Beam_MomentumDirectionZ();
 	  
       xdir +=fDirXSigma*std::sqrt(-std::log(G4UniformRand()));
-      ydir +=fDirZSigma*std::sqrt(-std::log(G4UniformRand()));
+      ydir +=fDirYSigma*std::sqrt(-std::log(G4UniformRand()));
       zdir = sqrt(1.0-ydir*ydir-xdir*xdir);
       //std::cout<<xdir<<" "<<ydir<<" "<<zdir<<std::endl;
 
@@ -162,13 +177,26 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     }
   else
     {
-      fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-	  
+      fParticleGun->SetParticleMomentumDirection(fDir);
+    }
+  G4double Ekin = 0;
+  if(fKineticE<0)
+    {
+      mom = fMomentum;//Par.Get_Beam_KineticEnergy();
+      if(fRandomizePrimary[1])
+	mom += std::sqrt(-std::log(G4UniformRand()))*fSigmaMomentum; 
+      
+      G4double pp = mom;
+      G4double mass = ConstParticle->GetPDGMass();
+      Ekin = std::sqrt(pp*pp+mass*mass)-mass;
+    }
+  else
+    {
+      Ekin = fKineticE;
+      if(fRandomizePrimary[1])
+       	Ekin += std::sqrt(-std::log(G4UniformRand()))*fSigmaMomentum;
     }
 
-  G4double pp = mom;
-  G4double mass = ConstParticle->GetPDGMass();
-  G4double Ekin = std::sqrt(pp*pp+mass*mass)-mass;
   fParticleGun->SetParticleEnergy(Ekin);
 
   fParticleGun->SetParticlePosition(G4ThreeVector(pos_x,pos_y,pos_z));
