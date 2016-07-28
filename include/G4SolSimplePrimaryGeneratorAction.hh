@@ -34,6 +34,7 @@
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
 #include "G4SolConfig.hh"
+#include "G4ThreeVector.hh"
 
 class G4ParticleGun;
 class G4GenericMessenger;
