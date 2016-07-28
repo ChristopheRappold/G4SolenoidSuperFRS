@@ -69,7 +69,9 @@ G4SolStackingAction::ClassifyNewTrack(const G4Track * aTrack)
 {
   G4ParticleDefinition* def = aTrack->GetDefinition();
   if( def == G4Lambda::Definition() || def == TH3L::Definition() || def == TH4L::Definition() || def == THe4L::Definition() || 
-      def == THe5L::Definition() || def == TnnL::Definition() || def == TTritonStar::Definition())
+      def == THe5L::Definition() || def == TnnL::Definition() || def == TTritonStar::Definition() ||
+      def == G4SigmaMinus::Definition() || def == G4SigmaPlus::Definition() ||
+      def == G4XiMinus::Definition() || def == G4XiZero::Definition())
     { 
       // G4cout<<" Stacking ClassifyNewTrack:"<<G4endl;
       // G4cout<<"Find Lambda :"<<aTrack->GetTrackID()<<G4endl;
