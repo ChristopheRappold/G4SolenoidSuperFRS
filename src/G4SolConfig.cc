@@ -215,12 +215,36 @@ void G4SolConfig::SetDefault()
   tree.put("Target_PosZ.unit","cm");
   tree.put("Target_PosZ.unit.cm",1.*cm);
 
+  tree.put("Wasa_ShiftZ",1);
+  tree.put("Wasa_ShiftZ.unit","m");
+  tree.put("Wasa_ShiftZ.unit.m",1.*m);
+
+  tree.put("Wasa_Side",0);
+
+  tree.put("HypHI_Si_minR",1);
+  tree.put("HypHI_Si_minR.unit","cm");
+  tree.put("HypHI_Si_minR.unit.cm",1.*cm);
+
+  tree.put("HypHI_Si_maxR",3);
+  tree.put("HypHI_Si_maxR.unit","cm");
+  tree.put("HypHI_Si_maxR.unit.cm",1.*cm);
+
+  tree.put("HypHI_EndCap_posZ",40);
+  tree.put("HypHI_EndCap_posZ.unit","cm");
+  tree.put("HypHI_EndCap_posZ.unit.cm",1.*cm);
+
+  tree.put("HypHI_EndCap_maxR",30);
+  tree.put("HypHI_EndCap_maxR.unit","cm");
+  tree.put("HypHI_EndCap_maxR.unit.cm",1.*cm);
+
+  
   tree.put("CDS_RelativePosTarget",-0.7);
 
   tree.put("Output_Namefile","Default_Output.root");
 
   tree.put("SimpleGeo",1);
-
+  tree.put("Geo","CDS");
+  
   tree.put("Physicslist","G4Default_FTFP_BERT");
 
   tree.put("HyperNuclei_H4L_br_mode1",0.); 
@@ -279,5 +303,5 @@ void G4SolConfig::SetDefault()
   tree.put("TargetRegionCut",10.);
   tree.put("TargetRegionCut.unit","mm");
   tree.put("TargetRegionCut.unit.mm",1.*mm);
-  
+
 }
