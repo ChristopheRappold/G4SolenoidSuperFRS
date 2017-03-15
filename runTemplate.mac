@@ -9,4 +9,7 @@
 # Initialize kernel
 /run/initialize
 #
+#/run/verbose 1
+#/run/printProgress 0
+
 /run/beamOn 3
