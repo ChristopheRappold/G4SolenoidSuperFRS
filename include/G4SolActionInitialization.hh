@@ -35,24 +35,30 @@
 
 #include "globals.hh"
 #include "G4VUserActionInitialization.hh"
-#include "KnuclDetectorConstruction.hh"
+//#include "KnuclDetectorConstruction.hh"
+//#include "G4SolVDetectorConstruction.hh"
+#include "G4SolGeometryController.hh"
 #include "G4SolConfig.hh"
 
 
-class KnuclDetectorConstruction;
+//class KnuclDetectorConstruction;
+//class G4SolVDetectorConstruction;
+class G4SolGeometryController;
 class THypHi_Par;
 
 class G4SolActionInitialization : public G4VUserActionInitialization
 {
 public:
-  G4SolActionInitialization(KnuclDetectorConstruction*, const G4SolConfig&);
+  G4SolActionInitialization(G4SolGeometryController*, const G4SolConfig&);
   virtual ~G4SolActionInitialization();
   
   virtual void BuildForMaster() const;
   virtual void Build() const;
  
 private:
-  KnuclDetectorConstruction* fGeoController;
+  //KnuclDetectorConstruction* fGeoController;
+  //G4SolVDetectorConstruction* fGeoController;
+  G4SolGeometryController* fGeoController;
   const G4SolConfig& Conf;
   std::string OutputFile;
 

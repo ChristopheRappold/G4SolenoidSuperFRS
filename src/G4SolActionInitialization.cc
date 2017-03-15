@@ -34,12 +34,11 @@
 #include "G4SolRunAction.hh"
 #include "G4SolEventAction.hh"
 #include "G4SolStackingAction.hh"
-#include "KnuclDetectorConstruction.hh"
 
 #include <memory>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolActionInitialization::G4SolActionInitialization (KnuclDetectorConstruction* geoControl, const G4SolConfig& ConfFile) : G4VUserActionInitialization(),fGeoController(geoControl),Conf(ConfFile)
+G4SolActionInitialization::G4SolActionInitialization (G4SolGeometryController* geoControl, const G4SolConfig& ConfFile) : G4VUserActionInitialization(),fGeoController(geoControl),Conf(ConfFile)
 {
   OutputFile = Conf.Get<std::string>("Output_Namefile");
   std::cout<<"ActionInit : done ! "<<OutputFile<<std::endl;
