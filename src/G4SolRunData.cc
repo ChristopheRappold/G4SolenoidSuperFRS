@@ -90,14 +90,14 @@ void G4SolRunData::InitTree(const std::vector<G4String>& nameDet, const G4SolCon
       parameterToFile.insert(std::make_pair("Target_PosY",config.Get<double>("Target_PosY")/cm));
       parameterToFile.insert(std::make_pair("Target_PosZ",config.Get<double>("Target_PosZ")/cm));
       parameterToFile.insert(std::make_pair("Field_CDS_Bz",config.Get<double>("Field_CDS_Bz")/tesla));
-      
+
       fileOut->cd();
       fileOut->WriteObjectAny(&nameDet, "std::vector<std::string>", "nameDet");
       fileOut->WriteObjectAny(&parameterToFile, "std::map<std::string,double>", "simParameters");
       Tree = new TTree("G4Tree","Geant4 Tree");
       
       fEvent = new TG4Sol_Event; 
-      Tree->Branch("TG4Sol_Event",&fEvent);
+      Tree->Branch("TG4Sol_Event",&fEvent,3200,2);
       for(auto& nameBranch : nameDet)
 	{
 	  //std::cout<<" Branch Construction : "<<nameBranch<<std::endl;
