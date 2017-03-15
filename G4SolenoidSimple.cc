@@ -30,7 +30,10 @@
 
 
 
+#include "G4SolVDetectorConstruction.hh"
 #include "KnuclDetectorConstruction.hh"
+#include "WasaSimpleDetectorConstruction.hh"
+
 #include "G4SolSimpleActionInitialization.hh"
 #include "G4SolActionInitialization.hh"
 
@@ -104,11 +107,34 @@ int main(int argc,char** argv)
   // double unitVal = config.Get<double>(nameUnit);
   // std::cout<<" get:"<<nameP<<" "<<sizeTarget/unitVal<<" "<<unit<<" ("<<unitVal<<" "<<sizeTarget<<")"<<std::endl;
   // std::cout<<" done !"<<std::endl;
+  
 
-  KnuclDetectorConstruction* Geometry = new KnuclDetectorConstruction(config); 
-  // Mandatory user initialization classes
-  runManager->SetUserInitialization(Geometry);
+  //G4SolVDetectorConstruction* Geometry = nullptr;
+  
+  std::string nameGeo = config.Get<std::string>("Geo");
+  G4SolGeometryController* geometryController = new G4SolGeometryController(config);
+  geometryController->SetGeometry(nameGeo);
 
+  // if(nameGeo == "CDS")
+  //   {
+  //     Geometry = new KnuclDetectorConstruction(config); 
+  //     // Mandatory user initialization classes
+  //     runManager->SetUserInitialization(Geometry);
+  //   }
+  // else if(nameGeo == "Wasa")
+  //   {
+  //     Geometry = new WasaSimpleDetectorConstruction(config); 
+  //     // Mandatory user initialization classes
+  //     runManager->SetUserInitialization(Geometry);
+  //   }
+  // else
+  //   {
+  //     std::cout<<"E> No Geometry selected !"<<nameGeo<<"\n";
+  //     return -2;
+  //   }
+  
+  
+    
   G4RegionStore* regionStore = G4RegionStore::GetInstance();
   for(auto& region : *regionStore)
     {
@@ -161,7 +187,7 @@ int main(int argc,char** argv)
   if(config.Get<bool>("SimpleGeo")==true)
     runManager->SetUserInitialization(new G4SolSimpleActionInitialization(config));
   else
-    runManager->SetUserInitialization(new G4SolActionInitialization(Geometry,config));
+    runManager->SetUserInitialization(new G4SolActionInitialization(geometryController,config));
  
 #ifdef G4VIS_USE
   // Visualization manager construction
@@ -201,25 +227,18 @@ int main(int argc,char** argv)
 #endif
     }
 
-#ifdef G4SOLCONVERT
   std::cout<<" Doing G4->ROOT convertion ? ";
   
   boost::optional<std::string> NameConvert = config.Get<boost::optional<std::string> >("ConvertRoot");
   if(NameConvert)
     {
       std::cout<<" yes"<<std::endl;
-      auto* logi = Geometry->experimentalHall_physOutRoot->GetLogicalVolume();
-      if(logi != nullptr)
-	{
-	  std::cout<<logi->GetName()<<std::endl;
-	}
       std::string nameConvertRoot(*NameConvert);
-      G4SolConvertGeo convertor(Geometry->experimentalHall_physOutRoot);
-      convertor.Convert(nameConvertRoot);
+      geometryController->ConvertG4toRoot(nameConvertRoot);
     }
   else
     std::cout<<" no"<<std::endl;
-#endif
+
   // Job termination
   // Free the store: user actions, physics_list and detector_description are
   // owned and deleted by the run manager, so they should not be deleted 
