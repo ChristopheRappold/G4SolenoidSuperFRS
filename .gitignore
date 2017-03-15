@@ -14,4 +14,14 @@
 *gz
 *debug
 *log*
+*.root
 .dir-locals.el
+
+boost_1_54_0/
+build/
+build2/
+build3/
+buildtt/
+cppformat/
+debug1/
+
