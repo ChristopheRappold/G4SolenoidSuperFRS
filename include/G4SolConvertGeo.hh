@@ -15,7 +15,7 @@ class G4SolConvertGeo
 public :
   G4SolConvertGeo(G4VPhysicalVolume* w);
   ~G4SolConvertGeo();
-  int Convert(const std::string& nameOut);
+  int Convert(const std::string& nameOut, const G4String& nameGeometry);
    
 };
 
