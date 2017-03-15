@@ -10,7 +10,7 @@
 //#include "KnuclMaterialManager.hh"
 //#include "KnuclFieldSetup.hh"
 //#include "KnuclCommon.h"
-#include "G4VUserDetectorConstruction.hh"
+#include "G4SolVDetectorConstruction.hh"
 
 //#include "HypHIVDetectorConstruction.hh"
 #include "globals.hh"
@@ -20,7 +20,6 @@
 #include "G4FieldManager.hh"
 
 #include "G4Color.hh"
-#include "G4SolConfig.hh"
 #include "G4VPhysicalVolume.hh"
 
 //class HypHIFrsMagneticField;
@@ -38,7 +37,7 @@ class G4FieldManager;
 
 
 
-class KnuclDetectorConstruction : public G4VUserDetectorConstruction
+class KnuclDetectorConstruction : public G4SolVDetectorConstruction
 {
 private:
   static G4ThreadLocal G4SolSimpleMagneticField* fMagneticField;
@@ -80,12 +79,12 @@ private:
   void ConstructAC(G4double cds_z, G4double CDS_AC_space, G4double AC_STC_space, G4double STC_BLC_space, G4double BLC_BLC_space);
   void ConstructInnerTracker(G4double cds_z, G4double RelativePos, G4double TargetPos_x, G4double TargetPos_y, G4double TargetPos_z);
   void ConstructEndFMF2();
-  G4LogicalVolume* FindVolume(const G4String& name);
+  //G4LogicalVolume* FindVolume(const G4String& name);
 
   void DefineCommands();
   G4GenericMessenger* fMessenger;
 
-  const G4SolConfig& Par;
+  //const G4SolConfig& Par;
   
 public:
   //explicit KnuclDetectorConstruction();//const THypHi_Par& _par);
@@ -93,9 +92,9 @@ public:
   ~KnuclDetectorConstruction();
 
   void ConstructMaterials();
-  G4VPhysicalVolume* Construct();
-  virtual void ConstructSDandField();
-  const std::vector<G4String>& GetNameDetectors() const { return NameDetectorsSD;}
+  G4VPhysicalVolume* Construct() override;
+  void ConstructSDandField() override;
+  //const std::vector<G4String>& GetNameDetectors() const { return NameDetectorsSD;}
   bool DoKurama;
   bool DoTOFn;
   bool DoTOFp;
@@ -114,9 +113,6 @@ public:
   G4LogicalVolume* experimentalHall_log;
   //G4PVPlacement*   experimentalHall_phys;
   G4VPhysicalVolume*   experimentalHall_phys;
-
-  G4LogicalVolume* experimentalHall_logOutRoot;
-  G4VPhysicalVolume*   experimentalHall_physOutRoot;
 
   G4VSolid*        Kurama_box;
   G4LogicalVolume* Kurama_log;
@@ -158,7 +154,7 @@ public:
   
   std::vector<G4PVPlacement*> AllPlacements;
   
-  std::vector<G4String> NameDetectorsSD;
+  //std::vector<G4String> NameDetectorsSD;
   
   double FieldInCDC;         
   double FieldInKurama;      
