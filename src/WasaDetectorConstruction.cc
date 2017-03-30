@@ -358,10 +358,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4RotationMatrix* rotFMF2 = new G4RotationMatrix;
   // if(WasaSide==1)
   //   rotFMF2->rotateY(-180*degree);
-
-  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., 2.*m)-transMFLD_new), EndFMF2_log, "FMF2_phys", MFLD_log,false,0));  
-  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., 2.*m+1.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys1", MFLD_log,false,1));
-  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., 2.*m+2.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys2", MFLD_log,false,2));
+  double FMF2_posZ = Par.Get<double>("FRS_FMF2_posZ");
+  
+  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ)-transMFLD_new), EndFMF2_log, "FMF2_phys", MFLD_log,false,0));  
+  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ+1.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys1", MFLD_log,false,1));
+  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ+2.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys2", MFLD_log,false,2));
 
   G4VisAttributes *FMF2_att = new G4VisAttributes(Red);
   FMF2_att->SetForceWireframe(false);

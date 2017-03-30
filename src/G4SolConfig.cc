@@ -237,6 +237,9 @@ void G4SolConfig::SetDefault()
   tree.put("HypHI_EndCap_maxR.unit","cm");
   tree.put("HypHI_EndCap_maxR.unit.cm",1.*cm);
 
+  tree.put("FRS_FMF2_posZ",2);
+  tree.put("FRS_FMF2_posZ.unit","m");
+  tree.put("FRS_FMF2_posZ.unit.m",1.*m);
   
   tree.put("CDS_RelativePosTarget",-0.7);
 
