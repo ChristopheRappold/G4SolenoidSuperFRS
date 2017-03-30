@@ -382,8 +382,10 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
 
   // Yoke
   TGeoVolume* IRC_ = gGeoManager->MakePcon("IRC", med11, 0, 360, 14);
-  ((TGeoPcon*)IRC_->GetShape())->DefineSection(0, -61.8, 9, 37);
-  ((TGeoPcon*)IRC_->GetShape())->DefineSection(1, -51.8, 9, 59.5);
+  //((TGeoPcon*)IRC_->GetShape())->DefineSection(0, -61.8, 9, 37);
+  //((TGeoPcon*)IRC_->GetShape())->DefineSection(1, -51.8, 9, 59.5);
+  ((TGeoPcon*)IRC_->GetShape())->DefineSection(0, -61.8, 33., 37);
+  ((TGeoPcon*)IRC_->GetShape())->DefineSection(1, -51.8, 33., 59.5);
   ((TGeoPcon*)IRC_->GetShape())->DefineSection(2, -51.8, 37, 59.5);
   ((TGeoPcon*)IRC_->GetShape())->DefineSection(3, -42, 52.5, 68);
   ((TGeoPcon*)IRC_->GetShape())->DefineSection(4, -35.5, 60, 70);
