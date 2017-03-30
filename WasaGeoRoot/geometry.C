@@ -27,7 +27,7 @@
 #include "geometryVolFW.C"
 #include "geometryVolume.C"
 
-void geometry()
+void geometry(bool Central_FW=false, bool Central_Pipe=false, bool EMC=false, bool ForwardCal=false)
 {
   //
   //  This file has been generated automatically via the root
@@ -225,9 +225,11 @@ void geometry()
   // ESC_->AddVolume(gGeoManager->MakeTube("ESC",med11,0,150,0.5000000E-01));
   // ESC_->AddVolume(gGeoManager->MakeTube("ESC",med11,149.9,150,300));
 
-  TGeoVolume* MFLD = geometryVolumeCentral(WASA, list_mat, list_med);
-  geometryVolEMC(MFLD, list_mat, list_med);
-  geometryVolFW(WASA, list_mat, list_med);
+  TGeoVolume* MFLD = geometryVolumeCentral(WASA, list_mat, list_med, Central_FW, Central_Pipe);
+  if(EMC==true)
+    geometryVolEMC(MFLD, list_mat, list_med);
+  if(ForwardCal==true)
+    geometryVolFW(WASA, list_mat, list_med);
 
   //-----------List of Nodes--------------
 

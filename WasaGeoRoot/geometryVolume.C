@@ -1,4 +1,4 @@
-TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMaterial*>& list_mat, const std::vector<TGeoMedium*>& list_med)
+TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMaterial*>& list_mat, const std::vector<TGeoMedium*>& list_med, bool FW=false, bool Pipe=false)
 // void geometryCentral()
 {
   // gSystem->Load("libGeom");
@@ -175,130 +175,201 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
 
   // Central Barrel
   // TGeoVolume* MFLD = gGeoManager->MakeTube("MFLD", med2, 0, 76, 122.3);
-
   TGeoVolume* MFLD = gGeoManager->MakeTube("MFLD", med2, 0, 76, 222.3);
+  //#ifdef WASAVACUUMPIPE
 
-   TGeoVolume* PCB_ = gGeoManager->MakeCone("PCB", med5, 13, 3, 3.3, 6.35, 6.65);
-   PCB_->SetLineColor(kBlue-10);
-   // TGeoVolume* PCC_ = gGeoManager->MakeTube("PCC", med6, 3, 3.12, 19);
-   TGeoVolume* PCC_ = gGeoManager->MakeTube("PCC", med6, 3, 3.12, 18.9); //overlap
-   PCC_->SetLineColor(kBlue-10);
-   //TGeoVolume* PCF_ = gGeoManager->MakeCone("PCF", med5, 45.5, 3, 3.3, 32.5, 32.8);
-   TGeoVolume* PCF_ = gGeoManager->MakeCone("PCF", med5, 45.5, 3, 3.15, 32.5, 32.65); // Remove overlap
-   PCF_->SetLineColor(kBlue-10);
+  TGeoVolume* PCB_ = nullptr;
+  TGeoVolume* PCC_ = nullptr;
+  TGeoVolume* PCF_ = nullptr;
 
-  //#ifdef WASAFWDTOF
+  if(Pipe==true)
+    {
+      PCB_ = gGeoManager->MakeCone("PCB", med5, 13, 3, 3.3, 6.35, 6.65);
+      PCB_->SetLineColor(kBlue-10);
+      // TGeoVolume* PCC_ = gGeoManager->MakeTube("PCC", med6, 3, 3.12, 19);
+      PCC_ = gGeoManager->MakeTube("PCC", med6, 3, 3.12, 18.9); //overlap
+      PCC_->SetLineColor(kBlue-10);
+      //TGeoVolume* PCF_ = gGeoManager->MakeCone("PCF", med5, 45.5, 3, 3.3, 32.5, 32.8);
+      PCF_ = gGeoManager->MakeCone("PCF", med5, 45.5, 3, 3.15, 32.5, 32.65); // Remove overlap
+      PCF_->SetLineColor(kBlue-10);
+      //#endif
+    }
   
-  TGeoVolume* VCF1 = gGeoManager->MakeTube("VCF1", med21, 3.4, 4.2, 0.5);
-  VCF1->SetLineColor(kBlue-4);
-  TGeoVolume* VCF2 = gGeoManager->MakeTube("VCF2", med22, 3.4, 4.2, 1.3);
-  VCF2->SetLineColor(kBlue-4);
-  TGeoVolume* VCF3 = gGeoManager->MakeTube("VCF3", med23, 35.1, 40, 3);
-  VCF3->SetLineColor(kBlue-4);
+  //#ifdef WASAFWDTOF
+  TGeoVolume* VCF1 = nullptr;
+  TGeoVolume* VCF2 = nullptr;
+  TGeoVolume* VCB1 = nullptr; 
+  TGeoVolume* VCB2 = nullptr; 
+  TGeoVolume* VCB3 = nullptr; 
+  TGeoVolume* VCB4 = nullptr; 
+  TGeoVolume* VCW_ = nullptr; 
 
-  TGeoVolume* VCB1 = gGeoManager->MakeBox("VCB1", med26, 18, 0.25, 1.3);
-  VCB1->SetLineColor(kBlue-4);
-  TGeoVolume* VCB2 = gGeoManager->MakeBox("VCB2", med27, 18, 0.25, 1.3);
-  VCB2->SetLineColor(kBlue-4);
-  TGeoVolume* VCB3 = gGeoManager->MakeBox("VCB3", med28, 18, 0.25, 1.3);
-  VCB3->SetLineColor(kBlue-4);
-  TGeoVolume* VCB4 = gGeoManager->MakeBox("VCB4", med29, 18, 0.25, 1.3);
-  VCB4->SetLineColor(kBlue-4);
+  TGeoVolume* FW_1 =  nullptr;
+  TGeoVolume* FW_2 =  nullptr;
+  TGeoVolume* FW_3 =  nullptr;
+  TGeoVolume* FW_4 =  nullptr;
+  TGeoVolume* FW_5 =  nullptr;
+  TGeoVolume* FW_6 =  nullptr;
+  TGeoVolume* FW_7 =  nullptr;
+  TGeoVolume* FW_8 =  nullptr;
+  TGeoVolume* FW_9 =  nullptr;
+  TGeoVolume* FW10 =  nullptr;
+  TGeoVolume* FW11 =  nullptr;
+  TGeoVolume* FW12 =  nullptr;
+  TGeoVolume* FW13 =  nullptr;
+  TGeoVolume* FW14 =  nullptr;
+  TGeoVolume* FW15 =  nullptr;
+  TGeoVolume* FW16 =  nullptr;
+  TGeoVolume* FW17 =  nullptr;
+  TGeoVolume* FW18 =  nullptr;
+  TGeoVolume* FW19 =  nullptr;
+  TGeoVolume* FW20 =  nullptr;
+  TGeoVolume* FW21 =  nullptr;
+  TGeoVolume* FW22 =  nullptr;
+  TGeoVolume* FW23 =  nullptr;
+  TGeoVolume* FW24 =  nullptr;
+  TGeoVolume* FW25 =  nullptr;
+  TGeoVolume* FW26 =  nullptr;
+  TGeoVolume* FW27 =  nullptr;
+  TGeoVolume* FW28 =  nullptr;
+  TGeoVolume* FW29 =  nullptr;
+  TGeoVolume* FW30 =  nullptr;
+  TGeoVolume* FW31 =  nullptr;
+  TGeoVolume* FW32 =  nullptr;
+  TGeoVolume* FW33 =  nullptr;
+  TGeoVolume* FW34 =  nullptr;
+  TGeoVolume* FW35 =  nullptr;
+  TGeoVolume* FW36 =  nullptr;
+  TGeoVolume* FW37 =  nullptr;
+  TGeoVolume* FW38 =  nullptr;
+  TGeoVolume* FW39 =  nullptr;
+  TGeoVolume* FW40 =  nullptr;
+  TGeoVolume* FW41 =  nullptr;
+  TGeoVolume* FW42 =  nullptr;
+  TGeoVolume* FW43 =  nullptr;
+  TGeoVolume* FW44 =  nullptr;
+  TGeoVolume* FW45 =  nullptr;
+  TGeoVolume* FW46 =  nullptr;
+  TGeoVolume* FW47 =  nullptr;
+  TGeoVolume* FW48 =  nullptr;
 
-  TGeoVolume* VCW_ = gGeoManager->MakeSphere("VCW", med4, 69.981, 70.019, 3.437746, 30.00007, 0, 360);
-  VCW_->SetLineColor(kBlue-4);
+  TGeoVolumeMulti* FW1E = nullptr;
+  TGeoVolume* FW2E = nullptr; 
+  TGeoVolume* BVC2 = nullptr;  
+  TGeoVolumeMulti* BTCD = nullptr;
+
+  if(FW==true)
+    {
+      CF1 = gGeoManager->MakeTube("VCF1", med21, 3.4, 4.2, 0.5);
+      VCF1->SetLineColor(kBlue-4);
+      VCF2 = gGeoManager->MakeTube("VCF2", med22, 3.4, 4.2, 1.3);
+      VCF2->SetLineColor(kBlue-4);
+      VCF3 = gGeoManager->MakeTube("VCF3", med23, 35.1, 40, 3);
+      VCF3->SetLineColor(kBlue-4);
+
+      VCB1 = gGeoManager->MakeBox("VCB1", med26, 18, 0.25, 1.3);
+      VCB1->SetLineColor(kBlue-4);
+      VCB2 = gGeoManager->MakeBox("VCB2", med27, 18, 0.25, 1.3);
+      VCB2->SetLineColor(kBlue-4);
+      VCB3 = gGeoManager->MakeBox("VCB3", med28, 18, 0.25, 1.3);
+      VCB3->SetLineColor(kBlue-4);
+      VCB4 = gGeoManager->MakeBox("VCB4", med29, 18, 0.25, 1.3);
+      VCB4->SetLineColor(kBlue-4);
+
+      VCW_ = gGeoManager->MakeSphere("VCW", med4, 69.981, 70.019, 3.437746, 30.00007, 0, 360);
+      VCW_->SetLineColor(kBlue-4);
 		     
-  TGeoVolume* FW_1 = gGeoManager->MakeTrd1("FW01", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW_2 = gGeoManager->MakeTrd1("FW02", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW_3 = gGeoManager->MakeTrd1("FW03", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW_4 = gGeoManager->MakeTrd1("FW04", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW_5 = gGeoManager->MakeTrd1("FW05", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW_6 = gGeoManager->MakeTrd1("FW06", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW_7 = gGeoManager->MakeTrd1("FW07", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW_8 = gGeoManager->MakeTrd1("FW08", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW_9 = gGeoManager->MakeTrd1("FW09", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW10 = gGeoManager->MakeTrd1("FW10", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW11 = gGeoManager->MakeTrd1("FW11", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW12 = gGeoManager->MakeTrd1("FW12", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW13 = gGeoManager->MakeTrd1("FW13", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW14 = gGeoManager->MakeTrd1("FW14", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW15 = gGeoManager->MakeTrd1("FW15", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW16 = gGeoManager->MakeTrd1("FW16", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW17 = gGeoManager->MakeTrd1("FW17", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW18 = gGeoManager->MakeTrd1("FW18", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW19 = gGeoManager->MakeTrd1("FW19", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW20 = gGeoManager->MakeTrd1("FW20", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW21 = gGeoManager->MakeTrd1("FW21", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW22 = gGeoManager->MakeTrd1("FW22", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW23 = gGeoManager->MakeTrd1("FW23", med51, 0.4815, 4.8615, 0.1565, 17.8215);
-  TGeoVolume* FW24 = gGeoManager->MakeTrd1("FW24", med51, 0.3515, 4.7315, 0.1565, 17.8215);
-  TGeoVolume* FW25 = gGeoManager->MakeTrd1("FW25", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW26 = gGeoManager->MakeTrd1("FW26", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW27 = gGeoManager->MakeTrd1("FW27", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW28 = gGeoManager->MakeTrd1("FW28", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW29 = gGeoManager->MakeTrd1("FW29", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW30 = gGeoManager->MakeTrd1("FW30", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW31 = gGeoManager->MakeTrd1("FW31", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW32 = gGeoManager->MakeTrd1("FW32", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW33 = gGeoManager->MakeTrd1("FW33", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW34 = gGeoManager->MakeTrd1("FW34", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW35 = gGeoManager->MakeTrd1("FW35", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW36 = gGeoManager->MakeTrd1("FW36", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW37 = gGeoManager->MakeTrd1("FW37", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW38 = gGeoManager->MakeTrd1("FW38", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW39 = gGeoManager->MakeTrd1("FW39", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW40 = gGeoManager->MakeTrd1("FW40", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW41 = gGeoManager->MakeTrd1("FW41", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW42 = gGeoManager->MakeTrd1("FW42", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW43 = gGeoManager->MakeTrd1("FW43", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW44 = gGeoManager->MakeTrd1("FW44", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW45 = gGeoManager->MakeTrd1("FW45", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW46 = gGeoManager->MakeTrd1("FW46", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW47 = gGeoManager->MakeTrd1("FW47", med51, 0.4815, 4.9165, 0.1565, 16.9865);
-  TGeoVolume* FW48 = gGeoManager->MakeTrd1("FW48", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW_1 = gGeoManager->MakeTrd1("FW01", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW_2 = gGeoManager->MakeTrd1("FW02", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW_3 = gGeoManager->MakeTrd1("FW03", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW_4 = gGeoManager->MakeTrd1("FW04", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW_5 = gGeoManager->MakeTrd1("FW05", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW_6 = gGeoManager->MakeTrd1("FW06", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW_7 = gGeoManager->MakeTrd1("FW07", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW_8 = gGeoManager->MakeTrd1("FW08", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW_9 = gGeoManager->MakeTrd1("FW09", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW10 = gGeoManager->MakeTrd1("FW10", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW11 = gGeoManager->MakeTrd1("FW11", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW12 = gGeoManager->MakeTrd1("FW12", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW13 = gGeoManager->MakeTrd1("FW13", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW14 = gGeoManager->MakeTrd1("FW14", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW15 = gGeoManager->MakeTrd1("FW15", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW16 = gGeoManager->MakeTrd1("FW16", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW17 = gGeoManager->MakeTrd1("FW17", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW18 = gGeoManager->MakeTrd1("FW18", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW19 = gGeoManager->MakeTrd1("FW19", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW20 = gGeoManager->MakeTrd1("FW20", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW21 = gGeoManager->MakeTrd1("FW21", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW22 = gGeoManager->MakeTrd1("FW22", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW23 = gGeoManager->MakeTrd1("FW23", med51, 0.4815, 4.8615, 0.1565, 17.8215);
+      FW24 = gGeoManager->MakeTrd1("FW24", med51, 0.3515, 4.7315, 0.1565, 17.8215);
+      FW25 = gGeoManager->MakeTrd1("FW25", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW26 = gGeoManager->MakeTrd1("FW26", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW27 = gGeoManager->MakeTrd1("FW27", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW28 = gGeoManager->MakeTrd1("FW28", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW29 = gGeoManager->MakeTrd1("FW29", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW30 = gGeoManager->MakeTrd1("FW30", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW31 = gGeoManager->MakeTrd1("FW31", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW32 = gGeoManager->MakeTrd1("FW32", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW33 = gGeoManager->MakeTrd1("FW33", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW34 = gGeoManager->MakeTrd1("FW34", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW35 = gGeoManager->MakeTrd1("FW35", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW36 = gGeoManager->MakeTrd1("FW36", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW37 = gGeoManager->MakeTrd1("FW37", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW38 = gGeoManager->MakeTrd1("FW38", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW39 = gGeoManager->MakeTrd1("FW39", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW40 = gGeoManager->MakeTrd1("FW40", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW41 = gGeoManager->MakeTrd1("FW41", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW42 = gGeoManager->MakeTrd1("FW42", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW43 = gGeoManager->MakeTrd1("FW43", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW44 = gGeoManager->MakeTrd1("FW44", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW45 = gGeoManager->MakeTrd1("FW45", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW46 = gGeoManager->MakeTrd1("FW46", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW47 = gGeoManager->MakeTrd1("FW47", med51, 0.4815, 4.9165, 0.1565, 16.9865);
+      FW48 = gGeoManager->MakeTrd1("FW48", med51, 0.4815, 4.9165, 0.1565, 16.9865);
 
-  TGeoVolumeMulti* FW1E = gGeoManager->MakeVolumeMulti("FW1E", med71);
-  FW1E->SetLineColor(kRed-3);
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
-  FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E = gGeoManager->MakeVolumeMulti("FW1E", med71);
+      FW1E->SetLineColor(kRed-3);
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.345, 4.725, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
+      FW1E->AddVolume(gGeoManager->MakeTrd1("FW1E", med71, 0.475, 4.855, 0.15, 17.815));
 
-  for(size_t iGeo = 0; iGeo< FW1E->GetNvolumes();++iGeo)
-    FW1E->GetVolume(iGeo)->SetLineColor(kRed-3);
+      for(size_t iGeo = 0; iGeo< FW1E->GetNvolumes();++iGeo)
+	FW1E->GetVolume(iGeo)->SetLineColor(kRed-3);
 
-  TGeoVolume* FW2E = gGeoManager->MakeTrd1("FW2E", med71, 0.475, 4.91, 0.15, 16.98);
-  FW2E->SetLineColor(kRed-2);
+      FW2E = gGeoManager->MakeTrd1("FW2E", med71, 0.475, 4.91, 0.15, 16.98);
+      FW2E->SetLineColor(kRed-2);
 
-  // FW Pipe
-  TGeoVolume* BVC2 = gGeoManager->MakeTube("BVC2", med1, 0, 3.4, 9.650002);
+      // FW Pipe
+      BVC2 = gGeoManager->MakeTube("BVC2", med1, 0, 3.4, 9.650002);
 
-  // BeamPipe FW
-  TGeoVolumeMulti* BTCD = gGeoManager->MakeVolumeMulti("BTCD", med4);
-  BTCD->AddVolume(gGeoManager->MakeTube("BTCD", med4, 3, 3.4, 9.650002));
-  BTCD->SetLineColor(kYellow);
-
-  //#endif
+      // BeamPipe FW
+      BTCD = gGeoManager->MakeVolumeMulti("BTCD", med4);
+      BTCD->AddVolume(gGeoManager->MakeTube("BTCD", med4, 3, 3.4, 9.650002));
+      BTCD->SetLineColor(kYellow);
+    }
+      //#endif
   
   // Solenoid
   TGeoVolume* INNER_ = gGeoManager->MakeTube("INNER", med1, 0., 31.5, 27.75);
@@ -628,121 +699,128 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoRotation* rot246 = new TGeoRotation("rot246", 90, 255, 180, 345, 90, 345);
 
   WASA->AddNode(MFLD, 1, new TGeoTranslation(0, 0, -2.5));
-  MFLD->AddNode(PCB_, 1, new TGeoCombiTrans(0, 0, -39.5, rot1));
-  MFLD->AddNode(PCC_, 1, new TGeoCombiTrans(0, 0, -7.5, rot2));
-  MFLD->AddNode(PCF_, 1, new TGeoCombiTrans(-0.4, 0.1, 57, rot3));
+  //#ifdef WASAVACUUMPIPE
+  if(Pipe==true)
+    {
+      MFLD->AddNode(PCB_, 1, new TGeoCombiTrans(0, 0, -39.5, rot1));
+      MFLD->AddNode(PCC_, 1, new TGeoCombiTrans(0, 0, -7.5, rot2));
+      MFLD->AddNode(PCF_, 1, new TGeoCombiTrans(-0.4, 0.1, 57, rot3));
+    }
   //MFLD->AddNode(PCF_, 1, new TGeoCombiTrans(0, 0., 59., rot3)); // overlap
-
-  //#ifdef WASAFWDTOF
-  MFLD->AddNode(VCF1, 1, new TGeoCombiTrans(0, 0, 102.5, rot4));
-  MFLD->AddNode(VCF2, 1, new TGeoCombiTrans(0, 0, 113.8, rot5));
-  MFLD->AddNode(VCF3, 1, new TGeoCombiTrans(0, 0, 109, rot6));
-  MFLD->AddNode(VCB1, 1, new TGeoCombiTrans(21.4, 0, 113.8, rot7));
-  MFLD->AddNode(VCB2, 1, new TGeoCombiTrans(0, 21.4, 113.8, rot8));
-  MFLD->AddNode(VCB3, 1, new TGeoCombiTrans(-21.4, 0, 113.8, rot9));
-  MFLD->AddNode(VCB4, 1, new TGeoCombiTrans(0, -21.4, 113.8, rot10));
-  MFLD->AddNode(VCW_, 1, new TGeoCombiTrans(0, 0, 173, rot11));
-
-  MFLD->AddNode(BVC2, 1, new TGeoCombiTrans(0, 0, 112.65, rot13));
-  BVC2->AddNode(BTCD->GetVolume(0), 1, gGeoIdentity);
-
-  MFLD->AddNode(FW_1, 1, new TGeoCombiTrans(20.44707, 2.82303, 109.9931, rot199));
-  FW_1->AddNode(FW1E->GetVolume(0), 1, gGeoIdentity);
-  MFLD->AddNode(FW_7, 1, new TGeoCombiTrans(-2.823033, 20.44707, 109.9931, rot200));
-  FW_7->AddNode(FW1E->GetVolume(1), 7, gGeoIdentity);
-  MFLD->AddNode(FW13, 1, new TGeoCombiTrans(-20.44707, -2.823031, 109.9931, rot201));
-  FW13->AddNode(FW1E->GetVolume(2), 13, gGeoIdentity);
-  MFLD->AddNode(FW19, 1, new TGeoCombiTrans(2.823035, -20.44707, 109.9931, rot202));
-  FW19->AddNode(FW1E->GetVolume(3), 19, gGeoIdentity);
-  MFLD->AddNode(FW_6, 1, new TGeoCombiTrans(2.823029, 20.44707, 109.9931, rot203));
-  FW_6->AddNode(FW1E->GetVolume(4), 6, gGeoIdentity);
-  MFLD->AddNode(FW12, 1, new TGeoCombiTrans(-20.44707, 2.823028, 109.9931, rot204));
-  FW12->AddNode(FW1E->GetVolume(5), 12, gGeoIdentity);
-  MFLD->AddNode(FW18, 1, new TGeoCombiTrans(-2.823025, -20.44707, 109.9931, rot205));
-  FW18->AddNode(FW1E->GetVolume(6), 18, gGeoIdentity);
-  MFLD->AddNode(FW24, 1, new TGeoCombiTrans(20.44707, -2.823021, 109.9931, rot206));
-  FW24->AddNode(FW1E->GetVolume(7), 24, gGeoIdentity);
-  MFLD->AddNode(FW_2, 1, new TGeoCombiTrans(19.06945, 7.898826, 109.9931, rot207));
-  FW_2->AddNode(FW1E->GetVolume(8), 2, gGeoIdentity);
-  MFLD->AddNode(FW_3, 1, new TGeoCombiTrans(16.37531, 12.56522, 109.9931, rot208));
-  FW_3->AddNode(FW1E->GetVolume(9), 3, gGeoIdentity);
-  MFLD->AddNode(FW_4, 1, new TGeoCombiTrans(12.56522, 16.37531, 109.9931, rot209));
-  FW_4->AddNode(FW1E->GetVolume(10), 4, gGeoIdentity);
-  MFLD->AddNode(FW_5, 1, new TGeoCombiTrans(7.898825, 19.06945, 109.9931, rot210));
-  FW_5->AddNode(FW1E->GetVolume(11), 5, gGeoIdentity);
-  MFLD->AddNode(FW_8, 1, new TGeoCombiTrans(-7.898825, 19.06945, 109.9931, rot211));
-  FW_8->AddNode(FW1E->GetVolume(12), 8, gGeoIdentity);
-  MFLD->AddNode(FW_9, 1, new TGeoCombiTrans(-12.56522, 16.37531, 109.9931, rot212));
-  FW_9->AddNode(FW1E->GetVolume(13), 9, gGeoIdentity);
-  MFLD->AddNode(FW10, 1, new TGeoCombiTrans(-16.37531, 12.56521, 109.9931, rot213));
-  FW10->AddNode(FW1E->GetVolume(14), 10, gGeoIdentity);
-  MFLD->AddNode(FW11, 1, new TGeoCombiTrans(-19.06945, 7.898826, 109.9931, rot214));
-  FW11->AddNode(FW1E->GetVolume(15), 11, gGeoIdentity);
-  MFLD->AddNode(FW14, 1, new TGeoCombiTrans(-19.06945, -7.89883, 109.9931, rot215));
-  FW14->AddNode(FW1E->GetVolume(16), 14, gGeoIdentity);
-  MFLD->AddNode(FW15, 1, new TGeoCombiTrans(-16.37531, -12.56522, 109.9931, rot216));
-  FW15->AddNode(FW1E->GetVolume(17), 15, gGeoIdentity);
-  MFLD->AddNode(FW16, 1, new TGeoCombiTrans(-12.56522, -16.37531, 109.9931, rot217));
-  FW16->AddNode(FW1E->GetVolume(18), 16, gGeoIdentity);
-  MFLD->AddNode(FW17, 1, new TGeoCombiTrans(-7.898828, -19.06945, 109.9931, rot218));
-  FW17->AddNode(FW1E->GetVolume(19), 17, gGeoIdentity);
-  MFLD->AddNode(FW20, 1, new TGeoCombiTrans(7.898829, -19.06945, 109.9931, rot219));
-  FW20->AddNode(FW1E->GetVolume(20), 20, gGeoIdentity);
-  MFLD->AddNode(FW21, 1, new TGeoCombiTrans(12.56522, -16.37531, 109.9931, rot220));
-  FW21->AddNode(FW1E->GetVolume(21), 21, gGeoIdentity);
-  MFLD->AddNode(FW22, 1, new TGeoCombiTrans(16.37531, -12.56522, 109.9931, rot221));
-  FW22->AddNode(FW1E->GetVolume(22), 22, gGeoIdentity);
-  MFLD->AddNode(FW23, 1, new TGeoCombiTrans(19.06946, -7.898816, 109.9931, rot222));
-  FW23->AddNode(FW1E->GetVolume(23), 23, gGeoIdentity);
-  MFLD->AddNode(FW25, 1, new TGeoCombiTrans(20.88, 0, 118.7, rot223));
-  FW25->AddNode(FW2E, 1, gGeoIdentity);
-  MFLD->AddNode(FW26, 1, new TGeoCombiTrans(20.16853, 5.404141, 118.7, rot224));
-  FW26->AddNode(FW2E, 2, gGeoIdentity);
-  MFLD->AddNode(FW27, 1, new TGeoCombiTrans(18.08261, 10.44, 118.7, rot225));
-  FW27->AddNode(FW2E, 3, gGeoIdentity);
-  MFLD->AddNode(FW28, 1, new TGeoCombiTrans(14.76439, 14.76439, 118.7, rot226));
-  FW28->AddNode(FW2E, 4, gGeoIdentity);
-  MFLD->AddNode(FW29, 1, new TGeoCombiTrans(10.44, 18.08261, 118.7, rot227));
-  FW29->AddNode(FW2E, 5, gGeoIdentity);
-  MFLD->AddNode(FW30, 1, new TGeoCombiTrans(5.40414, 20.16853, 118.7, rot228));
-  FW30->AddNode(FW2E, 6, gGeoIdentity);
-  MFLD->AddNode(FW31, 1, new TGeoCombiTrans(-0.9126937E-06, 20.88, 118.7, rot229));
-  FW31->AddNode(FW2E, 7, gGeoIdentity);
-  MFLD->AddNode(FW32, 1, new TGeoCombiTrans(-5.404144, 20.16853, 118.7, rot230));
-  FW32->AddNode(FW2E, 8, gGeoIdentity);
-  MFLD->AddNode(FW33, 1, new TGeoCombiTrans(-10.44, 18.08261, 118.7, rot231));
-  FW33->AddNode(FW2E, 9, gGeoIdentity);
-  MFLD->AddNode(FW34, 1, new TGeoCombiTrans(-14.76439, 14.76439, 118.7, rot232));
-  FW34->AddNode(FW2E, 10, gGeoIdentity);
-  MFLD->AddNode(FW35, 1, new TGeoCombiTrans(-18.08261, 10.44, 118.7, rot233));
-  FW35->AddNode(FW2E, 11, gGeoIdentity);
-  MFLD->AddNode(FW36, 1, new TGeoCombiTrans(-20.16853, 5.404139, 118.7, rot234));
-  FW36->AddNode(FW2E, 12, gGeoIdentity);
-  MFLD->AddNode(FW37, 1, new TGeoCombiTrans(-20.88, -0.1825387E-05, 118.7, rot235));
-  FW37->AddNode(FW2E, 13, gGeoIdentity);
-  MFLD->AddNode(FW38, 1, new TGeoCombiTrans(-20.16853, -5.404147, 118.7, rot236));
-  FW38->AddNode(FW2E, 14, gGeoIdentity);
-  MFLD->AddNode(FW39, 1, new TGeoCombiTrans(-18.08261, -10.44, 118.7, rot237));
-  FW39->AddNode(FW2E, 15, gGeoIdentity);
-  MFLD->AddNode(FW40, 1, new TGeoCombiTrans(-14.76439, -14.76439, 118.7, rot238));
-  FW40->AddNode(FW2E, 16, gGeoIdentity);
-  MFLD->AddNode(FW41, 1, new TGeoCombiTrans(-10.44, -18.08261, 118.7, rot239));
-  FW41->AddNode(FW2E, 17, gGeoIdentity);
-  MFLD->AddNode(FW42, 1, new TGeoCombiTrans(-5.40414, -20.16853, 118.7, rot240));
-  FW42->AddNode(FW2E, 18, gGeoIdentity);
-  MFLD->AddNode(FW43, 1, new TGeoCombiTrans(0.2489915E-06, -20.88, 118.7, rot241));
-  FW43->AddNode(FW2E, 19, gGeoIdentity);
-  MFLD->AddNode(FW44, 1, new TGeoCombiTrans(5.40415, -20.16853, 118.7, rot242));
-  FW44->AddNode(FW2E, 20, gGeoIdentity);
-  MFLD->AddNode(FW45, 1, new TGeoCombiTrans(10.44001, -18.08261, 118.7, rot243));
-  FW45->AddNode(FW2E, 21, gGeoIdentity);
-  MFLD->AddNode(FW46, 1, new TGeoCombiTrans(14.76439, -14.76439, 118.7, rot244));
-  FW46->AddNode(FW2E, 22, gGeoIdentity);
-  MFLD->AddNode(FW47, 1, new TGeoCombiTrans(18.08261, -10.43999, 118.7, rot245));
-  FW47->AddNode(FW2E, 23, gGeoIdentity);
-  MFLD->AddNode(FW48, 1, new TGeoCombiTrans(20.16853, -5.404137, 118.7, rot246));
-  FW48->AddNode(FW2E, 24, gGeoIdentity);
   //#endif
+  //#ifdef WASAFWDTOF
+  if(FW==true)
+    {
+      MFLD->AddNode(VCF1, 1, new TGeoCombiTrans(0, 0, 102.5, rot4));
+      MFLD->AddNode(VCF2, 1, new TGeoCombiTrans(0, 0, 113.8, rot5));
+      MFLD->AddNode(VCF3, 1, new TGeoCombiTrans(0, 0, 109, rot6));
+      MFLD->AddNode(VCB1, 1, new TGeoCombiTrans(21.4, 0, 113.8, rot7));
+      MFLD->AddNode(VCB2, 1, new TGeoCombiTrans(0, 21.4, 113.8, rot8));
+      MFLD->AddNode(VCB3, 1, new TGeoCombiTrans(-21.4, 0, 113.8, rot9));
+      MFLD->AddNode(VCB4, 1, new TGeoCombiTrans(0, -21.4, 113.8, rot10));
+      MFLD->AddNode(VCW_, 1, new TGeoCombiTrans(0, 0, 173, rot11));
+
+      MFLD->AddNode(BVC2, 1, new TGeoCombiTrans(0, 0, 112.65, rot13));
+      BVC2->AddNode(BTCD->GetVolume(0), 1, gGeoIdentity);
+
+      MFLD->AddNode(FW_1, 1, new TGeoCombiTrans(20.44707, 2.82303, 109.9931, rot199));
+      FW_1->AddNode(FW1E->GetVolume(0), 1, gGeoIdentity);
+      MFLD->AddNode(FW_7, 1, new TGeoCombiTrans(-2.823033, 20.44707, 109.9931, rot200));
+      FW_7->AddNode(FW1E->GetVolume(1), 7, gGeoIdentity);
+      MFLD->AddNode(FW13, 1, new TGeoCombiTrans(-20.44707, -2.823031, 109.9931, rot201));
+      FW13->AddNode(FW1E->GetVolume(2), 13, gGeoIdentity);
+      MFLD->AddNode(FW19, 1, new TGeoCombiTrans(2.823035, -20.44707, 109.9931, rot202));
+      FW19->AddNode(FW1E->GetVolume(3), 19, gGeoIdentity);
+      MFLD->AddNode(FW_6, 1, new TGeoCombiTrans(2.823029, 20.44707, 109.9931, rot203));
+      FW_6->AddNode(FW1E->GetVolume(4), 6, gGeoIdentity);
+      MFLD->AddNode(FW12, 1, new TGeoCombiTrans(-20.44707, 2.823028, 109.9931, rot204));
+      FW12->AddNode(FW1E->GetVolume(5), 12, gGeoIdentity);
+      MFLD->AddNode(FW18, 1, new TGeoCombiTrans(-2.823025, -20.44707, 109.9931, rot205));
+      FW18->AddNode(FW1E->GetVolume(6), 18, gGeoIdentity);
+      MFLD->AddNode(FW24, 1, new TGeoCombiTrans(20.44707, -2.823021, 109.9931, rot206));
+      FW24->AddNode(FW1E->GetVolume(7), 24, gGeoIdentity);
+      MFLD->AddNode(FW_2, 1, new TGeoCombiTrans(19.06945, 7.898826, 109.9931, rot207));
+      FW_2->AddNode(FW1E->GetVolume(8), 2, gGeoIdentity);
+      MFLD->AddNode(FW_3, 1, new TGeoCombiTrans(16.37531, 12.56522, 109.9931, rot208));
+      FW_3->AddNode(FW1E->GetVolume(9), 3, gGeoIdentity);
+      MFLD->AddNode(FW_4, 1, new TGeoCombiTrans(12.56522, 16.37531, 109.9931, rot209));
+      FW_4->AddNode(FW1E->GetVolume(10), 4, gGeoIdentity);
+      MFLD->AddNode(FW_5, 1, new TGeoCombiTrans(7.898825, 19.06945, 109.9931, rot210));
+      FW_5->AddNode(FW1E->GetVolume(11), 5, gGeoIdentity);
+      MFLD->AddNode(FW_8, 1, new TGeoCombiTrans(-7.898825, 19.06945, 109.9931, rot211));
+      FW_8->AddNode(FW1E->GetVolume(12), 8, gGeoIdentity);
+      MFLD->AddNode(FW_9, 1, new TGeoCombiTrans(-12.56522, 16.37531, 109.9931, rot212));
+      FW_9->AddNode(FW1E->GetVolume(13), 9, gGeoIdentity);
+      MFLD->AddNode(FW10, 1, new TGeoCombiTrans(-16.37531, 12.56521, 109.9931, rot213));
+      FW10->AddNode(FW1E->GetVolume(14), 10, gGeoIdentity);
+      MFLD->AddNode(FW11, 1, new TGeoCombiTrans(-19.06945, 7.898826, 109.9931, rot214));
+      FW11->AddNode(FW1E->GetVolume(15), 11, gGeoIdentity);
+      MFLD->AddNode(FW14, 1, new TGeoCombiTrans(-19.06945, -7.89883, 109.9931, rot215));
+      FW14->AddNode(FW1E->GetVolume(16), 14, gGeoIdentity);
+      MFLD->AddNode(FW15, 1, new TGeoCombiTrans(-16.37531, -12.56522, 109.9931, rot216));
+      FW15->AddNode(FW1E->GetVolume(17), 15, gGeoIdentity);
+      MFLD->AddNode(FW16, 1, new TGeoCombiTrans(-12.56522, -16.37531, 109.9931, rot217));
+      FW16->AddNode(FW1E->GetVolume(18), 16, gGeoIdentity);
+      MFLD->AddNode(FW17, 1, new TGeoCombiTrans(-7.898828, -19.06945, 109.9931, rot218));
+      FW17->AddNode(FW1E->GetVolume(19), 17, gGeoIdentity);
+      MFLD->AddNode(FW20, 1, new TGeoCombiTrans(7.898829, -19.06945, 109.9931, rot219));
+      FW20->AddNode(FW1E->GetVolume(20), 20, gGeoIdentity);
+      MFLD->AddNode(FW21, 1, new TGeoCombiTrans(12.56522, -16.37531, 109.9931, rot220));
+      FW21->AddNode(FW1E->GetVolume(21), 21, gGeoIdentity);
+      MFLD->AddNode(FW22, 1, new TGeoCombiTrans(16.37531, -12.56522, 109.9931, rot221));
+      FW22->AddNode(FW1E->GetVolume(22), 22, gGeoIdentity);
+      MFLD->AddNode(FW23, 1, new TGeoCombiTrans(19.06946, -7.898816, 109.9931, rot222));
+      FW23->AddNode(FW1E->GetVolume(23), 23, gGeoIdentity);
+      MFLD->AddNode(FW25, 1, new TGeoCombiTrans(20.88, 0, 118.7, rot223));
+      FW25->AddNode(FW2E, 1, gGeoIdentity);
+      MFLD->AddNode(FW26, 1, new TGeoCombiTrans(20.16853, 5.404141, 118.7, rot224));
+      FW26->AddNode(FW2E, 2, gGeoIdentity);
+      MFLD->AddNode(FW27, 1, new TGeoCombiTrans(18.08261, 10.44, 118.7, rot225));
+      FW27->AddNode(FW2E, 3, gGeoIdentity);
+      MFLD->AddNode(FW28, 1, new TGeoCombiTrans(14.76439, 14.76439, 118.7, rot226));
+      FW28->AddNode(FW2E, 4, gGeoIdentity);
+      MFLD->AddNode(FW29, 1, new TGeoCombiTrans(10.44, 18.08261, 118.7, rot227));
+      FW29->AddNode(FW2E, 5, gGeoIdentity);
+      MFLD->AddNode(FW30, 1, new TGeoCombiTrans(5.40414, 20.16853, 118.7, rot228));
+      FW30->AddNode(FW2E, 6, gGeoIdentity);
+      MFLD->AddNode(FW31, 1, new TGeoCombiTrans(-0.9126937E-06, 20.88, 118.7, rot229));
+      FW31->AddNode(FW2E, 7, gGeoIdentity);
+      MFLD->AddNode(FW32, 1, new TGeoCombiTrans(-5.404144, 20.16853, 118.7, rot230));
+      FW32->AddNode(FW2E, 8, gGeoIdentity);
+      MFLD->AddNode(FW33, 1, new TGeoCombiTrans(-10.44, 18.08261, 118.7, rot231));
+      FW33->AddNode(FW2E, 9, gGeoIdentity);
+      MFLD->AddNode(FW34, 1, new TGeoCombiTrans(-14.76439, 14.76439, 118.7, rot232));
+      FW34->AddNode(FW2E, 10, gGeoIdentity);
+      MFLD->AddNode(FW35, 1, new TGeoCombiTrans(-18.08261, 10.44, 118.7, rot233));
+      FW35->AddNode(FW2E, 11, gGeoIdentity);
+      MFLD->AddNode(FW36, 1, new TGeoCombiTrans(-20.16853, 5.404139, 118.7, rot234));
+      FW36->AddNode(FW2E, 12, gGeoIdentity);
+      MFLD->AddNode(FW37, 1, new TGeoCombiTrans(-20.88, -0.1825387E-05, 118.7, rot235));
+      FW37->AddNode(FW2E, 13, gGeoIdentity);
+      MFLD->AddNode(FW38, 1, new TGeoCombiTrans(-20.16853, -5.404147, 118.7, rot236));
+      FW38->AddNode(FW2E, 14, gGeoIdentity);
+      MFLD->AddNode(FW39, 1, new TGeoCombiTrans(-18.08261, -10.44, 118.7, rot237));
+      FW39->AddNode(FW2E, 15, gGeoIdentity);
+      MFLD->AddNode(FW40, 1, new TGeoCombiTrans(-14.76439, -14.76439, 118.7, rot238));
+      FW40->AddNode(FW2E, 16, gGeoIdentity);
+      MFLD->AddNode(FW41, 1, new TGeoCombiTrans(-10.44, -18.08261, 118.7, rot239));
+      FW41->AddNode(FW2E, 17, gGeoIdentity);
+      MFLD->AddNode(FW42, 1, new TGeoCombiTrans(-5.40414, -20.16853, 118.7, rot240));
+      FW42->AddNode(FW2E, 18, gGeoIdentity);
+      MFLD->AddNode(FW43, 1, new TGeoCombiTrans(0.2489915E-06, -20.88, 118.7, rot241));
+      FW43->AddNode(FW2E, 19, gGeoIdentity);
+      MFLD->AddNode(FW44, 1, new TGeoCombiTrans(5.40415, -20.16853, 118.7, rot242));
+      FW44->AddNode(FW2E, 20, gGeoIdentity);
+      MFLD->AddNode(FW45, 1, new TGeoCombiTrans(10.44001, -18.08261, 118.7, rot243));
+      FW45->AddNode(FW2E, 21, gGeoIdentity);
+      MFLD->AddNode(FW46, 1, new TGeoCombiTrans(14.76439, -14.76439, 118.7, rot244));
+      FW46->AddNode(FW2E, 22, gGeoIdentity);
+      MFLD->AddNode(FW47, 1, new TGeoCombiTrans(18.08261, -10.43999, 118.7, rot245));
+      FW47->AddNode(FW2E, 23, gGeoIdentity);
+      MFLD->AddNode(FW48, 1, new TGeoCombiTrans(20.16853, -5.404137, 118.7, rot246));
+      FW48->AddNode(FW2E, 24, gGeoIdentity);
+    }
+      //  #endif
   
   TGeoRotation* rot252 = new TGeoRotation("rot252", 90, 0, 90, 90, 0, 0);
   TGeoRotation* rot253 = new TGeoRotation("rot253", 0, 0, 90, 180, 90, 270);
