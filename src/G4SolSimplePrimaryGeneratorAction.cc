@@ -118,7 +118,7 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   ConstParticle = GetParticle(nameParticle);//GetParticle("Lambda");
   
   //ConstParticle = GetParticle(Par.Get_Beam_Type());
-  //G4cout<<" PrimaryGenerator :"<<Par.Get_Beam_Type()<<" "<<ConstParticle<<G4endl;
+  //G4cout<<" PrimaryGenerator :"<<Par.Get<std::string>("Particle")<<" "<<ConstParticle<<" "<<nameParticle<<G4endl;
 
   G4double mom;
   
