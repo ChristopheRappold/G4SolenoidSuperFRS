@@ -185,6 +185,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   //G4LogicalVolume* calorLV = FindVolume("Calorimeter");
   
   G4LogicalVolume* WasaLV = FindVolume("WASA");
+  G4LogicalVolume* InnerLV = FindVolume("INNER");
+  InnerLV->SetVisAttributes(G4VisAttributes::Invisible);
   // G4LogicalVolume* DMagLV = FindVolume("DMag1");
   // G4LogicalVolume* VolGapLV = FindVolume("VolGap");
   // G4LogicalVolume* SecondMagFieldLV = FindVolume("SecondMagField");
@@ -203,7 +205,21 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   // aTargetRegion->AddRootLogicalVolume(TargetLV);
 
   //G4Region* aDetectorRegion = new G4Region("DetectorRegion");
- 
+  std::vector<G4String> NameCDC1_Invisible = { "ME01","ME02","ME03","ME04","ME05","ME06","ME07","ME08","ME09","ME10","ME11","ME12","ME13","ME14","ME15","ME16","ME17"};
+  std::vector<G4String> NameCDC2_Invisible = { "MD01","MD02","MD03","MD04","MD05","MD06","MD07","MD08","MD09","MD10","MD11","MD12","MD13","MD14","MD15","MD16","MD17"};
+  for(auto& CurrentName : NameCDC1_Invisible)
+    {
+      G4LogicalVolume* UTracker = FindVolume(CurrentName);
+      UTracker->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+  for(auto& CurrentName : NameCDC2_Invisible)
+    {
+      G4LogicalVolume* UTracker = FindVolume(CurrentName);
+      UTracker->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+
+
+					       
   std::vector<G4String> NameSD = { "MG01","MG02","MG03","MG04","MG05","MG06","MG07","MG08","MG09","MG10","MG11","MG12","MG13","MG14","MG15","MG16","MG17",
 				   "PSCE","PSBE","PSFE"};
  
