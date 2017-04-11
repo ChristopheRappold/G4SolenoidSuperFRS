@@ -350,7 +350,18 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       HypHI_InSi_log->SetVisAttributes(Si_att);
     }
 
-  
+  const double TR1_posZ = Par.Get<double>("HypHI_TR1_posZ");
+  G4VSolid* TR1_box = new G4Box("TR1_box",15.*cm,15.*cm,1.*mm);
+  G4LogicalVolume* TR1_log = new G4LogicalVolume(TR1_box, Scinti, "TR1_log", 0, 0, 0);
+  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR1_posZ)-transMFLD_new), TR1_log, "TR1_phys", MFLD_log,false,0));  
+  NameDetectorsSD.push_back(TR1_log->GetName());
+
+  const double TR2_posZ = Par.Get<double>("HypHI_TR2_posZ");
+  G4VSolid* TR2_box = new G4Box("TR2_box",15.*cm,15.*cm,1.*mm);
+  G4LogicalVolume* TR2_log = new G4LogicalVolume(TR2_box, Scinti, "TR2_log", 0, 0, 0);
+  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR2_posZ)-transMFLD_new), TR2_log, "TR2_phys", MFLD_log,false,0));  
+  NameDetectorsSD.push_back(TR2_log->GetName());
+
   G4VSolid* EndFMF2_box = new G4Box("EndFMF2_box",25.*cm,25.*cm,1.*mm);
   G4LogicalVolume* EndFMF2_log = new G4LogicalVolume(EndFMF2_box, Scinti, "FMF2_log", 0, 0, 0);
   

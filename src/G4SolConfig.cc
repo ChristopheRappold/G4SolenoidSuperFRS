@@ -240,6 +240,14 @@ void G4SolConfig::SetDefault()
   tree.put("FRS_FMF2_posZ",2);
   tree.put("FRS_FMF2_posZ.unit","m");
   tree.put("FRS_FMF2_posZ.unit.m",1.*m);
+
+  tree.put("FRS_TR1_posZ",40);
+  tree.put("FRS_TR1_posZ.unit","cm");
+  tree.put("FRS_TR1_posZ.unit.cm",1.*cm);
+
+  tree.put("FRS_TR2_posZ",70);
+  tree.put("FRS_TR2_posZ.unit","cm");
+  tree.put("FRS_TR2_posZ.unit.cm",1.*cm);
   
   tree.put("CDS_RelativePosTarget",-0.7);
 
