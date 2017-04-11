@@ -186,7 +186,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   
   G4LogicalVolume* WasaLV = FindVolume("WASA");
   G4LogicalVolume* InnerLV = FindVolume("INNER");
-  InnerLV->SetVisAttributes(G4VisAttributes::Invisible);
+  if(!Par.IsAvailable("HypHI_InnerTrackerBox_Visible"))
+    InnerLV->SetVisAttributes(G4VisAttributes::Invisible);
   // G4LogicalVolume* DMagLV = FindVolume("DMag1");
   // G4LogicalVolume* VolGapLV = FindVolume("VolGap");
   // G4LogicalVolume* SecondMagFieldLV = FindVolume("SecondMagField");
@@ -258,7 +259,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   if(WasaLV)
     WasaLV->SetVisAttributes(G4VisAttributes::Invisible);
   if(MFLD_log)
-    MFLD_log->SetVisAttributes(G4VisAttributes::Invisible);
+    if(!Par.IsAvailable("HypHI_InnerTrackerBox_Visible"))
+      MFLD_log->SetVisAttributes(G4VisAttributes::Invisible);
   // if(VolGapLV)
   //   VolGapLV->SetVisAttributes(G4VisAttributes::Invisible);
   // if(SecondMagFieldLV)
