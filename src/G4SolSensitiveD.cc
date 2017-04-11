@@ -86,6 +86,7 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step*aStep, G4TouchableHistory*)
       newHit->TrackID = aStep->GetTrack()->GetTrackID();
       newHit->Energy = energ_depos;
       newHit->Time = aStep->GetPreStepPoint()->GetGlobalTime();
+      newHit->TrackLength = aStep->GetTrack()->GetTrackLength();
       newHit->HitPosX = aStep->GetTrack()->GetPosition().x();
       newHit->HitPosY = aStep->GetTrack()->GetPosition().y();
       newHit->HitPosZ = aStep->GetTrack()->GetPosition().z();
@@ -126,6 +127,7 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step*aStep, G4TouchableHistory*)
 	  newHit->TrackID = aStep->GetTrack()->GetTrackID();
 	  newHit->Energy = energ_depos;
 	  newHit->Time = aStep->GetPreStepPoint()->GetGlobalTime();
+	  newHit->TrackLength = aStep->GetTrack()->GetTrackLength();
 	  newHit->HitPosX = aStep->GetTrack()->GetPosition().x();
 	  newHit->HitPosY = aStep->GetTrack()->GetPosition().y();
 	  newHit->HitPosZ = aStep->GetTrack()->GetPosition().z();

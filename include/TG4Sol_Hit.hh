@@ -34,10 +34,11 @@ class TG4Sol_Hit : public TObject
 
   Double32_t Energy; 
   Double32_t Time;   
-
+  Double32_t TrackLength;
+  
   std::string Pname;
     
-  ClassDef(TG4Sol_Hit,1)  
+  ClassDef(TG4Sol_Hit,2)  
 };
 
 #endif // TG4SOL_HIT_H

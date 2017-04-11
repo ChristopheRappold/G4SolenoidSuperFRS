@@ -276,6 +276,7 @@ void G4SolRunData::FillPerEvent(const G4Event* event)
 	      RootHit->MomZ = TempHit->MomZ/GeV;
 	      RootHit->Energy = TempHit->Energy/MeV;
 	      RootHit->Time = TempHit->Time/ns; 
+	      RootHit->TrackLength = TempHit->TrackLength/cm; 
 	      RootHit->Pname = TempHit->Pname;
 	      RootHit->Mass = TempHit->Mass/GeV;
 	    }

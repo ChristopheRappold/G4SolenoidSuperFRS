@@ -50,7 +50,8 @@ class G4SolHit : public G4VHit
 
   G4double Energy; 
   G4double Time;   
-
+  G4double TrackLength;
+  
   G4String Pname;
 
   G4int LayerID; 
