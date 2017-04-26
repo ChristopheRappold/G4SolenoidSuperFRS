@@ -218,24 +218,33 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
       UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
-
+  FindVolume("SOL")->SetVisAttributes(G4VisAttributes::Invisible);
 
 					       
   std::vector<G4String> NameSD = { "MG01","MG02","MG03","MG04","MG05","MG06","MG07","MG08","MG09","MG10","MG11","MG12","MG13","MG14","MG15","MG16","MG17",
 				   "PSCE","PSBE","PSFE"};
- 
 
-  for(auto& CurrentName : NameSD)
-    {
-      G4LogicalVolume* UTracker = FindVolume(CurrentName);
+  NameDetectorsSD = NameSD;
+  
+  std::vector<G4String> NameSD_Color = { "MG01","MG02","MG03","MG04","MG05","MG06","MG07","MG08","MG09","MG10","MG11","MG12","MG13","MG14","MG15","MG16","MG17"};
+ 
+  FindVolume("PSCE")->SetVisAttributes(G4VisAttributes(Blue));
+  FindVolume("PSBE")->SetVisAttributes(G4VisAttributes(Blue));
+  FindVolume("PSFE")->SetVisAttributes(G4VisAttributes(LightBlue));
 
   //     UTracker->SetRegion(aDetectorRegion);
   //     aDetectorRegion->AddRootLogicalVolume(UTracker);
+      
+  //UTracker->SetVisAttributes(VisDetectorSD);
+    
+  for(size_t iColor = 0; iColor<NameSD_Color.size();++iColor)
+    {
+      G4LogicalVolume* UTracker = FindVolume(NameSD_Color[iColor]);
+      G4VisAttributes MG_Color(ColorCDC[iColor]);
+      UTracker->SetVisAttributes(MG_Color);      
+    }
 
-      UTracker->SetVisAttributes(VisDetectorSD);
-    }  
-
-  NameDetectorsSD = NameSD;
+  
 
   // SetupLV->SetUserLimits( new G4UserLimits(DBL_MAX,Par.Get_CutLength_Track(),10*s,0.,0.) );
   
