@@ -40,6 +40,13 @@
 #include "G4SolConfig.hh"
 #include "G4VPhysicalVolume.hh"
 
+#include "G4Mag_UsualEqRhs.hh"
+#include "G4MagIntegratorStepper.hh"
+#include "G4ChordFinder.hh"
+#include "G4ClassicalRK4.hh"
+#include "G4NystromRK4.hh"
+
+
 class G4VSolid;
 class G4PVPlacement;
 class G4VPhysicalVolume;
@@ -80,6 +87,11 @@ private:
   static G4ThreadLocal G4SolSimpleMagneticField* fMagneticField;
   static G4ThreadLocal G4FieldManager* fFieldMgr;
 
+  G4ChordFinder*          fChordFinder;
+  G4Mag_UsualEqRhs*       fEquation;
+  G4MagIntegratorStepper* fStepper;
+
+  
   const G4Colour  Blue        = {0.0, 0.0, 1.0} ;
   const G4Colour  Gray        = {0.5, 0.5, 0.5} ;
   const G4Colour  Red         = {1.0, 0.0, 0.0} ;

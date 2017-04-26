@@ -106,7 +106,9 @@ G4ThreadLocal G4FieldManager* WasaDetectorConstruction::fFieldMgr = 0;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 WasaDetectorConstruction::WasaDetectorConstruction(const G4SolConfig& _par) : G4SolVDetectorConstruction(_par),experimentalHall_log(nullptr),experimentalHall_phys(nullptr),MFLD_log(nullptr),MFLD_phys(nullptr), fCheckOverlaps(true)
-{}
+{
+
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -551,10 +553,20 @@ void WasaDetectorConstruction::ConstructSDandField()
   G4ThreeVector fCDC   (0.0, 0.0, fCDField);  
 
   fMagneticField = new G4SolSimpleMagneticField();
-  fFieldMgr = new G4FieldManager();
-  fFieldMgr->SetDetectorField(fMagneticField);
-  fFieldMgr->CreateChordFinder(fMagneticField);
+  fMagneticField->SetField(fCDC);
+  
+  fEquation = new G4Mag_UsualEqRhs(fMagneticField);
+  //fStepper = new G4ClassicalRK4( fEquation );
+  fStepper = new G4NystromRK4(fEquation);
 
+  
+  fFieldMgr = new G4FieldManager();
+  //fFieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+  fFieldMgr->SetDetectorField(fMagneticField);
+  //fFieldMgr->CreateChordFinder(fMagneticField);
+  fChordFinder = new G4ChordFinder(fMagneticField, 1.e-2, fStepper);
+  fFieldMgr->SetChordFinder(fChordFinder);
+  
   G4bool forceToAllDaughters = true;
   INNER_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   //CDS_endcap_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
@@ -563,7 +575,11 @@ void WasaDetectorConstruction::ConstructSDandField()
   
   G4AutoDelete::Register(fMagneticField);
   G4AutoDelete::Register(fFieldMgr);
-
+  G4AutoDelete::Register(fEquation);
+  G4AutoDelete::Register(fStepper);
+  G4AutoDelete::Register(fChordFinder);
+  
+  
   
   // G4FieldManager* fieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
 
