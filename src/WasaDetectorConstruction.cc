@@ -161,12 +161,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   std::cout<<"Rot:"<<rotMFLD<<"\n";
 
   const G4double Wasa_Zshift = Par.Get<double>("Wasa_ShiftZ");
-
+  const G4double Systematic_shift =  Par.Get<double>("Systematic_Shift");
   const G4double TargetPosX = Par.Get<double>("Target_PosX");
   const G4double TargetPosY = Par.Get<double>("Target_PosY");
   const G4double TargetPosZ = Par.Get<double>("Target_PosZ");
 
-  G4ThreeVector transMFLD_move(0.,0.,Wasa_Zshift);
+  G4ThreeVector transMFLD_move(0.,0.,Wasa_Zshift+Systematic_shift);
   G4ThreeVector transMFLD_new = transMFLD+transMFLD_move;
 
   const int WasaSide = Par.Get<int>("Wasa_Side");
@@ -353,13 +353,13 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   const double TR1_posZ = Par.Get<double>("HypHI_TR1_posZ");
   G4VSolid* TR1_box = new G4Box("TR1_box",15.*cm,15.*cm,1.*mm);
   G4LogicalVolume* TR1_log = new G4LogicalVolume(TR1_box, Scinti, "TR1_log", 0, 0, 0);
-  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR1_posZ)-transMFLD_new), TR1_log, "TR1_phys", MFLD_log,false,0));  
+  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR1_posZ+Systematic_shift)-transMFLD_new), TR1_log, "TR1_phys", MFLD_log,false,0));  
   NameDetectorsSD.push_back(TR1_log->GetName());
 
   const double TR2_posZ = Par.Get<double>("HypHI_TR2_posZ");
   G4VSolid* TR2_box = new G4Box("TR2_box",15.*cm,15.*cm,1.*mm);
   G4LogicalVolume* TR2_log = new G4LogicalVolume(TR2_box, Scinti, "TR2_log", 0, 0, 0);
-  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR2_posZ)-transMFLD_new), TR2_log, "TR2_phys", MFLD_log,false,0));  
+  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR2_posZ+Systematic_shift)-transMFLD_new), TR2_log, "TR2_phys", MFLD_log,false,0));  
   NameDetectorsSD.push_back(TR2_log->GetName());
 
   G4VSolid* EndFMF2_box = new G4Box("EndFMF2_box",25.*cm,25.*cm,1.*mm);
@@ -373,9 +373,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   //   rotFMF2->rotateY(-180*degree);
   double FMF2_posZ = Par.Get<double>("FRS_FMF2_posZ");
   
-  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ)-transMFLD_new), EndFMF2_log, "FMF2_phys", MFLD_log,false,0));  
-  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ+1.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys1", MFLD_log,false,1));
-  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ+2.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys2", MFLD_log,false,2));
+  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ+Systematic_shift)-transMFLD_new), EndFMF2_log, "FMF2_phys", MFLD_log,false,0));  
+  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ+Systematic_shift+1.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys1", MFLD_log,false,1));
+  AllPlacements.emplace_back(new G4PVPlacement(rotFMF2,Sign*(G4ThreeVector(0., 0., FMF2_posZ+Systematic_shift+2.*cm)-transMFLD_new), EndFMF2_log, "FMF2_phys2", MFLD_log,false,2));
 
   G4VisAttributes *FMF2_att = new G4VisAttributes(Red);
   FMF2_att->SetForceWireframe(false);
@@ -392,7 +392,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   // if(WasaSide==1)
   //   rotEndCap->rotateY(90*degree);
 
-  AllPlacements.emplace_back(new G4PVPlacement(rotEndCap, Sign*(G4ThreeVector(0., 0., HypHI_EndCap_PosZ)-transMFLD_new), HypHI_Endcap_log, "HypHI_Endcap",
+  AllPlacements.emplace_back(new G4PVPlacement(rotEndCap, Sign*(G4ThreeVector(0., 0., HypHI_EndCap_PosZ+Systematic_shift)-transMFLD_new), HypHI_Endcap_log, "HypHI_Endcap",
 					       MFLD_log, false,0));
   
   //--- Visualization ---//
