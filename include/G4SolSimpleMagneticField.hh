@@ -47,7 +47,7 @@ public:
     
   virtual void GetFieldValue(const G4double point[4],double* bField ) const;
   
-  void SetField(const G4ThreeVector& val) { fBx = val.x(); fBx = val.y(); fBx = val.z(); fField = val;}
+  void SetField(const G4ThreeVector& val) { fBx = val.x(); fBy = val.y(); fBz = val.z(); fField = val;}
   void SetFieldBx(double val) { fBx = val;}
   void SetFieldBy(double val) { fBy = val;}
   void SetFieldBz(double val) { fBz = val;}

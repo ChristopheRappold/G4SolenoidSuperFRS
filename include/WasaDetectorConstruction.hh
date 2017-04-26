@@ -124,6 +124,9 @@ private:
   G4LogicalVolume* MFLD_log;
   G4VPhysicalVolume* MFLD_phys;
 
+  G4LogicalVolume* INNER_log;
+  G4VPhysicalVolume* INNER_phys;
+
   G4ThreeVector transMFLD;
   G4RotationMatrix rotMFLD;
 

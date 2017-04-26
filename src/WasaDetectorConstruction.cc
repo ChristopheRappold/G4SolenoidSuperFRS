@@ -188,6 +188,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4LogicalVolume* InnerLV = FindVolume("INNER");
   if(!Par.IsAvailable("HypHI_InnerTrackerBox_Visible"))
     InnerLV->SetVisAttributes(G4VisAttributes::Invisible);
+
+  INNER_log = FindVolume("INNER");
+  INNER_phys = FindVolPhys("INNER");
+
   // G4LogicalVolume* DMagLV = FindVolume("DMag1");
   // G4LogicalVolume* VolGapLV = FindVolume("VolGap");
   // G4LogicalVolume* SecondMagFieldLV = FindVolume("SecondMagField");
@@ -552,7 +556,7 @@ void WasaDetectorConstruction::ConstructSDandField()
   fFieldMgr->CreateChordFinder(fMagneticField);
 
   G4bool forceToAllDaughters = true;
-  MFLD_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
+  INNER_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   //CDS_endcap_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   // if(DoModHypHI)
   //   HypHI_InTracker_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
