@@ -62,11 +62,12 @@ void HypernuclearPhysics::ConstructParticle()
   TnnL* nnL = TnnL::nnLDefinition();
   
   std::vector<double> vecBR;
-  vecBR.resize(4);
+  vecBR.resize(5);
   vecBR[0] = Par.Get<double>("HyperNuclei_H4L_br_mode1");
   vecBR[1] = Par.Get<double>("HyperNuclei_H4L_br_mode2");
   vecBR[2] = Par.Get<double>("HyperNuclei_H4L_br_mode3");
   vecBR[3] = Par.Get<double>("HyperNuclei_H4L_br_mode4");
+  vecBR[4] = Par.Get<double>("HyperNuclei_H4L_br_mode5");
   h4l->setBR(vecBR);
   h4l->setLT(Par.Get<double>("HyperNuclei_H4LT12"));
 

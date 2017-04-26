@@ -258,10 +258,11 @@ void G4SolConfig::SetDefault()
   
   tree.put("Physicslist","G4Default_FTFP_BERT");
 
-  tree.put("HyperNuclei_H4L_br_mode1",0.); 
-  tree.put("HyperNuclei_H4L_br_mode2",1.); 
+  tree.put("HyperNuclei_H4L_br_mode1",1.); 
+  tree.put("HyperNuclei_H4L_br_mode2",0.); 
   tree.put("HyperNuclei_H4L_br_mode3",0.); 
   tree.put("HyperNuclei_H4L_br_mode4",0.); 
+  tree.put("HyperNuclei_H4L_br_mode5",0.); 
 
   tree.put("HyperNuclei_H4LT12",0.194);
   tree.put("HyperNuclei_H4LT12.unit","ns");
