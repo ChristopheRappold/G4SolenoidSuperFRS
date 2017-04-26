@@ -219,6 +219,10 @@ void G4SolConfig::SetDefault()
   tree.put("Wasa_ShiftZ.unit","m");
   tree.put("Wasa_ShiftZ.unit.m",1.*m);
 
+  tree.put("Systematic_Shift",0);
+  tree.put("Systematic_Shift.unit","cm");
+  tree.put("Systematic_Shift.unit.cm",1.*cm);
+    
   tree.put("Wasa_Side",0);
 
   tree.put("HypHI_Si_minR",1);
