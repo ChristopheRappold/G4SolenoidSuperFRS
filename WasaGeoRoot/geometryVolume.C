@@ -198,6 +198,7 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   //#ifdef WASAFWDTOF
   TGeoVolume* VCF1 = nullptr;
   TGeoVolume* VCF2 = nullptr;
+  TGeoVolume* VCF3 = nullptr;
   TGeoVolume* VCB1 = nullptr; 
   TGeoVolume* VCB2 = nullptr; 
   TGeoVolume* VCB3 = nullptr; 
@@ -260,7 +261,7 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
 
   if(FW==true)
     {
-      CF1 = gGeoManager->MakeTube("VCF1", med21, 3.4, 4.2, 0.5);
+      VCF1 = gGeoManager->MakeTube("VCF1", med21, 3.4, 4.2, 0.5);
       VCF1->SetLineColor(kBlue-4);
       VCF2 = gGeoManager->MakeTube("VCF2", med22, 3.4, 4.2, 1.3);
       VCF2->SetLineColor(kBlue-4);
