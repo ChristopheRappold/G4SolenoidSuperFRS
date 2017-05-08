@@ -126,9 +126,9 @@ private:
 				     {222/255.,45/255.,38/255.}, {165/255.,15/255.,21/255.}};
     
   
-  const G4Colour ColorCDC[17] = {PaletteOrange[0],PaletteOrange[0],PaletteOrange[0],PaletteOrange[0],PaletteOrange[0],
-				 PaletteOrange[2],PaletteOrange[2],PaletteOrange[2],PaletteOrange[2],PaletteOrange[2],PaletteOrange[2],
-				 PaletteOrange[3],PaletteOrange[3],PaletteOrange[3],PaletteOrange[3],PaletteOrange[3],PaletteOrange[3]};
+  const G4Colour ColorCDC[17] = {PaletteOrange[0],PaletteOrange[0],PaletteOrange[1],PaletteOrange[1],PaletteOrange[1],
+				 PaletteOrange[2],PaletteOrange[2],PaletteOrange[2],PaletteOrange[3],PaletteOrange[3],PaletteOrange[3],
+				 PaletteOrange[3],PaletteOrange[4],PaletteOrange[4],PaletteOrange[4],PaletteOrange[4],PaletteOrange[4]};
   
   G4LogicalVolume* experimentalHall_log;
   G4VPhysicalVolume*   experimentalHall_phys;
