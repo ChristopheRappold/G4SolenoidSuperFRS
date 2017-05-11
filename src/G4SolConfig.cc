@@ -257,6 +257,8 @@ void G4SolConfig::SetDefault()
 
   tree.put("Output_Namefile","Default_Output.root");
 
+  tree.put("Geometry_Namefile","geometry.root");
+  
   tree.put("SimpleGeo",1);
   tree.put("Geo","CDS");
   

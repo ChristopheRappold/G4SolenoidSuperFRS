@@ -134,7 +134,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   // Import geometry from the root file
   new TGeoManager("Wasa", "Geant4 basic example Wasa");
-  gGeoManager->Import("geometry.root");
+
+  const std::string nameGeometry = Par.Get<std::string>("Geometry_Namefile");
+  gGeoManager->Import(nameGeometry.c_str());
 
   // Import geometry from Root to VGM
   RootGM::Factory rtFactory;
