@@ -50,8 +50,9 @@ gGeoManager->Export("name_of_your_geometry.root");
 This is not needed anymore:
 >>>
 Go to your build directory. You would need to make symbolic link of the geometry :
-sh
+
 cd build
+
 ln -s ../WasaGeoRoot/"name...".root ./geometry.root
 
 Later the geometry will be load from the configuration file, instead from a hardlink in the code.
@@ -83,3 +84,27 @@ binary name : ./G4SolenoidSimple
 * [-m run.mac] [--mac run.mac] : provide Geant4 macro file for Geant4 settings (for example number of events generated).
 * [-c config.par] [--config config.par] : configuration file for the code, can set different option that are implemented within the simulation code.
 * Outputfile.root : mandatory ! provide name of ROOT output file. 
+
+## Example :
+
+*  Run with GUI with beam and geometry setting in config file. An output file is mandatory, in this case it is just like a dummy file since it will have only the event run in the GUI.
+
+```sh
+./G4SolenoidSimple -g -c configWasa_1.8T.par OutGUI.root
+```
+
+* Run in batch mode for full run. Config file and macro file are provided. External event generator file is set as input. And finally the output file. 
+
+```sh
+./G4SolenoidSimple -c configWasa_1.8T.par -i ../../UrQMDEvents_10_L_wAssoc.dat_div60_new.dat -m runSim.mac run_LambdaWithA_WasaFront3_Field1.8T.root
+```
+
+
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Merge Request
