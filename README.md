@@ -100,7 +100,6 @@ binary name : ./G4SolenoidSimple
 ```
 
 
-
 ## Contributing
 
 1. Fork it
@@ -108,3 +107,102 @@ binary name : ./G4SolenoidSimple
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Merge Request
+
+## Input files :
+
+### Configuration option :
+
+The default option can be seen in src/G4SolConfig.cc 
+
+Example : 
+```
+Target_Size 2 cm
+```
+
+The first string is the key in the configuration data structure. The second can be anything: string, integer, or double; it will be delimited by the white space. The third key is only for declaring the unit. In this example the key into the configuration data structure is "Target_Size", which stand for the half-size of target, which is set to be 2 cm. The string "Target\_Size" is use to retrieve the contain "2 cm". The unit is the unit defined within Geant4 framework. 
+
+Any key / contain can be set in the configuration file. Please keep the convention that the key name starts with a Capital letter. It will loaded in the configuration data structure. Then it can be obtained via the config object. Mandatory key/contain do not need to be set in the configuration file since they will be set and fill by default values. If other values are needed, the default values are overridden by the values of the configuration file.
+
+Any line in the configuration file can be made ignored with a # at the beginning of the line as a shell comment
+
+Example of configuration file:
+
+```
+Target_Size 2 cm
+#CDS_RelativePosTarget -1.5
+#CD_AbsPosTarget 1. m
+Wasa_Side 0
+Wasa_ShiftZ 1. m
+#Systematic_Shift 0 cm
+Field_CDS_Bz 1.8 tesla
+chambersize 300 mm
+#Particle lambda
+Particle H3L
+Beam_Momentum 9 GeV
+Geo Wasa
+Geometry_Namefile ../WasaGeoRoot/WasaGeometry5_biggerEntrance.root 
+SimpleGeo 0
+#Physicslist G4_QGSP_FTFP_BERT
+Physicslist G4Default_FTFP_BERT
+HypHI_InnerTracker_Spec 1
+HypHI_InnerTracker_PosZ 2. cm
+HypHI_InnerTracker_Nb 4
+HypHI_InnerTracker_Spacing 1. cm
+HypHI_Si_minR 0. cm
+HypHI_Si_maxR 15. cm
+HypHI_EndCap_posZ 150. cm
+HypHI_EndCap_maxR 20. cm
+FRS_FMF2_posZ 3. m
+HypHI_TR1_posZ 20. cm
+HypHI_TR2_posZ 40. cm
+#ReductionFactor 0.8
+ConvertRoot GeoWasaRealSolenoidFront.root
+#HypHI_Downstream_Size 0.85 m
+#HypHI_Downstream_Shift -0.36 m
+#HypHI_InnerTrackerBox_Visible 0
+HyperNuclei_H3L_T12 0.200 ns
+```
+
+Some explanations for the most important options:
+
+| Key name                    | possible value            | purpose |
+|-----------------------------|---------------------------|-------|
+| Particle                    | string                    | Name of the particle/ion for the beam definition. It is used when then Geant4 event generator is used. for ion : Z3A6 = Li6 beam, Z6A12 = C12 | 
+| Beam\_SpotSizeSigma         | double + unit: 1 cm       | Size of the beam profile in the transverse plane. Primary vertex is randomize within a Gaussian dist. | 
+| Beam\_Momentum              | double + unit : 10 GeV    | Beam momentum in GeV. Be careful in case of ion it is the total momentum, not per nucleon |
+| Beam\_MomentumSigma         | double + unit : 1 MeV     | In case of needs of momentum randomization |
+| Beam\_Momentum(X, Y, Z)     | double                    | Define the unit direction vector |
+| Beam_Momentum(X, Y, Z)sigma | double                    | In case of needs of randomization of the direction vector |
+| Target\_Size                | double + unit : 2 cm      | Half-size of the target (cube) |
+| Field\_CDS\_Bz              | double + unit : 1.3 tesla | Set the magnetic field value |
+|                             |                           | |
+| SimpleGeo                   | bool                      | Set for simple geometry case for debugging only |
+| Geo                         | string                    | Name of the Geometry class used for the Geant4 geometry construction. See src/G4SolGeometryController.cc |
+| Wasa\_ShiftZ                | double + unit: 1 m        | Placement of the Wasa central detector from the target | 
+| Wasa\_Side                  | int/bool: 0 or 1          | To flip the Wasa geometry so that the back of the central detector is now the front |
+| Geometry\_Namefile          | string                    | Path of the Wasa geometry file |
+| Physicslist                 | string                    | Name of the physics list option |
+|                             |                           |  |
+| DefaultRegionCut            | double + unit: 1 mm       | Value for region cut as defined in Geant4 | 
+
+### Geant4 macro file:
+
+Those files are responsible for the internal Geant4 configuration. The most important part is the /run/beamOn "Nb\_of\_Events"
+
+Example :
+```
+# Macro file for G4SolSimple
+# 
+# Can be run in batch, without graphic
+# or interactively: Idle> /control/execute run1.mac
+#
+# Change the default number of workers (in multi-threading mode) 
+#/run/numberOfWorkers 4
+#
+# Initialize kernel
+/run/initialize
+#
+#/run/verbose 1
+/run/printProgress 1000
+/run/beamOn 50000
+```
