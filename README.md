@@ -47,13 +47,17 @@ gGeoManager->Export("name_of_your_geometry.root");
 
 5. To run the simulation:
 
+This is not needed anymore:
+>>>
 Go to your build directory. You would need to make symbolic link of the geometry :
-```sh
+sh
 cd build
 ln -s ../WasaGeoRoot/"name...".root ./geometry.root
-```
-Later the geometry will be load from the configuration file, instead from a hardlink in the code.
 
+Later the geometry will be load from the configuration file, instead from a hardlink in the code.
+>>>
+
+The path for the geometry file is now set via the config file, it is not hardcoded anymore
 
 ## Needed : 
 
