@@ -92,7 +92,7 @@ G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4Sol
   fSpotSizeSigma = Par.Get<double>("Beam_SpotSizeSigma");
   fTargetSize = Par.Get<double>("Target_Size");
   
-  ConstParticle = GetParticle(nameParticle);
+  ConstParticle = GetParticle("geantino");//nullptr;//GetParticle(nameParticle);
 
   fParticleGun->SetParticlePosition(G4ThreeVector(fPosX,fPosY,fPosZ));
   fParticleGun->SetParticleDefinition(ConstParticle);
