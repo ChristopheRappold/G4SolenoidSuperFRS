@@ -39,6 +39,7 @@
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
+#include "G4SubtractionSolid.hh"
 
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
@@ -306,7 +307,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
     
   //G4Material* Air = materialMgr->FindOrBuildMaterial("G4_AIR");
   G4Material* Air = materialMgr->FindOrBuildMaterial("G4_AIR");
-  //G4Material* Vacuum = materialMgr->FindOrBuildMaterial("G4_Galactic");
+  G4Material* Vacuum = materialMgr->FindOrBuildMaterial("G4_Galactic");
   G4Material* Si = materialMgr->FindOrBuildMaterial("G4_Si");//"Plastic");
   G4Material* Scinti = materialMgr->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");//G4_POLYETHYLENE");//"Plastic");
   G4Material* Carbon = materialMgr->FindOrBuildMaterial("G4_C");//"Plastic");
@@ -314,9 +315,13 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4VisAttributes *Si_att = new G4VisAttributes(Pink);
 
   G4double TargetLength = Par.Get<double>("Target_Size");//1.0*cm;
-
+  G4double BeamHoleSize = 0.*cm;
+  if(Par.IsAvailable("HypHI_BeamHole"))
+    BeamHoleSize = Par.Get<double>("HypHI_BeamHole");
+  
   G4VSolid*        HypHI_Target = new G4Box("HypHI_Target", TargetLength, TargetLength, TargetLength);
-  G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
+  //G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
+  G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Vacuum,"HypHI_Target_log", 0,0,0);
   //G4PVPlacement*   HypHI_Target_phys = 
   G4ThreeVector TargetTrans = G4ThreeVector(TargetPosX, TargetPosY , TargetPosZ)-transMFLD_new;
   G4RotationMatrix* TargetRot = new G4RotationMatrix;
@@ -374,13 +379,32 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
     }
 
   const double TR1_posZ = Par.Get<double>("HypHI_TR1_posZ");
-  G4VSolid* TR1_box = new G4Box("TR1_box",15.*cm,15.*cm,1.*mm);
+  G4VSolid* TR1_box = nullptr;
+  if(Par.IsAvailable("HypHI_BeamHole"))
+    {
+      G4VSolid* TR1_box_init = new G4Box("TR1_box_init",15.*cm,15.*cm,1.*mm);
+      G4VSolid* TR1_box_hole = new G4Box("TR1_box",BeamHoleSize*0.5,BeamHoleSize*0.5,1.*mm);
+      TR1_box = new G4SubtractionSolid("TR1_box", TR1_box_init, TR1_box_hole);
+    }
+  else
+    TR1_box = new G4Box("TR1_box",15.*cm,15.*cm,1.*mm);
+
   G4LogicalVolume* TR1_log = new G4LogicalVolume(TR1_box, Scinti, "TR1_log", 0, 0, 0);
   AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR1_posZ+Systematic_shift)-transMFLD_new), TR1_log, "TR1_phys", MFLD_log,false,0));  
   NameDetectorsSD.push_back(TR1_log->GetName());
 
   const double TR2_posZ = Par.Get<double>("HypHI_TR2_posZ");
-  G4VSolid* TR2_box = new G4Box("TR2_box",15.*cm,15.*cm,1.*mm);
+  
+  G4VSolid* TR2_box = nullptr;
+  if(Par.IsAvailable("HypHI_BeamHole"))
+    {
+      G4VSolid* TR2_box_init = new G4Box("TR2_box_init",15.*cm,15.*cm,1.*mm);
+      G4VSolid* TR2_box_hole = new G4Box("TR2_box_hole",BeamHoleSize*0.5, BeamHoleSize*0.5,1.*mm);
+      TR2_box = new G4SubtractionSolid("TR2_box", TR2_box_init, TR2_box_hole);
+    }
+  else
+    TR2_box = new G4Box("TR2_box",15.*cm,15.*cm,1.*mm);
+
   G4LogicalVolume* TR2_log = new G4LogicalVolume(TR2_box, Scinti, "TR2_log", 0, 0, 0);
   AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR2_posZ+Systematic_shift)-transMFLD_new), TR2_log, "TR2_phys", MFLD_log,false,0));  
   NameDetectorsSD.push_back(TR2_log->GetName());
@@ -421,7 +445,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   //--- Visualization ---//
   HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
   
-  G4VSolid* HypHI_TrackerFwd = new G4Tubs("HypHI_TrackerFwd",0., HypHI_EndCap_rmax, 2*mm, 0,CLHEP::twopi);
+  G4VSolid* HypHI_TrackerFwd = new G4Tubs("HypHI_TrackerFwd",BeamHoleSize*0.5, HypHI_EndCap_rmax, 2*mm, 0,CLHEP::twopi);
   G4LogicalVolume* HypHI_TrackerFwd_log = new G4LogicalVolume(HypHI_TrackerFwd,Air,"HypHI_TrackFwd_log",0,0,0);
   
   NameDetectorsSD.push_back(HypHI_TrackerFwd_log->GetName());
@@ -435,7 +459,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0, 0, -0.5*cm),
 					       HypHI_TrackerFwd_log, "HypHI_TrackerFwd2", HypHI_Endcap_log, false,2));
             
-  G4VSolid* HypHI_RPC_l = new G4Tubs("HypHI_RPC_segment_L",0., HypHI_EndCap_rmax/2., 0.5*cm, -CLHEP::twopi/16.,2.*CLHEP::twopi/16.);
+  G4VSolid* HypHI_RPC_l = new G4Tubs("HypHI_RPC_segment_L",BeamHoleSize*0.5, HypHI_EndCap_rmax/2., 0.5*cm, -CLHEP::twopi/16.,2.*CLHEP::twopi/16.);
   G4LogicalVolume* HypHI_RPC_l_log = new G4LogicalVolume(HypHI_RPC_l, Air, "HypHI_RPC_l_log",0,0,0);
   NameDetectorsSD.push_back(HypHI_RPC_l_log->GetName());
   G4VSolid* HypHI_RPC_h = new G4Tubs("HypHI_RPC_segment_H",HypHI_EndCap_rmax/2., HypHI_EndCap_rmax, 0.5*cm, -CLHEP::twopi/16.,2.*CLHEP::twopi/16.);
