@@ -221,9 +221,14 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
       UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
+
+  //int iColorT = 0;
   for(auto& CurrentName : NameCDC2_Invisible)
     {
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
+      //G4VisAttributes MG_Color(ColorCDC[iColorT]);
+      //UTracker->SetVisAttributes(MG_Color);
+      //++iColorT;
       UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
   FindVolume("SOL")->SetVisAttributes(G4VisAttributes::Invisible);
@@ -250,6 +255,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4LogicalVolume* UTracker = FindVolume(NameSD_Color[iColor]);
       G4VisAttributes MG_Color(ColorCDC[iColor]);
       UTracker->SetVisAttributes(MG_Color);      
+      //UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
   
