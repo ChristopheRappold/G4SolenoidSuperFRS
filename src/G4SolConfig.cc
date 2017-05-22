@@ -17,6 +17,7 @@ static struct option optlong[] =
     {"help",0,NULL,'h'},
     {"gui",0,NULL,'g'},
     {"mac",1,NULL,'m'},
+    {"seed",1,NULL,'s'},
     {"input",1,NULL,'i'},
     {"config",1,NULL,'c'},
   };
@@ -79,7 +80,7 @@ int G4SolConfig::ParseCmd(int argc,char** argv)
     std::cout << "!> Wrong number of parameters!\n";
     std::cout << "!> Example of use:\n";
     std::cout << "!> " << argv[0];
-    std::cout << "!> [-h] [--help] [-g] [--gui] [-i inputfile] [--input inputfile] [-m run.mac] [--mac run.mac] [-c config.par] [--config config.par] Outputfile.root \n";
+    std::cout << "!> [-h] [--help] [-g] [--gui] [-s seed] [--seed seed] [-i inputfile] [--input inputfile] [-m run.mac] [--mac run.mac] [-c config.par] [--config config.par] Outputfile.root \n";
     std::cout << " \n";
   };
   
@@ -90,11 +91,13 @@ int G4SolConfig::ParseCmd(int argc,char** argv)
     }
   int option_char;
   std::string nameI, nameM, nameC("testconfig.par");
-  while ((option_char = getopt_long (argc,argv,"+hgm:i:c:",optlong,NULL)) != EOF)
+  long seed;
+  while ((option_char = getopt_long (argc,argv,"+hgs:m:i:c:",optlong,NULL)) != EOF)
     switch (option_char)
       {  
       case 'h': print_help(); return -1; break;
       case 'g': std::cout<<"Gui mode "<<std::endl; tree.put("Gui",1); break; 
+      case 's': std::cout<<"Seed for Parallel runs :"<<optarg<<std::endl; seed = std::stol(optarg); tree.put("HEPRand_Seed",seed); break;
       case 'i': std::cout<<"Inputfile of Event :"<<optarg<<std::endl; nameI=optarg; tree.put("InputFile",nameI); break;
       case 'm': std::cout<<"Macro File :"<<optarg<<std::endl; nameM=optarg; tree.put("MacroFile",nameM); break;
       case 'c': std::cout<<"Configuration File :"<<optarg<<std::endl; nameC=optarg; tree.put("Config",nameC); break;

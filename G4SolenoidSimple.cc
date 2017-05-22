@@ -80,6 +80,17 @@ int main(int argc,char** argv)
   config.CheckConfig();
 
   int guimode = config.Get<int>("Gui"); 
+
+  if(config.IsAvailable("HEPRand_Seed"))
+    {
+      std::cout<<"!> Set Seed for HepRandom :\n";
+      //CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
+      //CLHEP::HepRandom::setTheEngine(new CLHEP::MixMaxRng);
+      CLHEP::HepRandom::setTheSeed(config.Get<long>("HEPRand_Seed"));
+      CLHEP::HepRandom::showEngineStatus();
+    }
+  else
+    CLHEP::HepRandom::showEngineStatus();
   
 #ifdef G4UI_USE
   // Detect interactive mode (if no arguments) and define UI session
