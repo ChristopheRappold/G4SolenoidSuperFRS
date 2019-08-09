@@ -50,7 +50,7 @@ struct Daugthers_Info
 {
 
   G4ThreeVector secondary_vertex;
-  G4double decaytime;
+  G4double decaytime = 0.0;
   std::vector<G4ThreeVector> mom_daughters;
   std::vector<G4double> mass_daughters;
   std::vector<G4double> charge_daughters;
