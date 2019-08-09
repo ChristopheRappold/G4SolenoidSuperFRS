@@ -33,8 +33,14 @@
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
+#include "Randomize.hh"
+
 #include "G4SolConfig.hh"
 #include "G4ThreeVector.hh"
+
+#include <functional>
+#include <unordered_map>
+#include <tuple>
 
 class G4ParticleGun;
 class G4GenericMessenger;
@@ -97,10 +103,33 @@ private:
   G4double fPosZ;
   G4double fSpotSizeSigma;
   G4double fTargetSize;
+
+  G4double fDirTheta_1;
+  G4double fDirTheta_2;
+
+  G4double fDirPhi_1;
+  G4double fDirPhi_2;
+
+  G4int fRandomizePrimary[5] = {0,0,0,0,0}; // [0] : Position / [1] : Total Mom / [2] : Beam Dir / [3] : Beam Theta / [4] : Beam Phi 
+
+  std::unordered_map<int, std::function<double(double, double)> > RandTable {
+									     {1, [](double mean, double sigma) { return G4RandGauss::shoot(mean, sigma);} },
+									     {2, [](double min, double max) { return G4RandFlat::shoot(min, max); } },
+									     {3, [](double a, double) { return a;} },};
+
+  G4bool setBinRand;
+  G4long eventPerBin;
+  G4long currentEvent;
+  std::tuple<unsigned int,unsigned int> currentBin;
+  G4int NbBin;
+  std::vector<std::tuple<double,double> > ThetaBins;
+  std::vector<std::tuple<double,double> > PhiBins;
   
-  G4bool fRandomizePrimary[3] = {true,true,true};
 
   const G4SolConfig& Par;
+
+  
+  
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

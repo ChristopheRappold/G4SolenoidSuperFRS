@@ -79,7 +79,7 @@ private:
   
   G4long nEvents;
   
-  G4bool fRandomizePrimary[3] = {true,true,true};
+  G4int fRandomizePrimary[3] = {1,1,1};
 
   const G4SolConfig& Par;
   

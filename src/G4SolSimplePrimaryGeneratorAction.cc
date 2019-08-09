@@ -38,7 +38,6 @@
 
 #include "G4GenericMessenger.hh"
 #include "G4SystemOfUnits.hh"
-#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -63,14 +62,19 @@ G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4Sol
     fKineticE = -1;
 
   if(Par.IsAvailable("Beam_PosRandom"))
-    fRandomizePrimary[0] = Par.Get<int>("Beam_PosRandom") == 1 ? true : false;
+    fRandomizePrimary[0] = Par.Get<int>("Beam_PosRandom") ;//== 1 ? true : false;
 
   if(Par.IsAvailable("Beam_TotalMomRandom"))
-    fRandomizePrimary[1] = Par.Get<int>("Beam_TotalMomRandom") == 1 ? true : false;
+    fRandomizePrimary[1] = Par.Get<int>("Beam_TotalMomRandom") ;//== 1 ? true : false;
 
   if(Par.IsAvailable("Beam_DirMomRandom"))
-    fRandomizePrimary[2] = Par.Get<int>("Beam_DirMomRandom") == 1 ? true : false;
+    fRandomizePrimary[2] = Par.Get<int>("Beam_DirMomRandom") ;//== 1 ? true : false;
+  
+  if(Par.IsAvailable("Beam_DirThetaRandom"))
+    fRandomizePrimary[3] = Par.Get<int>("Beam_DirThetaRandom");
 
+  if(Par.IsAvailable("Beam_DirPhiRandom"))
+    fRandomizePrimary[4] = Par.Get<int>("Beam_DirPhiRandom");
   
   fMomentum = Par.Get<double>("Beam_Momentum");
   fSigmaMomentum = Par.Get<double>("Beam_MomentumSigma");
@@ -98,6 +102,74 @@ G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4Sol
   fParticleGun->SetParticleDefinition(ConstParticle);
   fParticleGun->SetParticleEnergy(fMomentum);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(fDirX,fDirY,fDirZ));
+
+ 
+  if(Par.IsAvailable("Beam_PosX"))
+    fPosX = Par.Get<double>("Beam_PosX");
+  if(Par.IsAvailable("Beam_PosY"))
+    fPosY = Par.Get<double>("Beam_PosY");
+  if(Par.IsAvailable("Beam_PosZ"))
+    fPosZ = Par.Get<double>("Beam_PosZ");
+
+  
+  if(Par.IsAvailable("Beam_DirTheta_1"))
+    fDirTheta_1 = Par.Get<double>("Beam_DirTheta_1");
+  if(Par.IsAvailable("Beam_DirTheta_2"))
+    fDirTheta_2 = Par.Get<double>("Beam_DirTheta_2");
+
+  if(Par.IsAvailable("Beam_DirPhi_1"))
+    fDirPhi_1 = Par.Get<double>("Beam_DirPhi_1");
+  if(Par.IsAvailable("Beam_DirPhi_2"))
+    fDirPhi_2 = Par.Get<double>("Beam_DirPhi_2");
+
+  currentEvent = 0;
+  eventPerBin  = -1;
+  setBinRand = false;
+  currentBin = std::make_tuple(0,0);
+  
+  if(Par.IsAvailable("EventPerRandomBin"))
+    {
+      eventPerBin = Par.Get<double>("EventPerRandomBin");
+      setBinRand = true;
+    }
+
+  if(Par.IsAvailable("NbRandomBinPerGen"))
+    {
+      NbBin = Par.Get<int>("NbRandomBinPerGen");
+      if(Par.IsAvailable("Beam_DirTheta_1") && Par.IsAvailable("Beam_DirTheta_2"))
+	{
+	  double temp_bin_l = fDirTheta_1, temp_bin_h = 0;
+	  double binStep = (fDirTheta_2 - fDirTheta_1)/static_cast<double>(NbBin);
+	  for(int iBin = 0; iBin < NbBin ; ++iBin)
+	    {
+	      temp_bin_h = temp_bin_l + binStep;
+	      ThetaBins.emplace_back(std::make_tuple(temp_bin_l,temp_bin_h));
+	      temp_bin_l = temp_bin_h;
+	    }
+	}
+      else
+	ThetaBins.emplace_back(std::make_tuple(fDirTheta_1,fDirTheta_2));
+
+      if(Par.IsAvailable("Beam_DirPhi_1") && Par.IsAvailable("Beam_DirPhi_2"))
+	{
+	  double temp_bin_l = fDirPhi_1, temp_bin_h = 0;
+	  double binStep = (fDirPhi_2 - fDirPhi_1)/static_cast<double>(NbBin);
+	  for(int iBin = 0; iBin < NbBin ; ++iBin)
+	    {
+	      temp_bin_h = temp_bin_l + binStep;
+	      PhiBins.emplace_back(std::make_tuple(temp_bin_l,temp_bin_h));
+	      temp_bin_l = temp_bin_h;
+	    }
+	}
+      else
+	PhiBins.emplace_back(std::make_tuple(fDirPhi_1,fDirPhi_2));
+
+    }
+  else
+    {
+      ThetaBins.emplace_back(std::make_tuple(fDirTheta_1,fDirTheta_2));	
+      PhiBins.emplace_back(std::make_tuple(fDirPhi_1,fDirPhi_2));
+    }
   
   // define commands for this class
   DefineCommands();
@@ -158,6 +230,8 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   
   fParticleGun->SetParticleDefinition(ConstParticle);
 
+  G4ThreeVector TempDir = fDir;
+  
   if(fRandomizePrimary[2])
     {
       double xdir = fDirX;//Par.Get_Beam_MomentumDirectionX();
@@ -168,17 +242,27 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       ydir +=fDirYSigma*std::sqrt(-std::log(G4UniformRand()));
       zdir = sqrt(1.0-ydir*ydir-xdir*xdir);
       //std::cout<<xdir<<" "<<ydir<<" "<<zdir<<std::endl;
-
-      fParticleGun->SetParticleMomentumDirection(G4ThreeVector(xdir,ydir,zdir));
+      TempDir.set(xdir,ydir,zdir);
+      //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(xdir,ydir,zdir));
 
       //G4double angle = (G4UniformRand()-0.5)*fSigmaAngle;
       //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(std::sin(angle),0.,std::cos(angle)));
-
     }
-  else
+  
+  if(fRandomizePrimary[3])
     {
-      fParticleGun->SetParticleMomentumDirection(fDir);
+      double temp_theta = RandTable[fRandomizePrimary[3]](std::get<0>(ThetaBins[std::get<0>(currentBin)]),std::get<1>(ThetaBins[std::get<0>(currentBin)]));
+      TempDir.setTheta(temp_theta);
     }
+
+  if(fRandomizePrimary[4])
+    {
+      double temp_phi = RandTable[fRandomizePrimary[4]](std::get<0>(PhiBins[std::get<1>(currentBin)]),std::get<1>(PhiBins[std::get<1>(currentBin)]));
+      TempDir.setPhi(temp_phi);
+    }
+  
+  fParticleGun->SetParticleMomentumDirection(TempDir);
+
   G4double Ekin = 0;
   if(fKineticE<0)
     {
@@ -196,13 +280,26 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       if(fRandomizePrimary[1])
        	Ekin += std::sqrt(-std::log(G4UniformRand()))*fSigmaMomentum;
     }
-
+  
   fParticleGun->SetParticleEnergy(Ekin);
 
   fParticleGun->SetParticlePosition(G4ThreeVector(pos_x,pos_y,pos_z));
   fParticleGun->GeneratePrimaryVertex(anEvent);
     
-       
+  ++currentEvent;
+
+  if(currentEvent > eventPerBin && setBinRand == true)
+    {
+      ++std::get<0>(currentBin);
+      if(std::get<0>(currentBin)>ThetaBins.size())
+	{
+	  std::get<0>(currentBin) = 0;
+	  ++std::get<1>(currentBin);
+	  if(std::get<1>(currentBin) > PhiBins.size())
+	    std::get<1>(currentBin) = 0;
+	}
+    }
+    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -211,13 +308,13 @@ void G4SolSimplePrimaryGeneratorAction::DefineCommands()
 {
   // Define /G4SolSimple/generator command directory using generic messenger class
   fMessenger = new G4GenericMessenger(this,"/G4SolSimple/generator/", "Primary generator control");
-              
+  
   // momentum command
   G4GenericMessenger::Command& momentumCmd = fMessenger->DeclarePropertyWithUnit("momentum", "GeV", fMomentum, "Mean momentum of primaries.");
   momentumCmd.SetParameterName("p", true);
   momentumCmd.SetRange("p>=0.");                                
   momentumCmd.SetDefaultValue("1.");
-
+  
   // momentum command
   G4GenericMessenger::Command& ParticleCmd = fMessenger->DeclareProperty("Particle", nameParticle);
   ParticleCmd.SetGuidance( "Which particle");
@@ -241,12 +338,12 @@ void G4SolSimplePrimaryGeneratorAction::DefineCommands()
 
   // randomizePrimary command
   G4GenericMessenger::Command& randomCmd = fMessenger->DeclareProperty("randomizePrimary", fRandomizePrimary[0]);
-  G4String guidance = "Boolean flag for randomizing primary particle types.\n";   
+  G4String guidance = "Integer flag for randomizing primary particle types.\n";   
   guidance += "In case this flag is false, you can select the primary particle\n";
   guidance += "  with /gun/particle command.";                               
   randomCmd.SetGuidance(guidance);
   randomCmd.SetParameterName("flg", true);
-  randomCmd.SetDefaultValue("true");
+  randomCmd.SetDefaultValue("1");
 }
 
 

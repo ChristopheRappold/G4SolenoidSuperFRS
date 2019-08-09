@@ -279,12 +279,12 @@ void HypHIPrimaryGeneratorAction::DefineCommands()
 
   // randomizePrimary command
   G4GenericMessenger::Command& randomCmd = fMessenger->DeclareProperty("randomizePrimary", fRandomizePrimary[0]);
-  G4String guidance = "Boolean flag for randomizing primary particle types.\n";   
+  G4String guidance = "Integer flag for randomizing primary particle types.\n";   
   guidance += "In case this flag is false, you can select the primary particle\n";
   guidance += "  with /gun/particle command.";                               
   randomCmd.SetGuidance(guidance);
   randomCmd.SetParameterName("flg", true);
-  randomCmd.SetDefaultValue("true");
+  randomCmd.SetDefaultValue("1");
 }
 
 
