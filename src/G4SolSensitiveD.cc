@@ -67,14 +67,20 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step*aStep, G4TouchableHistory*)
   //   return true;
 
   const G4TouchableHistory* touchable = dynamic_cast<const G4TouchableHistory*>(aStep->GetPreStepPoint()->GetTouchable());
+  G4int idVolume = touchable->GetHistoryDepth()>3 ? 1 : 0; // more than 3 meaning it is Central drifttube | less or equal to 3 meaning the rest 
+
   //G4VPhysicalVolume* motherPhysical = touchable->GetVolume(1); // mother
-  G4VPhysicalVolume* currentPhysical = touchable->GetVolume(0);
-  //G4int copyNo = motherPhysical->GetCopyNo();
+  G4VPhysicalVolume* currentPhysical = touchable->GetVolume(idVolume);
+  //G4int copyNo1 = motherPhysical->GetCopyNo();
   G4int copyNo = currentPhysical->GetCopyNo();
+
+  //G4int replicat1 = touchable->GetReplicaNumber(1);
+  //G4int replicat = touchable->GetReplicaNumber(0);
   
   int CurrentTrack = aStep->GetTrack()->GetTrackID();
   
-  //std::cout<<" -> mother :"<<motherPhysical->GetName()<<" "<<copyNo<<" | "<<currentPhysical->GetName()<<" "<<copyNo2<<std::endl;
+  //std::cout<<" -> mother :"<<motherPhysical->GetName()<<" "<<copyNo1<<" / "<<replicat1<<" | current :"<<currentPhysical->GetName()<<" "<<copyNo<<" / "<<replicat<<" # "<<touchable->GetHistoryDepth()<<std::endl;
+  //std::cout<<" current :"<<currentPhysical->GetName()<<" "<<copyNo<<" # "<<touchable->GetHistoryDepth()<<std::endl;
   
   auto it_layer = mapTrackID_Hits.find(copyNo);
   if(it_layer == mapTrackID_Hits.end())
