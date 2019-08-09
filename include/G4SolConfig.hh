@@ -11,6 +11,7 @@
 #include <string>
 #include <boost/property_tree/ptree.hpp>
 #include <complex>
+#include <vector>
 
 namespace pt = boost::property_tree;
 
@@ -52,6 +53,7 @@ private:
   int status;
 
   int ParseCmd(int argc,char** argv);
+  void ParseLine(std::stringstream & lineStream, std::vector<std::string>& res);
   void display(const int depth, const pt::ptree& t);
   double GetDimension(const std::string&);
   void SetDefault();

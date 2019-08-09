@@ -32,6 +32,20 @@ G4SolConfig::G4SolConfig(int argc,char** argv)
   status = ParseCmd(argc,argv);
 }
 
+void G4SolConfig::ParseLine(std::stringstream& lineStream, std::vector<std::string>& res)
+{
+  std::string lastStr;
+  lineStream >> lastStr;
+  if(lastStr.empty())
+    return;
+  else
+      {
+       res.emplace_back(lastStr);
+       return ParseLine(lineStream, res);
+      }
+  
+}
+
 void G4SolConfig::ParseConfig(const std::string& namefile)
 {
   std::cout<<"start reading"<<std::endl;
@@ -51,20 +65,44 @@ void G4SolConfig::ParseConfig(const std::string& namefile)
 	      //std::cout<<"!> Skip "<<test<<std::endl;
 	      continue;
 	    }
-	  std::string key, value, unit;
-	  stream >> key >> value >> unit;
-	  std::cout<<"key :"<<key<<" "<<value<<" "<<unit<<std::endl;
-	  if(unit.empty()==false)
+
+	  std::vector<std::string> out_list;
+	  ParseLine(stream,out_list);
+	  
+	  switch (out_list.size())
 	    {
-	      std::string key1(key+".unit");
-	      tree.put(key,value);
-	      tree.put(key1,unit);
-	      std::string key2(key1+"."+unit);
-	      double valUnit=GetDimension(unit);
-	      tree.put(key2,valUnit);
+	    case 2:
+	      tree.put(out_list[0], out_list[1]);
+	      break;
+	    case 3:
+	      {
+		std::string key1(out_list[0]+".unit");
+		tree.put(out_list[0], out_list[1]);
+		tree.put(key1, out_list[2]);
+		std::string key2(key1+"."+out_list[2]);
+		double valUnit=GetDimension(out_list[2]);
+		tree.put(key2,valUnit);
+		break;
+	      }
+	    default:
+	      std::cout<<"!> stream of line from config file with unknown parsing "<<out_list.size()<<" \n";
+	      break;
 	    }
-	  else
-	    tree.put(key,value);
+	  
+	  // std::string key, value, unit;
+	  // stream >> key >> value >> unit;
+	  // std::cout<<"key :"<<key<<" "<<value<<" "<<unit<<std::endl;
+	  // if(unit.empty()==false)
+	  //   {
+	  //     std::string key1(key+".unit");
+	  //     tree.put(key,value);
+	  //     tree.put(key1,unit);
+	  //     std::string key2(key1+"."+unit);
+	  //     double valUnit=GetDimension(unit);
+	  //     tree.put(key2,valUnit);
+	  //   }
+	  // else
+	  //   tree.put(key,value);
 	}
     }
 }
