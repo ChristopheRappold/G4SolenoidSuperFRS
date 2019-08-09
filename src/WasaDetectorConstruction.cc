@@ -606,7 +606,7 @@ void WasaDetectorConstruction::ConstructSDandField()
   //   HypHI_InTracker_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   
   G4AutoDelete::Register(fMagneticField);
-  G4AutoDelete::Register(fFieldMgr);
+  //G4AutoDelete::Register(fFieldMgr);
   G4AutoDelete::Register(fEquation);
   G4AutoDelete::Register(fStepper);
   G4AutoDelete::Register(fChordFinder);
