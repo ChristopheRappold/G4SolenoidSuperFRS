@@ -378,6 +378,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       HypHI_InSi_log->SetVisAttributes(Si_att);
     }
 
+// -------------------------- @@ -------------------------
+/* 
+// -------------------------- @@ -------------------------
+
   const double TR1_posZ = Par.Get<double>("HypHI_TR1_posZ");
   G4VSolid* TR1_box = nullptr;
   if(Par.IsAvailable("HypHI_BeamHole"))
@@ -408,6 +412,148 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4LogicalVolume* TR2_log = new G4LogicalVolume(TR2_box, Scinti, "TR2_log", 0, 0, 0);
   AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., 0., TR2_posZ+Systematic_shift)-transMFLD_new), TR2_log, "TR2_phys", MFLD_log,false,0));  
   NameDetectorsSD.push_back(TR2_log->GetName());
+// -------------------------- @@ -------------------------
+*/
+// -------------------------- @@ -------------------------
+
+
+// -------------------------- @@ --------------------------
+// 		     Fiber Detectors
+// -------------------------- @@ --------------------------
+const double HypHI_FiberTracker1_posZ = Par.Get<double>("HypHI_FiberTracker1_posZ");
+const double HypHI_FiberTracker2_posZ = Par.Get<double>("HypHI_FiberTracker2_posZ");
+const double HypHI_FiberTracker3_posZ = Par.Get<double>("HypHI_FiberTracker3_posZ");
+// -------------------------- --------------------------
+G4RotationMatrix* rotFib1 = new G4RotationMatrix;
+rotFib1->rotateX(90.*deg);
+G4RotationMatrix* rotFib2 = new G4RotationMatrix;
+rotFib2->rotateX(90.*deg); 
+rotFib2->rotateY(30.*deg);
+G4RotationMatrix* rotFib3 = new G4RotationMatrix;
+rotFib3->rotateX(90.*deg);
+rotFib3->rotateY(-30.*deg);
+G4double spacingX = 0.55 *mm;
+G4double startZ1 = 0.*mm;
+G4double startZ2 = 0.47631397*mm;
+std::vector<G4double> posZshift = {-8.*mm, 0.*mm, 8.*mm};
+G4ThreeVector posFib1, posFib2, posFib3;
+// -------------------------- First and second Fiber Detectors --------------------------
+		     
+std::vector<G4double> startX1_layer1 = {-70.125*mm, -39.325*mm, -4.125*mm,  31.075*mm};
+std::vector<G4double> startX1_layer2 = {-69.85*mm,  -30.25*mm,   4.95*mm,   40.15*mm };
+std::vector<G4double> numFibersTopLayer1 = {56, 64, 64, 72};
+
+G4VSolid* Fiber_solid1 = new G4Tubs("Fiber_Core",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
+G4VSolid* Fiber_solid_tilted1 = new G4Tubs("Fiber_Core_tilted",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
+
+G4LogicalVolume* Fiber_log1 = new G4LogicalVolume(Fiber_solid1,	FiberCoreScinti, "Fiber_log1", 0, 0, 0);	
+G4LogicalVolume* Fiber_log_tilted1 = new G4LogicalVolume(Fiber_solid_tilted1,	FiberCoreScinti, "Fiber_log_tilted1", 0, 0, 0);	
+G4LogicalVolume* Fiber_log2 = new G4LogicalVolume(Fiber_solid1,	FiberCoreScinti, "Fiber_log2", 0, 0, 0);	
+G4LogicalVolume* Fiber_log_tilted2 = new G4LogicalVolume(Fiber_solid_tilted1,	FiberCoreScinti, "Fiber_log_tilted2", 0, 0, 0);	
+
+G4VSolid* Fiber_Cladding1 = new G4Tubs("Fiber_Cladding",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
+G4VSolid* Fiber_Cladding_tilted1 = new G4Tubs("Fiber_Cladding_tilted",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
+
+G4LogicalVolume* Fiber_Cladding_log1 = new G4LogicalVolume(Fiber_Cladding1, Scinti, "Fiber_Cladding_log", 0, 0, 0);	
+G4LogicalVolume* Fiber_Cladding_log_tilted1 = new G4LogicalVolume(Fiber_Cladding_tilted1, Scinti, "Fiber_Cladding_log_tilted", 0, 0, 0);
+
+for(G4int idLayer = 0 ; idLayer < 3; ++idLayer){
+	for(G4int IdReadout = 0 ; IdReadout < 4; ++IdReadout){
+		for(G4int IdFib = 0 ; IdFib < 128; ++IdFib){
+			std::string nameFib1 ("FiberDetector1_Layer"); 
+			 nameFib1 =nameFib1 + std::to_string(idLayer+1)+ "_Group" + std::to_string(IdReadout+1);
+			std::string nameFib2 ("FiberDetector2_Layer"); 
+			 nameFib2 =nameFib2 + std::to_string(idLayer+1)+ "_Group" + std::to_string(IdReadout+1);
+
+			if(IdFib<numFibersTopLayer1[IdReadout]){
+				posFib1 = G4ThreeVector(startX1_layer1[IdReadout] + IdFib*spacingX ,0. , HypHI_FiberTracker1_posZ + posZshift[idLayer] + Systematic_shift-startZ1)-transMFLD_new;
+				posFib2 = G4ThreeVector(startX1_layer1[IdReadout] + IdFib*spacingX ,0. , HypHI_FiberTracker2_posZ + posZshift[idLayer] + Systematic_shift-startZ1)-transMFLD_new;
+			}else{
+				posFib1 = G4ThreeVector(startX1_layer2[IdReadout] + 
+					(IdFib-numFibersTopLayer1[IdReadout])*spacingX ,0. , HypHI_FiberTracker1_posZ + posZshift[idLayer] + Systematic_shift-startZ2)-transMFLD_new;
+				posFib2 = G4ThreeVector(startX1_layer2[IdReadout] + 
+					(IdFib-numFibersTopLayer1[IdReadout])*spacingX ,0. , HypHI_FiberTracker2_posZ + posZshift[idLayer] + Systematic_shift-startZ2)-transMFLD_new;
+
+			}
+			if(idLayer==0){
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib1, Fiber_Cladding_log1, "Fiber_Cladding", MFLD_log,false,IdFib)); 
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib2, Fiber_Cladding_log1, "Fiber_Cladding", MFLD_log,false,IdFib)); 
+
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib1, Fiber_log1, nameFib1, MFLD_log,false,IdFib));
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib2, Fiber_log2, nameFib2, MFLD_log,false,IdFib)); 
+			}else if(idLayer==1){
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFib1, Fiber_Cladding_log_tilted1, "Fiber_Cladding", MFLD_log,false,IdFib));
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFib2, Fiber_Cladding_log_tilted1, "Fiber_Cladding", MFLD_log,false,IdFib));
+
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFib1, Fiber_log_tilted1, nameFib1, MFLD_log,false,IdFib));
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFib2, Fiber_log_tilted2, nameFib2, MFLD_log,false,IdFib)); 
+			}else{
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFib1, Fiber_Cladding_log_tilted1, "Fiber_Cladding", MFLD_log,false,IdFib));
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFib2, Fiber_Cladding_log_tilted1, "Fiber_Cladding", MFLD_log,false,IdFib));
+
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFib1, Fiber_log_tilted1, nameFib1, MFLD_log,false,IdFib));
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFib2, Fiber_log_tilted2, nameFib2, MFLD_log,false,IdFib));
+			}
+		}
+	}
+}
+	
+NameDetectorsSD.push_back(Fiber_log1->GetName());
+NameDetectorsSD.push_back(Fiber_log_tilted1->GetName());
+NameDetectorsSD.push_back(Fiber_log2->GetName());
+NameDetectorsSD.push_back(Fiber_log_tilted2->GetName());
+
+
+// -------------------------- Third Fiber Detector (larger one) --------------------------
+
+std::vector<G4double> startX3_layer1 = {-105.325*mm,-74.525*mm ,-39.325*mm, -4.125*mm,  31.075*mm, 66.275*mm};
+std::vector<G4double> startX3_layer2 = {-105.05*mm, -65.45*mm,  -30.25*mm,   4.95*mm,   40.15*mm,  75.35*mm};
+std::vector<G4double> numFibersTopLayer3 = {56, 64, 64, 64, 64, 72};
+
+G4VSolid* Fiber_solid3 = new G4Tubs("Fiber_Core",0, 0.24*mm, (1.5*10.5)*cm, 0.*deg, 360.*deg);
+G4VSolid* Fiber_solid_tilted3 = new G4Tubs("Fiber_Core_tilted",0, 0.24*mm, (1.5*10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
+
+G4LogicalVolume* Fiber_log3 = new G4LogicalVolume(Fiber_solid3,	FiberCoreScinti, "Fiber_log3", 0, 0, 0);	
+G4LogicalVolume* Fiber_log_tilted3 = new G4LogicalVolume(Fiber_solid_tilted3,	FiberCoreScinti, "Fiber_log_tilted3", 0, 0, 0);	
+
+G4VSolid* Fiber_Cladding3 = new G4Tubs("Fiber_Cladding",0.24*mm, 0.25*mm, (1.5*10.5)*cm, 0.*deg, 360.*deg);
+G4VSolid* Fiber_Cladding_tilted3 = new G4Tubs("Fiber_Cladding_tilted",0.24*mm, 0.25*mm, (1.5*10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
+
+G4LogicalVolume* Fiber_Cladding_log3 = new G4LogicalVolume(Fiber_Cladding3, Scinti, "Fiber_Cladding_log", 0, 0, 0);	
+G4LogicalVolume* Fiber_Cladding_log_tilted3 = new G4LogicalVolume(Fiber_Cladding_tilted3, Scinti, "Fiber_Cladding_log_tilted", 0, 0, 0);
+
+for(G4int idLayer = 0 ; idLayer < 3; ++idLayer){
+	for(G4int IdReadout = 0 ; IdReadout < 6; ++IdReadout){
+		for(G4int IdFib = 0 ; IdFib < 128; ++IdFib){
+			std::string nameFib3 ("FiberDetector3_Layer"); 
+			 nameFib3 =nameFib3 + std::to_string(idLayer+1)+ "_Group" + std::to_string(IdReadout+1);
+
+			if(IdFib<numFibersTopLayer3[IdReadout]){
+				posFib3 = G4ThreeVector(startX3_layer1[IdReadout] + IdFib*spacingX ,0. , HypHI_FiberTracker3_posZ + posZshift[idLayer] + Systematic_shift-startZ1)-transMFLD_new;
+			}else{
+				posFib3 = G4ThreeVector(startX3_layer2[IdReadout] + 
+					(IdFib-numFibersTopLayer3[IdReadout])*spacingX ,0. , HypHI_FiberTracker3_posZ + posZshift[idLayer] + Systematic_shift-startZ2)-transMFLD_new;
+			}
+			if(idLayer==0){
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib3, Fiber_Cladding_log3, "Fiber_Cladding", MFLD_log,false,IdFib)); 
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib3, Fiber_log3, nameFib3, MFLD_log,false,IdFib));
+			}else if(idLayer==1){
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFib3, Fiber_Cladding_log_tilted3, "Fiber_Cladding", MFLD_log,false,IdFib));
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFib3, Fiber_log_tilted3, nameFib3, MFLD_log,false,IdFib));
+			}else{
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFib3, Fiber_Cladding_log_tilted3, "Fiber_Cladding", MFLD_log,false,IdFib));
+				AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFib3, Fiber_log_tilted3, nameFib3, MFLD_log,false,IdFib));
+			}
+		}
+	}
+}
+	
+NameDetectorsSD.push_back(Fiber_log3->GetName());
+NameDetectorsSD.push_back(Fiber_log_tilted3->GetName());
+
+// -------------------------- @@ --------------------------
+// 		     
+// -------------------------- @@ --------------------------
 
   G4VSolid* EndFMF2_box = new G4Box("EndFMF2_box",25.*cm,25.*cm,1.*mm);
   G4LogicalVolume* EndFMF2_log = new G4LogicalVolume(EndFMF2_box, Scinti, "FMF2_log", 0, 0, 0);
