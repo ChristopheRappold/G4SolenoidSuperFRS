@@ -23,19 +23,19 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------------- 
+// -------------------------------------------------------
 // Implementation of the G4SolEventAction class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------------
 
 #include "G4SolEventAction.hh"
+
 #include "G4SolRunAction.hh"
 //#include "G4SolAnalysis.hh"
-#include "G4SolRunData.hh"
-
-#include "G4SDManager.hh"
-#include "G4RunManager.hh"
 #include "G4Event.hh"
+#include "G4RunManager.hh"
+#include "G4SDManager.hh"
+#include "G4SolRunData.hh"
 //#include "G4UnitsTable.hh"
 
 //#include "TG4Sol_Hit.hh"
@@ -46,53 +46,46 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolEventAction::G4SolEventAction(const std::vector<G4String>& name) : G4UserEventAction(),nameDetector(name)
+G4SolEventAction::G4SolEventAction(const std::vector<G4String>& name) : G4UserEventAction(), nameDetector(name)
 {
 
-  // G4SDManager *SDman = G4SDManager::GetSDMpointer();  
+  // G4SDManager *SDman = G4SDManager::GetSDMpointer();
 
   // for(const auto& nameDetector : NameDetectors)
   //   {
   //     G4SolSensetiveD* tempD = dynamic_cast<G4SolSensetiveD*>(SDman->FindSensitiveDetector(nameDetector));
   //     TClonesArray* tempArray = tempD->Hits;
-      
+
   //     list_Arrays.push_back(tempArray);
   //   }
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolEventAction::~G4SolEventAction()
-{
-
-}
+G4SolEventAction::~G4SolEventAction() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4SolEventAction::BeginOfEventAction(const G4Event* /*event*/)
-{  
+{
   // for(auto&  array : list_Arrays)
   //   array.Clear("C");
 
-  if(HCID.size()!=nameDetector.size())
+  if(HCID.size() != nameDetector.size())
     {
       G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-      //std::cout<<"!> SDmanager :"<<std::endl;
-      //sdManager->ListTree();
+      // std::cout<<"!> SDmanager :"<<std::endl;
+      // sdManager->ListTree();
       for(auto name : nameDetector)
-	{
-	  G4String tempName(name);
-	  tempName+="/G4SolColl";
-	  HCID.push_back(sdManager->GetCollectionID(tempName));
-	}
-      
-      
+        {
+          G4String tempName(name);
+          tempName += "/G4SolColl";
+          HCID.push_back(sdManager->GetCollectionID(tempName));
+        }
     }
 
   G4SolRunData* runData = dynamic_cast<G4SolRunData*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   runData->Reset();
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -102,16 +95,14 @@ void G4SolEventAction::EndOfEventAction(const G4Event* event)
   G4SolRunData* runData = dynamic_cast<G4SolRunData*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   runData->FillPerEvent(event);
 
-  
   // G4HCofThisEvent* hce = event->GetHCofThisEvent();
-  // if (!hce) 
+  // if (!hce)
   //   {
   //     G4ExceptionDescription msg;
-  //     msg << "No hits collection of this event found." << G4endl; 
+  //     msg << "No hits collection of this event found." << G4endl;
   //     G4Exception("B5EventAction::EndOfEventAction()","B5Code001", JustWarning, msg);
   //     return;
-  //   }   
-
+  //   }
 
   // G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
@@ -134,19 +125,18 @@ void G4SolEventAction::EndOfEventAction(const G4Event* event)
   // 	      analysisManager->FillNtupleDColumn(7, TempHit->MomX);
   // 	      analysisManager->FillNtupleDColumn(8, TempHit->MomY);
   // 	      analysisManager->FillNtupleDColumn(9, TempHit->MomZ);
-  // 	      analysisManager->FillNtupleDColumn(10, 0.983);  
-  // 	      analysisManager->AddNtupleRow();  
+  // 	      analysisManager->FillNtupleDColumn(10, 0.983);
+  // 	      analysisManager->AddNtupleRow();
   // 	    }
   // 	}
   //     else
   // 	{
   // 	  G4ExceptionDescription msg;
-  // 	  msg << "Some of hits collections of this event not found." << G4endl; 
+  // 	  msg << "Some of hits collections of this event not found." << G4endl;
   // 	  G4Exception("B5EventAction::EndOfEventAction()","B5Code001", JustWarning, msg);
   // 	  return;
   // 	}
   //   }
-
 
   // G4RunManager* run = G4RunManager::GetRunManager();
   // const G4SolRunAction* UserRun = dynamic_cast<const G4SolRunAction*>(run->GetUserRunAction());
@@ -162,20 +152,20 @@ void G4SolEventAction::EndOfEventAction(const G4Event* event)
   // analysisManager->FillH1(2, fEnergyGap);
   // analysisManager->FillH1(3, fTrackLAbs);
   // analysisManager->FillH1(4, fTrackLGap);
-  
+
   // // fill ntuple
   // analysisManager->FillNtupleDColumn(0, fEnergyAbs);
   // analysisManager->FillNtupleDColumn(1, fEnergyGap);
   // analysisManager->FillNtupleDColumn(2, fTrackLAbs);
   // analysisManager->FillNtupleDColumn(3, fTrackLGap);
-  // analysisManager->AddNtupleRow();  
-  
+  // analysisManager->AddNtupleRow();
+
   // // Print per event (modulo n)
   // //
   // G4int eventID = event->GetEventID();
   // G4int printModulo = G4RunManager::GetRunManager()->GetPrintProgress();
   // if ( ( printModulo > 0 ) && ( eventID % printModulo == 0 ) ) {
-  //   G4cout << "---> End of event: " << eventID << G4endl;     
+  //   G4cout << "---> End of event: " << eventID << G4endl;
 
   //   G4cout
   //      << "   Absorber: total energy: " << std::setw(7)
@@ -189,6 +179,6 @@ void G4SolEventAction::EndOfEventAction(const G4Event* event)
   //                                       << G4BestUnit(fTrackLGap,"Length")
   //      << G4endl;
   // }
-}  
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

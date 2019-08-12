@@ -1,28 +1,22 @@
 #include "G4SolGeometryController.hh"
 
 #include "G4RunManager.hh"
-#include "G4VUserParallelWorld.hh"
-
-#include "KnuclDetectorConstruction.hh"
-#include "WasaSimpleDetectorConstruction.hh"
-#include "WasaDetectorConstruction.hh"
-
 #include "G4SolConvertGeo.hh"
+#include "G4VUserParallelWorld.hh"
+#include "KnuclDetectorConstruction.hh"
+#include "WasaDetectorConstruction.hh"
+#include "WasaSimpleDetectorConstruction.hh"
 
-G4SolGeometryController::G4SolGeometryController(const G4SolConfig& _par):Par(_par)
-{
+G4SolGeometryController::G4SolGeometryController(const G4SolConfig& _par) : Par(_par) {}
 
-}
-
-G4SolGeometryController::~G4SolGeometryController()
-{}
+G4SolGeometryController::~G4SolGeometryController() {}
 
 int G4SolGeometryController::SetGeometry(G4String nameGeo)
 {
-   G4cout <<"Activating geometry " << nameGeo << G4endl;
+  G4cout << "Activating geometry " << nameGeo << G4endl;
   // if(name == "G4Sol")
   //   {
-  //     detectorBuilder = new G4SolDetectorConstruction(Par); 
+  //     detectorBuilder = new G4SolDetectorConstruction(Par);
   //     registerGeometry(detectorBuilder);
   //   }
   // else if(name == "Phase0")
@@ -41,13 +35,13 @@ int G4SolGeometryController::SetGeometry(G4String nameGeo)
   //   }
   if(nameGeo == "CDS")
     {
-      detectorBuilder = new KnuclDetectorConstruction(Par); 
+      detectorBuilder = new KnuclDetectorConstruction(Par);
       // Mandatory user initialization classes
       registerGeometry(detectorBuilder);
     }
   else if(nameGeo == "WasaSimple")
     {
-      detectorBuilder = new WasaSimpleDetectorConstruction(Par); 
+      detectorBuilder = new WasaSimpleDetectorConstruction(Par);
       // Mandatory user initialization classes
       registerGeometry(detectorBuilder);
     }
@@ -58,7 +52,7 @@ int G4SolGeometryController::SetGeometry(G4String nameGeo)
     }
   else
     {
-      std::cout<<"E> No Geometry selected !"<<nameGeo<<"\n";
+      std::cout << "E> No Geometry selected !" << nameGeo << "\n";
       return -2;
     }
 
@@ -66,18 +60,14 @@ int G4SolGeometryController::SetGeometry(G4String nameGeo)
   return 0;
 }
 
-
-void G4SolGeometryController::registerGeometry(G4VUserDetectorConstruction *detector)
+void G4SolGeometryController::registerGeometry(G4VUserDetectorConstruction* detector)
 {
-  G4RunManager *runManager = G4RunManager::GetRunManager();
-  runManager -> SetUserInitialization(detector);
-  runManager -> GeometryHasBeenModified();
+  G4RunManager* runManager = G4RunManager::GetRunManager();
+  runManager->SetUserInitialization(detector);
+  runManager->GeometryHasBeenModified();
 }
 
-const std::vector<G4String>& G4SolGeometryController::GetNameDetectors()
-{
-  return detectorBuilder->GetNameDetectors();
-}
+const std::vector<G4String>& G4SolGeometryController::GetNameDetectors() { return detectorBuilder->GetNameDetectors(); }
 
 void G4SolGeometryController::ConvertG4toRoot(const std::string& nameConvertRoot)
 {
@@ -85,13 +75,13 @@ void G4SolGeometryController::ConvertG4toRoot(const std::string& nameConvertRoot
   auto* logi = detectorBuilder->experimentalHall_physOutRoot->GetLogicalVolume();
   if(logi != nullptr)
     {
-      std::cout<<logi->GetName()<<std::endl;
+      std::cout << logi->GetName() << std::endl;
       G4SolConvertGeo convertor(detectorBuilder->experimentalHall_physOutRoot);
-      convertor.Convert(nameConvertRoot,nameGeometry);
+      convertor.Convert(nameConvertRoot, nameGeometry);
     }
   else
     {
-      std::cout<<"E> Convertion G4toRoot failed!\n";
+      std::cout << "E> Convertion G4toRoot failed!\n";
       return;
     }
 }

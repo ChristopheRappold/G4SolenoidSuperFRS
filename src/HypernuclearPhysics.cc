@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------------------- 
+// -------------------------------------------------------------
 // Implementation of the HypernuclearPhysics class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------------------
@@ -39,28 +39,25 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-
-HypernuclearPhysics::HypernuclearPhysics(const G4String& name,const G4SolConfig& _par) : G4VPhysicsConstructor(name),Par(_par)
+HypernuclearPhysics::HypernuclearPhysics(const G4String& name, const G4SolConfig& _par)
+    : G4VPhysicsConstructor(name), Par(_par)
 {
-
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-HypernuclearPhysics::~HypernuclearPhysics()
-{}
+HypernuclearPhysics::~HypernuclearPhysics() {}
 
 void HypernuclearPhysics::ConstructParticle()
 {
   TTritonStar::TritonStarDefinition();
-  
-  TH3L* h3l = TH3L::H3LDefinition();
-  TH4L* h4l = TH4L::H4LDefinition();
+
+  TH3L* h3l   = TH3L::H3LDefinition();
+  TH4L* h4l   = TH4L::H4LDefinition();
   THe4L* he4l = THe4L::He4LDefinition();
   THe5L* he5l = THe5L::He5LDefinition();
-  TnnL* nnL = TnnL::nnLDefinition();
-  
+  TnnL* nnL   = TnnL::nnLDefinition();
+
   std::vector<double> vecBR;
   vecBR.resize(5);
   vecBR[0] = Par.Get<double>("HyperNuclei_H4L_br_mode1");
@@ -104,7 +101,4 @@ void HypernuclearPhysics::ConstructParticle()
   nnL->setLT(Par.Get<double>("HyperNuclei_nnL_T12"));
 }
 
-void HypernuclearPhysics::ConstructProcess()
-{
-
-}
+void HypernuclearPhysics::ConstructProcess() {}

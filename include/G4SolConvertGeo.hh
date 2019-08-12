@@ -1,4 +1,4 @@
-// --------------------------------------------------------- 
+// ---------------------------------------------------------
 // Definition of the G4SolConvertGeo class
 // Created by C.Rappold (c.rappold@gsi.de)
 //----------------------------------------------------------
@@ -11,13 +11,11 @@
 class G4SolConvertGeo
 {
   G4VPhysicalVolume* physiWorld;
-  
-public :
+
+public:
   G4SolConvertGeo(G4VPhysicalVolume* w);
   ~G4SolConvertGeo();
   int Convert(const std::string& nameOut, const G4String& nameGeometry);
-   
 };
-
 
 #endif

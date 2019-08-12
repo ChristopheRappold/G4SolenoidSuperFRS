@@ -1,4 +1,4 @@
-// ----------------------------------------------------- 
+// -----------------------------------------------------
 // Definition of the TG4Sol_Event class
 // Created by C.Rappold (c.rappold@gsi.de)
 //------------------------------------------------------
@@ -6,15 +6,15 @@
 #ifndef TG4Sol_Event_header
 #define TG4Sol_Event_header 1
 
-#include <iostream>
-#include <fstream>
-#include <string>
-
 #include "TObject.h"
+
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <vector>
 
 /********************************************************************/
-class TG4Sol_Event:public TObject
+class TG4Sol_Event : public TObject
 {
 public: // Primary decay vertex
   Int_t WasDecay;
@@ -22,19 +22,19 @@ public: // Primary decay vertex
   std::string MotherName;
   Double_t MotherMass;
   Double_t DecayTime;
-  
+
   Double_t InteractionPoint_X;
   Double_t InteractionPoint_Y;
   Double_t InteractionPoint_Z;
-  
+
   Double_t DecayVertex_X;
   Double_t DecayVertex_Y;
   Double_t DecayVertex_Z;
-  
+
   Double_t MotherMomentumAtDecay_X;
   Double_t MotherMomentumAtDecay_Y;
   Double_t MotherMomentumAtDecay_Z;
-  
+
   std::vector<std::string> DaughterNames;
   std::vector<Double_t> DaughterMasses;
   std::vector<Double_t> DaughterCharges;
@@ -52,7 +52,7 @@ public: // Primary decay vertex
   std::vector<Double_t> BeamMomentums_Z;
   std::vector<Int_t> BeamTrackID;
   //***********************************************************
-          
+
 public:
   TG4Sol_Event();
   ~TG4Sol_Event();
@@ -60,7 +60,7 @@ public:
   void Display();
   void Zero();
   /*------------------------------------------------------------*/
-  ClassDef(TG4Sol_Event,1); // TG4Sol_Event
+  ClassDef(TG4Sol_Event, 1); // TG4Sol_Event
 };
 
 #endif

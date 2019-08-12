@@ -23,9 +23,9 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
 //
-// ------------------------------------------------- 
+//
+// -------------------------------------------------
 // Definition of the G4SolActionInitialization class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------
@@ -33,16 +33,11 @@
 #ifndef G4SolActionInitialization_h
 #define G4SolActionInitialization_h 1
 
-#include "globals.hh"
-#include "G4VUserActionInitialization.hh"
-//#include "KnuclDetectorConstruction.hh"
-//#include "G4SolVDetectorConstruction.hh"
-#include "G4SolGeometryController.hh"
 #include "G4SolConfig.hh"
+#include "G4SolGeometryController.hh"
+#include "G4VUserActionInitialization.hh"
+#include "globals.hh"
 
-
-//class KnuclDetectorConstruction;
-//class G4SolVDetectorConstruction;
 class G4SolGeometryController;
 class THypHi_Par;
 
@@ -51,19 +46,14 @@ class G4SolActionInitialization : public G4VUserActionInitialization
 public:
   G4SolActionInitialization(G4SolGeometryController*, const G4SolConfig&);
   virtual ~G4SolActionInitialization();
-  
+
   virtual void BuildForMaster() const;
   virtual void Build() const;
- 
+
 private:
-  //KnuclDetectorConstruction* fGeoController;
-  //G4SolVDetectorConstruction* fGeoController;
   G4SolGeometryController* fGeoController;
   const G4SolConfig& Conf;
   std::string OutputFile;
-
 };
 
 #endif
-
-    

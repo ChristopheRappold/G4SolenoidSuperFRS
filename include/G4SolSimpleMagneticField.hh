@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------- 
+// -------------------------------------------------
 // Definition of the G4SolSimpleMagneticField class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------
@@ -31,9 +31,9 @@
 #ifndef G4SolSimpleMagneticField_H
 #define G4SolSimpleMagneticField_H 1
 
-#include "globals.hh"
 #include "G4MagneticField.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4GenericMessenger;
 
@@ -44,15 +44,21 @@ class G4SolSimpleMagneticField : public G4MagneticField
 public:
   G4SolSimpleMagneticField();
   virtual ~G4SolSimpleMagneticField();
-    
-  virtual void GetFieldValue(const G4double point[4],double* bField ) const;
-  
-  void SetField(const G4ThreeVector& val) { fBx = val.x(); fBy = val.y(); fBz = val.z(); fField = val;}
-  void SetFieldBx(double val) { fBx = val;}
-  void SetFieldBy(double val) { fBy = val;}
-  void SetFieldBz(double val) { fBz = val;}
+
+  virtual void GetFieldValue(const G4double point[4], double* bField) const;
+
+  void SetField(const G4ThreeVector& val)
+  {
+    fBx    = val.x();
+    fBy    = val.y();
+    fBz    = val.z();
+    fField = val;
+  }
+  void SetFieldBx(double val) { fBx = val; }
+  void SetFieldBy(double val) { fBy = val; }
+  void SetFieldBz(double val) { fBz = val; }
   G4ThreeVector GetField() const { return fField; }
-    
+
 private:
   void DefineCommands();
 

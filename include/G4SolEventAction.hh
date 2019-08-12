@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------- 
+// -------------------------------------------------
 // Definition of the G4SolEventAction class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------
@@ -32,8 +32,9 @@
 #define G4SolEventAction_h 1
 
 #include "G4UserEventAction.hh"
-#include "globals.hh"
 #include "TClonesArray.h"
+#include "globals.hh"
+
 #include <vector>
 
 /// Event action class
@@ -46,25 +47,20 @@
 
 class G4SolEventAction : public G4UserEventAction
 {
-  public:
+public:
   explicit G4SolEventAction(const std::vector<G4String>& name);
   virtual ~G4SolEventAction();
-  
-  virtual void  BeginOfEventAction(const G4Event* event);
-  virtual void    EndOfEventAction(const G4Event* event);
-  
-  private:
-  //std::vector<*> list_Arrays;
+
+  virtual void BeginOfEventAction(const G4Event* event);
+  virtual void EndOfEventAction(const G4Event* event);
+
+private:
+  // std::vector<*> list_Arrays;
 
   const std::vector<G4String>& nameDetector;
   std::vector<int> HCID;
-
 };
 
-
-                     
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-    

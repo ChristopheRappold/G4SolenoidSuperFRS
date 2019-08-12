@@ -23,114 +23,108 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------------------- 
+// -------------------------------------------------------------
 // Implementation of the G4SolStackingAction class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------------------
 
 #include "G4SolStackingAction.hh"
 
-#include "G4VProcess.hh"
-
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTypes.hh"
 #include "G4Track.hh"
+#include "G4VProcess.hh"
 #include "G4ios.hh"
 //#include "HypernuclearPhysics.hh"
 #include "G4SystemOfUnits.hh"
-
 #include "TH3L.hh"
 #include "TH4L.hh"
 #include "THe4L.hh"
 #include "THe5L.hh"
+#include "TMath.h"
 #include "TTritonStar.hh"
 #include "TnnL.hh"
-
-#include "TMath.h"
 //#include <tuple>
 //#include <functional>
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4SolStackingAction::G4SolStackingAction() : G4UserStackingAction(), beamAxis(0, 0, 1) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolStackingAction::G4SolStackingAction() : G4UserStackingAction(),beamAxis(0,0,1)
-
-{}
+G4SolStackingAction::~G4SolStackingAction() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolStackingAction::~G4SolStackingAction()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4ClassificationOfNewTrack
-G4SolStackingAction::ClassifyNewTrack(const G4Track * aTrack)
+G4ClassificationOfNewTrack G4SolStackingAction::ClassifyNewTrack(const G4Track* aTrack)
 {
   G4ParticleDefinition* def = aTrack->GetDefinition();
-  if( def == G4Lambda::Definition() || def == TH3L::Definition() || def == TH4L::Definition() || def == THe4L::Definition() || 
-      def == THe5L::Definition() || def == TnnL::Definition() || def == TTritonStar::Definition() ||
-      def == G4SigmaMinus::Definition() || def == G4SigmaPlus::Definition() ||
-      def == G4XiMinus::Definition() || def == G4XiZero::Definition())
-    { 
+  if(def == G4Lambda::Definition() || def == TH3L::Definition() || def == TH4L::Definition() ||
+     def == THe4L::Definition() || def == THe5L::Definition() || def == TnnL::Definition() ||
+     def == TTritonStar::Definition() || def == G4SigmaMinus::Definition() || def == G4SigmaPlus::Definition() ||
+     def == G4XiMinus::Definition() || def == G4XiZero::Definition())
+    {
       // G4cout<<" Stacking ClassifyNewTrack:"<<G4endl;
       // G4cout<<"Find Lambda :"<<aTrack->GetTrackID()<<G4endl;
       G4int mother_id = aTrack->GetTrackID();
-      //const G4DynamicParticle* tempParticle = aTrack->GetDynamicParticle(); 
-      //tempParticle->DumpInfo();
+      // const G4DynamicParticle* tempParticle = aTrack->GetDynamicParticle();
+      // tempParticle->DumpInfo();
       // G4cout<<" Vtx Position"<<aTrack->GetPosition()<<G4endl;
-      // G4cout<<" Time :"<<aTrack->GetProperTime()/ns<<" "<<" "<<aTrack->GetLocalTime()/ns<<" "<<aTrack->GetGlobalTime()/ns<<G4endl;
-      
-      auto it_mother = mother_daugthersInfo.find(mother_id);
-      if(it_mother==mother_daugthersInfo.end())
-	{
-	  G4SolStacking::Daugthers_Info newInfo;
-	  mother_daugthersInfo.insert(std::pair<G4int,G4SolStacking::Daugthers_Info>(mother_id,newInfo));
-	}
-    }
-  
+      // G4cout<<" Time :"<<aTrack->GetProperTime()/ns<<" "<<" "<<aTrack->GetLocalTime()/ns<<"
+      // "<<aTrack->GetGlobalTime()/ns<<G4endl;
 
-  if(aTrack->GetParentID()>0)
-    {
-      //G4cout<<"Process :"<<aTrack->GetCreatorProcess()->GetProcessName()<<G4endl;
-      if(aTrack->GetCreatorProcess()->GetProcessName()=="Decay")
-	{
-	  auto it_mother = mother_daugthersInfo.find(aTrack->GetParentID());
-	  
-	  if(it_mother!=mother_daugthersInfo.end())
-	    { // particle is secondary
-	      //G4cout<<"Stacking: "<<aTrack->GetCreatorProcess()->GetProcessName()<<G4endl;
-	      const G4DynamicParticle* tempParticle = aTrack->GetDynamicParticle(); 
-	      //tempParticle->DumpInfo();
-	      //G4cout<<" Vtx Position"<<aTrack->GetPosition()<<G4endl;
-	      //G4cout<<" Time :"<<aTrack->GetProperTime()/ns<<" "<<" "<<aTrack->GetLocalTime()/ns<<" "<<aTrack->GetGlobalTime()/ns<<G4endl;
-	      if(it_mother->second.mass_daughters.size()==0)
-		{
-		  it_mother->second.secondary_vertex = aTrack->GetPosition();
-		  it_mother->second.decaytime = aTrack->GetGlobalTime();
-		  it_mother->second.mom_daughters.push_back(aTrack->GetMomentum());
-		  it_mother->second.mass_daughters.push_back(tempParticle->GetMass());
-		  it_mother->second.name_daughters.push_back(tempParticle->GetParticleDefinition()->GetParticleName());
-		  it_mother->second.charge_daughters.push_back(tempParticle->GetCharge());
-		  it_mother->second.trackID_daughters.push_back(aTrack->GetTrackID());
-		}
-	      else
-		{
-		  if(it_mother->second.secondary_vertex != aTrack->GetPosition())
-		    {
-		      G4cout<<"E > Secondary Vertex position different !"<<it_mother->second.secondary_vertex<<" "<<aTrack->GetPosition()<<G4endl;
-		    }
-		  
-		  it_mother->second.mom_daughters.push_back(aTrack->GetMomentum());
-		  it_mother->second.mass_daughters.push_back(tempParticle->GetMass());
-		  it_mother->second.name_daughters.push_back(tempParticle->GetParticleDefinition()->GetParticleName());
-		  it_mother->second.charge_daughters.push_back(tempParticle->GetCharge());
-		  it_mother->second.trackID_daughters.push_back(aTrack->GetTrackID());
-		}
-	    }
-	}
+      auto it_mother = mother_daugthersInfo.find(mother_id);
+      if(it_mother == mother_daugthersInfo.end())
+        {
+          G4SolStacking::Daugthers_Info newInfo;
+          mother_daugthersInfo.insert(std::pair<G4int, G4SolStacking::Daugthers_Info>(mother_id, newInfo));
+        }
     }
-  //G4cout<<" ---- "<<G4endl;
+
+  if(aTrack->GetParentID() > 0)
+    {
+      // G4cout<<"Process :"<<aTrack->GetCreatorProcess()->GetProcessName()<<G4endl;
+      if(aTrack->GetCreatorProcess()->GetProcessName() == "Decay")
+        {
+          auto it_mother = mother_daugthersInfo.find(aTrack->GetParentID());
+
+          if(it_mother != mother_daugthersInfo.end())
+            { // particle is secondary
+              // G4cout<<"Stacking: "<<aTrack->GetCreatorProcess()->GetProcessName()<<G4endl;
+              const G4DynamicParticle* tempParticle = aTrack->GetDynamicParticle();
+              // tempParticle->DumpInfo();
+              // G4cout<<" Vtx Position"<<aTrack->GetPosition()<<G4endl;
+              // G4cout<<" Time :"<<aTrack->GetProperTime()/ns<<" "<<" "<<aTrack->GetLocalTime()/ns<<"
+              // "<<aTrack->GetGlobalTime()/ns<<G4endl;
+              if(it_mother->second.mass_daughters.size() == 0)
+                {
+                  it_mother->second.secondary_vertex = aTrack->GetPosition();
+                  it_mother->second.decaytime        = aTrack->GetGlobalTime();
+                  it_mother->second.mom_daughters.push_back(aTrack->GetMomentum());
+                  it_mother->second.mass_daughters.push_back(tempParticle->GetMass());
+                  it_mother->second.name_daughters.push_back(tempParticle->GetParticleDefinition()->GetParticleName());
+                  it_mother->second.charge_daughters.push_back(tempParticle->GetCharge());
+                  it_mother->second.trackID_daughters.push_back(aTrack->GetTrackID());
+                }
+              else
+                {
+                  if(it_mother->second.secondary_vertex != aTrack->GetPosition())
+                    {
+                      G4cout << "E > Secondary Vertex position different !" << it_mother->second.secondary_vertex << " "
+                             << aTrack->GetPosition() << G4endl;
+                    }
+
+                  it_mother->second.mom_daughters.push_back(aTrack->GetMomentum());
+                  it_mother->second.mass_daughters.push_back(tempParticle->GetMass());
+                  it_mother->second.name_daughters.push_back(tempParticle->GetParticleDefinition()->GetParticleName());
+                  it_mother->second.charge_daughters.push_back(tempParticle->GetCharge());
+                  it_mother->second.trackID_daughters.push_back(aTrack->GetTrackID());
+                }
+            }
+        }
+    }
+  // G4cout<<" ---- "<<G4endl;
 
   return fUrgent;
 }
@@ -153,10 +147,7 @@ void G4SolStackingAction::NewStage()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4SolStackingAction::PrepareNewEvent()
-{
-  mother_daugthersInfo.clear();
-}
+void G4SolStackingAction::PrepareNewEvent() { mother_daugthersInfo.clear(); }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -171,15 +162,14 @@ const G4SolStacking::Daugthers_Info G4SolStackingAction::Get_DaugthersInfo(G4int
 {
 
   auto it_motherOut = mother_daugthersInfo.find(id);
-  if(it_motherOut!=mother_daugthersInfo.end())
+  if(it_motherOut != mother_daugthersInfo.end())
     {
       return it_motherOut->second;
     }
   else
     {
-      G4cout<<"E> Stack Info no daugther info for this mother ID "<<id<<G4endl;
+      G4cout << "E> Stack Info no daugther info for this mother ID " << id << G4endl;
     }
-
 
   G4SolStacking::Daugthers_Info temp;
   return temp;

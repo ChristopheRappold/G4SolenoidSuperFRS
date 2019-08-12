@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ----------------------------------------------------- 
+// -----------------------------------------------------
 // Definition of the HypHIPrimaryGeneratorAction class
 // Created by C.Rappold (c.rappold@gsi.de)
 //------------------------------------------------------
@@ -31,11 +31,11 @@
 #ifndef HypHIPrimaryGeneratorAction_h
 #define HypHIPrimaryGeneratorAction_h 1
 
-#include "G4VUserPrimaryGeneratorAction.hh"
-#include "globals.hh"
+#include "G4GenericMessenger.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SolConfig.hh"
-#include "G4GenericMessenger.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
+#include "globals.hh"
 
 #include <fstream>
 
@@ -46,9 +46,9 @@ class G4ParticleDefinition;
 
 /// The primary generator action class with particle gum.
 ///
-/// It defines a single particle which hits the calorimeter 
+/// It defines a single particle which hits the calorimeter
 /// perpendicular to the input face. The type of the particle
-/// can be changed via the G4 build-in commands of G4ParticleGun class 
+/// can be changed via the G4 build-in commands of G4ParticleGun class
 /// (see the macros provided with this example).
 
 class HypHIPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
@@ -58,14 +58,14 @@ public:
   virtual ~HypHIPrimaryGeneratorAction();
 
   virtual void GeneratePrimaries(G4Event* event);
-  int GetStatus() const {return status;}
+  int GetStatus() const { return status; }
 
 private:
   void DefineCommands();
 
   int status;
 
-  G4ParticleGun*  fParticleGun; // G4 particle gun
+  G4ParticleGun* fParticleGun; // G4 particle gun
   G4GenericMessenger* fMessenger;
   G4String nameInputFile;
   std::ifstream InStream;
@@ -76,18 +76,16 @@ private:
   G4double fPosZ;
   G4double fSpotSizeSigma;
   G4double fTargetSize;
-  
+
   G4long nEvents;
-  
-  G4int fRandomizePrimary[3] = {1,1,1};
+
+  G4int fRandomizePrimary[3] = {1, 1, 1};
 
   const G4SolConfig& Par;
-  
+
   G4ParticleDefinition* GetParticle(const G4String& particleName);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-

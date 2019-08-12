@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------- 
+// -------------------------------------------------
 // Definition of the G4SolRunAction class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------
@@ -31,21 +31,20 @@
 #ifndef G4SolRunAction_h
 #define G4SolRunAction_h 1
 
-#include "G4UserRunAction.hh"
 #include "G4SolConfig.hh"
-#include "globals.hh"
-
+#include "G4UserRunAction.hh"
 #include "TFile.h"
-#include "TTree.h"
 #include "TH1F.h"
+#include "TTree.h"
+#include "globals.hh"
 
 class G4Run;
 
 /// Run action class
 ///
-/// It accumulates statistic and computes dispersion of the energy deposit 
+/// It accumulates statistic and computes dispersion of the energy deposit
 /// and track lengths of charged particles with use of analysis tools:
-/// H1D histograms are created in BeginOfRunAction() for the following 
+/// H1D histograms are created in BeginOfRunAction() for the following
 /// physics quantities:
 /// - Edep in absorber
 /// - Edep in gap
@@ -55,7 +54,7 @@ class G4Run;
 /// The histograms and ntuple are saved in the output file in a format
 /// accoring to a selected technology in G4SolAnalysis.hh.
 ///
-/// In EndOfRunAction(), the accumulated statistic and computed 
+/// In EndOfRunAction(), the accumulated statistic and computed
 /// dispersion is printed.
 ///
 
@@ -64,16 +63,15 @@ class G4SolRunAction : public G4UserRunAction
 public:
   G4SolRunAction(const G4String& name, const std::vector<G4String>& nameD, const G4SolConfig& config);
   virtual ~G4SolRunAction();
-  
-  virtual void BeginOfRunAction(const G4Run*);
-  virtual void   EndOfRunAction(const G4Run*);
-  
-  virtual G4Run* GenerateRun();
 
+  virtual void BeginOfRunAction(const G4Run*);
+  virtual void EndOfRunAction(const G4Run*);
+
+  virtual G4Run* GenerateRun();
 
   // void Close();
   // void Fill() const;
-private :
+private:
   const G4String OutputFileName;
   const std::vector<G4String>& NameDetectorsSD;
   const G4SolConfig& Conf;
@@ -82,10 +80,8 @@ private :
   // TTree* OutTree;
 
   // TH1F* h1;
-
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------- 
+// -------------------------------------------------
 // Definition of the G4SolRunData class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------
@@ -31,30 +31,29 @@
 #ifndef G4SolRunData_h
 #define G4SolRunData_h 1
 
-#include "G4Run.hh"
-#include "globals.hh"
 #include "G4Event.hh"
-
-#include "TFile.h"
-#include "TTree.h"
-#include "TClonesArray.h"
-
+#include "G4Run.hh"
 #include "G4SolConfig.hh"
+#include "TClonesArray.h"
+#include "TFile.h"
 #include "TG4Sol_Event.hh"
+#include "TTree.h"
+#include "globals.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-enum {
+enum
+{
   kAbs = 0,
   kGap = 1,
   kDim = 2
-};  
+};
 
 ///  Run data class
 ///
 /// It defines data members to hold the energy deposit and track lengths
 /// of charged particles in Absober and Gap layers.
-/// 
-/// In order to reduce the number of data members a 2-dimensions array 
+///
+/// In order to reduce the number of data members a 2-dimensions array
 /// is introduced for each quantity:
 /// - fEdep[], fTrackLength[].
 ///
@@ -75,7 +74,6 @@ public:
   void InitTree(const std::vector<G4String>& nameDet, const G4SolConfig& config);
 
 private:
-
   const G4String& namefile;
   TFile* fileOut;
   TTree* Tree;
@@ -86,11 +84,8 @@ private:
   bool LookCheckFile;
   bool LookCheckTree;
   bool CloseDone;
-
 };
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

@@ -23,32 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------------------- 
+// -------------------------------------------------------------
 // Implementation of the G4SolSimpleActionInitialization class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------------------
 
 #include "G4SolSimpleActionInitialization.hh"
+
 #include "G4SolSimplePrimaryGeneratorAction.hh"
 //#include "G4SolSimpleRunAction.hh"
 //#include "G4SolSimpleEventAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolSimpleActionInitialization::G4SolSimpleActionInitialization(const G4SolConfig& conf) : G4VUserActionInitialization(),Conf(conf)
-{}
+G4SolSimpleActionInitialization::G4SolSimpleActionInitialization(const G4SolConfig& conf)
+    : G4VUserActionInitialization(), Conf(conf)
+{
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolSimpleActionInitialization::~G4SolSimpleActionInitialization()
-{}
+G4SolSimpleActionInitialization::~G4SolSimpleActionInitialization() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4SolSimpleActionInitialization::BuildForMaster() const
 {
-  //G4SolSimpleEventAction* eventAction = 0;
-  //SetUserAction(new G4SolSimpleRunAction(eventAction));
+  // G4SolSimpleEventAction* eventAction = 0;
+  // SetUserAction(new G4SolSimpleRunAction(eventAction));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -57,10 +59,10 @@ void G4SolSimpleActionInitialization::Build() const
 {
   SetUserAction(new G4SolSimplePrimaryGeneratorAction(Conf));
 
-  //G4SolSimpleEventAction* eventAction = new G4SolSimpleEventAction;
-  //SetUserAction(eventAction);
+  // G4SolSimpleEventAction* eventAction = new G4SolSimpleEventAction;
+  // SetUserAction(eventAction);
 
-  //SetUserAction(new G4SolSimpleRunAction(eventAction));
-}  
+  // SetUserAction(new G4SolSimpleRunAction(eventAction));
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -1,12 +1,11 @@
 #ifndef G4SolGeometryController_hh
 #define G4SolGeometryController_hh 1
 
-#include "globals.hh"
+#include "G4SolConfig.hh"
+#include "G4SolVDetectorConstruction.hh"
 #include "G4String.hh"
 #include "G4VUserDetectorConstruction.hh"
-#include "G4SolVDetectorConstruction.hh"
-
-#include "G4SolConfig.hh"
+#include "globals.hh"
 
 /**
  * Controller for geometry selection
@@ -29,12 +28,11 @@ public:
   void ConvertG4toRoot(const std::string& nameConvertRoot);
 
 private:
-  void registerGeometry(G4VUserDetectorConstruction *det);
+  void registerGeometry(G4VUserDetectorConstruction* det);
 
   const G4SolConfig& Par;
   G4String nameGeometry;
-  G4SolVDetectorConstruction *detectorBuilder;
+  G4SolVDetectorConstruction* detectorBuilder;
 };
-
 
 #endif

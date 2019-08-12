@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// ------------------------------------------------- 
+// -------------------------------------------------
 // Definition of the G4SolStackingAction class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------
@@ -32,16 +32,16 @@
 #ifndef G4SolStackingAction_H
 #define G4SolStackingAction_H 1
 
-#include "globals.hh"
-#include "G4UserStackingAction.hh"
-#include "G4ThreeVector.hh"
 #include "G4String.hh"
+#include "G4ThreeVector.hh"
+#include "G4UserStackingAction.hh"
+#include "globals.hh"
 
-#include <vector>
-#include <unordered_map>
-#include <tuple>
-#include <set>
 #include <functional>
+#include <set>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 namespace G4SolStacking
@@ -59,13 +59,13 @@ struct Daugthers_Info
 
   void Print() const
   {
-    G4cout<<" Daugther :"<<G4endl;
-    G4cout<<" Secondary vertex :"<<secondary_vertex<<G4endl;
+    G4cout << " Daugther :" << G4endl;
+    G4cout << " Secondary vertex :" << secondary_vertex << G4endl;
 
-    for(unsigned int i=0; i< name_daughters.size();++i)
+    for(unsigned int i = 0; i < name_daughters.size(); ++i)
       {
-	G4cout<<" name :"<<name_daughters[i]<<G4endl;
-	G4cout<<"  '--> mom"<<mom_daughters[i]<<G4endl;
+        G4cout << " name :" << name_daughters[i] << G4endl;
+        G4cout << "  '--> mom" << mom_daughters[i] << G4endl;
       }
   }
 };
@@ -90,16 +90,12 @@ struct Daugthers_Info
 class HashTuple
 {
   std::hash<int> hashFunc;
-public :
-  size_t operator() (const std::tuple<int,int>& a) const
-  {
-    return hashFunc(std::get<0,int>(a));
-  }
 
+public:
+  size_t operator()(const std::tuple<int, int>& a) const { return hashFunc(std::get<0, int>(a)); }
 };
 
-}
-
+} // namespace G4SolStacking
 
 class G4SolStackingAction : public G4UserStackingAction
 {
@@ -112,18 +108,18 @@ public:
   virtual void NewStage();
   virtual void PrepareNewEvent();
 
-  bool Get_MotherInfo(G4int ) const;
-  const G4SolStacking::Daugthers_Info Get_DaugthersInfo(G4int ) const;
+  bool Get_MotherInfo(G4int) const;
+  const G4SolStacking::Daugthers_Info Get_DaugthersInfo(G4int) const;
+
 private:
-  
-  std::unordered_map<G4int,G4SolStacking::Daugthers_Info> mother_daugthersInfo;
+  std::unordered_map<G4int, G4SolStacking::Daugthers_Info> mother_daugthersInfo;
 
   std::set<G4int> list_PDGSelected;
-  std::unordered_map<std::tuple<int,int>,std::vector<std::tuple<double,double,double,double,double> >, G4SolStacking::HashTuple > optic_lines; // PID -> graph : pathLength, X, Y, angleXZ, angleYZ 
+  std::unordered_map<std::tuple<int, int>, std::vector<std::tuple<double, double, double, double, double> >,
+                     G4SolStacking::HashTuple>
+      optic_lines; // PID -> graph : pathLength, X, Y, angleXZ, angleYZ
 
-  
   const G4ThreeVector beamAxis;
-
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

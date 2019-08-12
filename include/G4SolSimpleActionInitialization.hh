@@ -31,25 +31,22 @@
 #ifndef G4SolSimpleActionInitialization_h
 #define G4SolSimpleActionInitialization_h 1
 
-#include "G4VUserActionInitialization.hh"
 #include "G4SolConfig.hh"
+#include "G4VUserActionInitialization.hh"
 /// Action initialization class.
 
 class G4SolSimpleActionInitialization : public G4VUserActionInitialization
 {
   const G4SolConfig& Conf;
-  
-  public:
+
+public:
   explicit G4SolSimpleActionInitialization(const G4SolConfig& conf);
   virtual ~G4SolSimpleActionInitialization();
-  
+
   virtual void BuildForMaster() const;
   virtual void Build() const;
-  
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-    

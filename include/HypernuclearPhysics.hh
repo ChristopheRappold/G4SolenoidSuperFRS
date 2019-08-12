@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ----------------------------------------------------- 
+// -----------------------------------------------------
 // Definition of the HypernuclearPhysics class
 // Created by C.Rappold (c.rappold@gsi.de)
 //------------------------------------------------------
@@ -31,12 +31,12 @@
 #ifndef HypernuclearPhysics_h
 #define HypernuclearPhysics_h 1
 
-#include "G4VPhysicsConstructor.hh"
 #include "G4SolConfig.hh"
+#include "G4VPhysicsConstructor.hh"
 
 /// Physics list with geantino and charged geantino only
 
-class HypernuclearPhysics: public G4VPhysicsConstructor
+class HypernuclearPhysics : public G4VPhysicsConstructor
 {
 public:
   HypernuclearPhysics(const G4String& name, const G4SolConfig& _par);
@@ -46,18 +46,10 @@ protected:
   // Construct particle and physics process
   void ConstructParticle();
   void ConstructProcess();
-  //virtual void SetCuts();
-  
-private :
-  const G4SolConfig& Par;
+  // virtual void SetCuts();
 
+private:
+  const G4SolConfig& Par;
 };
 
 #endif
-
-
-
-
-
-
-

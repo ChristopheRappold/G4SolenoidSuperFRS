@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// ------------------------------------------------------------- 
+// -------------------------------------------------------------
 // Implementation of the G4SolSimpleMagneticField class
 // Created by C.Rappold (c.rappold@gsi.de)
 //--------------------------------------------------------------
@@ -36,48 +36,48 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolSimpleMagneticField::G4SolSimpleMagneticField() : G4MagneticField(), fMessenger(0), fBx(0.),fBy(0.),fBz(1.0*tesla)
+G4SolSimpleMagneticField::G4SolSimpleMagneticField()
+    : G4MagneticField(), fMessenger(0), fBx(0.), fBy(0.), fBz(1.0 * tesla)
 {
-    // define commands for this class
-    DefineCommands();
+  // define commands for this class
+  DefineCommands();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolSimpleMagneticField::~G4SolSimpleMagneticField()
-{ 
-    delete fMessenger; 
-}
+G4SolSimpleMagneticField::~G4SolSimpleMagneticField() { delete fMessenger; }
 
-void G4SolSimpleMagneticField::GetFieldValue(const G4double [4],double *bField) const
+void G4SolSimpleMagneticField::GetFieldValue(const G4double[4], double* bField) const
 {
-    bField[0] = fBx;
-    bField[1] = fBy;
-    bField[2] = fBz;
+  bField[0] = fBx;
+  bField[1] = fBy;
+  bField[2] = fBz;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4SolSimpleMagneticField::DefineCommands()
 {
-    // Define /G4SolSimple/field command directory using generic messenger class
-    fMessenger = new G4GenericMessenger(this, "/G4SolSimple/field/", "Field control");
+  // Define /G4SolSimple/field command directory using generic messenger class
+  fMessenger = new G4GenericMessenger(this, "/G4SolSimple/field/", "Field control");
 
-    // fieldValue command 
-    G4GenericMessenger::Command& valueCmd = fMessenger->DeclareMethodWithUnit("valueBx","tesla", &G4SolSimpleMagneticField::SetFieldBx, "Set fieldBx strength.");
-    valueCmd.SetParameterName("fieldBx", true);
-    valueCmd.SetDefaultValue("0.");
+  // fieldValue command
+  G4GenericMessenger::Command& valueCmd = fMessenger->DeclareMethodWithUnit(
+      "valueBx", "tesla", &G4SolSimpleMagneticField::SetFieldBx, "Set fieldBx strength.");
+  valueCmd.SetParameterName("fieldBx", true);
+  valueCmd.SetDefaultValue("0.");
 
-    // fieldValue command 
-    G4GenericMessenger::Command& valueCmd2 = fMessenger->DeclareMethodWithUnit("valueBy","tesla", &G4SolSimpleMagneticField::SetFieldBy, "Set fieldBy strength.");
-    valueCmd2.SetParameterName("fieldBy", true);
-    valueCmd2.SetDefaultValue("0.");
+  // fieldValue command
+  G4GenericMessenger::Command& valueCmd2 = fMessenger->DeclareMethodWithUnit(
+      "valueBy", "tesla", &G4SolSimpleMagneticField::SetFieldBy, "Set fieldBy strength.");
+  valueCmd2.SetParameterName("fieldBy", true);
+  valueCmd2.SetDefaultValue("0.");
 
-    // fieldValue command 
-    G4GenericMessenger::Command& valueCmd3 = fMessenger->DeclareMethodWithUnit("valueBz","tesla", &G4SolSimpleMagneticField::SetFieldBz, "Set fieldBz strength.");
-    valueCmd3.SetParameterName("fieldBz", true);
-    valueCmd3.SetDefaultValue(".5");
-
+  // fieldValue command
+  G4GenericMessenger::Command& valueCmd3 = fMessenger->DeclareMethodWithUnit(
+      "valueBz", "tesla", &G4SolSimpleMagneticField::SetFieldBz, "Set fieldBz strength.");
+  valueCmd3.SetParameterName("fieldBz", true);
+  valueCmd3.SetDefaultValue(".5");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

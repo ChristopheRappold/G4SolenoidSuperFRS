@@ -24,45 +24,40 @@
 // ********************************************************************
 //
 // $Id: G4SolVDetectorConstruction.cc 77601 2013-11-26 17:08:44Z gcosmo $
-// 
+//
 /// \file G4SolVDetectorConstruction.cc
 /// \brief Implementation of the G4SolVDetectorConstruction class
 
 #include "G4SolVDetectorConstruction.hh"
 
+#include "G4GeometryManager.hh"
+#include "G4LogicalVolume.hh"
+#include "G4LogicalVolumeStore.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"
-
-#include "G4LogicalVolume.hh"
-
-#include "G4GeometryManager.hh"
 #include "G4PhysicalVolumeStore.hh"
-#include "G4LogicalVolumeStore.hh"
 #include "G4SolidStore.hh"
 
-
-G4SolVDetectorConstruction::G4SolVDetectorConstruction(const G4SolConfig& conf) : G4VUserDetectorConstruction(), Par(conf)
-{}
+G4SolVDetectorConstruction::G4SolVDetectorConstruction(const G4SolConfig& conf)
+    : G4VUserDetectorConstruction(), Par(conf)
+{
+}
 
 G4LogicalVolume* G4SolVDetectorConstruction::FindVolume(const G4String& name)
 {
   G4LogicalVolumeStore* lvStore = G4LogicalVolumeStore::GetInstance();
-  
-  for (G4int i=0; i<G4int(lvStore->size()); i++) 
+
+  for(G4int i = 0; i < G4int(lvStore->size()); i++)
     {
       G4LogicalVolume* lv = (*lvStore)[i];
-      if (lv->GetName() == name) 
-	return lv;
+      if(lv->GetName() == name)
+        return lv;
     }
 
-  G4String text = "ExN03DetectorConstruction:: FindVolume:\n"; 
-  text = text + "    Logical volume " + name + " does not exist.";
+  G4String text = "ExN03DetectorConstruction:: FindVolume:\n";
+  text          = text + "    Logical volume " + name + " does not exist.";
   std::cerr << text << G4endl;
   return 0;
-}  	       	         
-
-G4SolVDetectorConstruction::~G4SolVDetectorConstruction()
-{ 
-
 }
 
+G4SolVDetectorConstruction::~G4SolVDetectorConstruction() {}

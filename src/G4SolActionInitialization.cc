@@ -29,35 +29,36 @@
 //--------------------------------------------------------
 
 #include "G4SolActionInitialization.hh"
-#include "HypHIPrimaryGeneratorAction.hh"
-#include "G4SolSimplePrimaryGeneratorAction.hh"
-#include "G4SolRunAction.hh"
+
 #include "G4SolEventAction.hh"
+#include "G4SolRunAction.hh"
+#include "G4SolSimplePrimaryGeneratorAction.hh"
 #include "G4SolStackingAction.hh"
+#include "HypHIPrimaryGeneratorAction.hh"
 
 #include <memory>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolActionInitialization::G4SolActionInitialization (G4SolGeometryController* geoControl, const G4SolConfig& ConfFile) : G4VUserActionInitialization(),fGeoController(geoControl),Conf(ConfFile)
+G4SolActionInitialization::G4SolActionInitialization(G4SolGeometryController* geoControl, const G4SolConfig& ConfFile)
+    : G4VUserActionInitialization(), fGeoController(geoControl), Conf(ConfFile)
 {
   OutputFile = Conf.Get<std::string>("Output_Namefile");
-  std::cout<<"ActionInit : done ! "<<OutputFile<<std::endl;
+  std::cout << "ActionInit : done ! " << OutputFile << std::endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SolActionInitialization::~G4SolActionInitialization()
-{}
+G4SolActionInitialization::~G4SolActionInitialization() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4SolActionInitialization::BuildForMaster() const
 {
   std::vector<G4String> nameD = fGeoController->GetNameDetectors();
-  std::cout<<"!> G4SolActionInitialization BuildForMaster:"<<nameD.size()<<" "<<fGeoController->GetNameDetectors().size()<<std::endl;
-  
-  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors(),Conf));
+  std::cout << "!> G4SolActionInitialization BuildForMaster:" << nameD.size() << " "
+            << fGeoController->GetNameDetectors().size() << std::endl;
 
+  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors(), Conf));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -65,20 +66,22 @@ void G4SolActionInitialization::BuildForMaster() const
 void G4SolActionInitialization::Build() const
 {
   std::vector<G4String> nameD = fGeoController->GetNameDetectors();
-  std::cout<<"!> G4SolActionInitialization Build:"<<nameD.size()<<" "<<fGeoController->GetNameDetectors().size()<<std::endl;
+  std::cout << "!> G4SolActionInitialization Build:" << nameD.size() << " " << fGeoController->GetNameDetectors().size()
+            << std::endl;
 
-  std::unique_ptr<HypHIPrimaryGeneratorAction> newPrimGen (new HypHIPrimaryGeneratorAction(Conf));//= std::make_unique<HypHIPrimaryGeneratorAction>(Conf);
-  if(newPrimGen->GetStatus()!=0)
+  std::unique_ptr<HypHIPrimaryGeneratorAction> newPrimGen(new HypHIPrimaryGeneratorAction(Conf));
+  //= std::make_unique<HypHIPrimaryGeneratorAction>(Conf);
+  if(newPrimGen->GetStatus() != 0)
     SetUserAction(new G4SolSimplePrimaryGeneratorAction(Conf));
   else
     SetUserAction(newPrimGen.release());
-    
-  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors(),Conf));
-  
-  G4SolEventAction* eventAction = new G4SolEventAction( fGeoController->GetNameDetectors());
+
+  SetUserAction(new G4SolRunAction(OutputFile, fGeoController->GetNameDetectors(), Conf));
+
+  G4SolEventAction* eventAction = new G4SolEventAction(fGeoController->GetNameDetectors());
   SetUserAction(eventAction);
 
   SetUserAction(new G4SolStackingAction());
-}  
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
