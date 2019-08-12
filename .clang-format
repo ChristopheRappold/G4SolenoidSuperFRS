@@ -1,0 +1,18 @@
+---
+AccessModifierOffset: '-2'
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: 'true'
+AlwaysBreakTemplateDeclarations: 'true'
+AllowShortCaseLabelsOnASingleLine: 'true'
+AllowShortIfStatementsOnASingleLine: 'false'
+AllowShortCaseLabelsOnASingleLine: 'false'
+IncludeBlocks: Regroup
+BreakBeforeBraces: GNU
+PointerAlignment: Left
+SortIncludes: 'true'
+SpaceBeforeParens: Never
+#SpaceBeforeRangeBasedForLoopColon: 'true'
+Cpp11BracedListStyle: 'true'
+Standard: Cpp03
+ColumnLimit: 120
+...
