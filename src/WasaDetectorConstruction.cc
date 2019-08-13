@@ -310,6 +310,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4Material* Vacuum = materialMgr->FindOrBuildMaterial("G4_Galactic");
   G4Material* Si = materialMgr->FindOrBuildMaterial("G4_Si");//"Plastic");
   G4Material* Scinti = materialMgr->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");//G4_POLYETHYLENE");//"Plastic");
+  G4Material* FiberCoreScinti =  materialMgr->FindOrBuildMaterial("G4_POLYSTYRENE");
   G4Material* Carbon = materialMgr->FindOrBuildMaterial("G4_C");//"Plastic");
 
   G4VisAttributes *Si_att = new G4VisAttributes(Pink);
