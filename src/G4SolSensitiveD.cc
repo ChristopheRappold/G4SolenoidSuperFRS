@@ -67,7 +67,7 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step*aStep, G4TouchableHistory*)
   //   return true;
 
   const G4TouchableHistory* touchable = dynamic_cast<const G4TouchableHistory*>(aStep->GetPreStepPoint()->GetTouchable());
-  G4int idVolume = touchable->GetHistoryDepth()>3 ? 1 : 0; // more than 3 meaning it is Central drifttube | less or equal to 3 meaning the rest 
+  G4int idVolume = touchable->GetHistoryDepth()>4 ? 1 : 0; // more than 4 meaning it is Central drifttube (at 5) | less or equal to 4 meaning the rest 
 
   //G4VPhysicalVolume* motherPhysical = touchable->GetVolume(1); // mother
   G4VPhysicalVolume* currentPhysical = touchable->GetVolume(idVolume);
