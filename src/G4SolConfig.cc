@@ -237,150 +237,162 @@ double G4SolConfig::GetDimension(const std::string& dimension)
 
 void G4SolConfig::SetDefault()
 {
-  tree.put("Gui", 0);
+  tree.put("Gui",0);
+  
+  tree.put("Particle","proton");
 
-  tree.put("Particle", "proton");
+  tree.put("Beam_SpotSizeSigma",1);
+  tree.put("Beam_SpotSizeSigma.unit","cm");
+  tree.put("Beam_SpotSizeSigma.unit.cm",1.*cm);
 
-  tree.put("Beam_SpotSizeSigma", 1);
-  tree.put("Beam_SpotSizeSigma.unit", "cm");
-  tree.put("Beam_SpotSizeSigma.unit.cm", 1. * cm);
+  tree.put("Beam_Momentum",2);
+  tree.put("Beam_Momentum.unit","GeV");
+  tree.put("Beam_Momentum.unit.GeV",1.*GeV);
 
-  tree.put("Beam_Momentum", 2);
-  tree.put("Beam_Momentum.unit", "GeV");
-  tree.put("Beam_Momentum.unit.GeV", 1. * GeV);
+  tree.put("Beam_MomentumSigma",10.);
+  tree.put("Beam_MomentumSigma.unit","MeV");
+  tree.put("Beam_MomentumSigma.unit.MeV",1.*MeV);
+    
+  tree.put("Beam_MomentumX",0.);   
+  tree.put("Beam_MomentumY",0.);   
+  tree.put("Beam_MomentumZ",1.);   
 
-  tree.put("Beam_MomentumSigma", 10.);
-  tree.put("Beam_MomentumSigma.unit", "MeV");
-  tree.put("Beam_MomentumSigma.unit.MeV", 1. * MeV);
+  tree.put("Beam_MomentumXsigma",0.1);
+  tree.put("Beam_MomentumYsigma",0.1);
+  tree.put("Beam_MomentumZsigma",0);
+  
+  tree.put("Target_Size",2);
+  tree.put("Target_Size.unit","cm");
+  tree.put("Target_Size.unit.cm",1.*cm);
 
-  tree.put("Beam_MomentumX", 0.);
-  tree.put("Beam_MomentumY", 0.);
-  tree.put("Beam_MomentumZ", 1.);
+  tree.put("Target_PosX",0);
+  tree.put("Target_PosX.unit","cm");
+  tree.put("Target_PosX.unit.cm",1.*cm);
 
-  tree.put("Beam_MomentumXsigma", 0.1);
-  tree.put("Beam_MomentumYsigma", 0.1);
-  tree.put("Beam_MomentumZsigma", 0);
+  tree.put("Target_PosY",0);
+  tree.put("Target_PosY.unit","cm");
+  tree.put("Target_PosY.unit.cm",1.*cm);
 
-  tree.put("Target_Size", 2);
-  tree.put("Target_Size.unit", "cm");
-  tree.put("Target_Size.unit.cm", 1. * cm);
+  tree.put("Target_PosZ",0);
+  tree.put("Target_PosZ.unit","cm");
+  tree.put("Target_PosZ.unit.cm",1.*cm);
 
-  tree.put("Target_PosX", 0);
-  tree.put("Target_PosX.unit", "cm");
-  tree.put("Target_PosX.unit.cm", 1. * cm);
+  tree.put("Wasa_ShiftZ",1);
+  tree.put("Wasa_ShiftZ.unit","m");
+  tree.put("Wasa_ShiftZ.unit.m",1.*m);
 
-  tree.put("Target_PosY", 0);
-  tree.put("Target_PosY.unit", "cm");
-  tree.put("Target_PosY.unit.cm", 1. * cm);
+  tree.put("Systematic_Shift",0);
+  tree.put("Systematic_Shift.unit","cm");
+  tree.put("Systematic_Shift.unit.cm",1.*cm);
+    
+  tree.put("Wasa_Side",0);
 
-  tree.put("Target_PosZ", 0);
-  tree.put("Target_PosZ.unit", "cm");
-  tree.put("Target_PosZ.unit.cm", 1. * cm);
+  tree.put("HypHI_Si_minR",1);
+  tree.put("HypHI_Si_minR.unit","cm");
+  tree.put("HypHI_Si_minR.unit.cm",1.*cm);
 
-  tree.put("Wasa_ShiftZ", 1);
-  tree.put("Wasa_ShiftZ.unit", "m");
-  tree.put("Wasa_ShiftZ.unit.m", 1. * m);
+  tree.put("HypHI_Si_maxR",3);
+  tree.put("HypHI_Si_maxR.unit","cm");
+  tree.put("HypHI_Si_maxR.unit.cm",1.*cm);
 
-  tree.put("Systematic_Shift", 0);
-  tree.put("Systematic_Shift.unit", "cm");
-  tree.put("Systematic_Shift.unit.cm", 1. * cm);
+  tree.put("HypHI_EndCap_posZ",40);
+  tree.put("HypHI_EndCap_posZ.unit","cm");
+  tree.put("HypHI_EndCap_posZ.unit.cm",1.*cm);
 
-  tree.put("Wasa_Side", 0);
+  tree.put("HypHI_EndCap_maxR",30);
+  tree.put("HypHI_EndCap_maxR.unit","cm");
+  tree.put("HypHI_EndCap_maxR.unit.cm",1.*cm);
 
-  tree.put("HypHI_Si_minR", 1);
-  tree.put("HypHI_Si_minR.unit", "cm");
-  tree.put("HypHI_Si_minR.unit.cm", 1. * cm);
+  tree.put("FRS_FMF2_posZ",2);
+  tree.put("FRS_FMF2_posZ.unit","m");
+  tree.put("FRS_FMF2_posZ.unit.m",1.*m);
 
-  tree.put("HypHI_Si_maxR", 3);
-  tree.put("HypHI_Si_maxR.unit", "cm");
-  tree.put("HypHI_Si_maxR.unit.cm", 1. * cm);
+  tree.put("HypHI_FiberTracker1_posZ",5);
+  tree.put("HypHI_FiberTracker1_posZ.unit","cm");
+  tree.put("HypHI_FiberTracker1_posZ.unit.cm",1.*cm);
 
-  tree.put("HypHI_EndCap_posZ", 40);
-  tree.put("HypHI_EndCap_posZ.unit", "cm");
-  tree.put("HypHI_EndCap_posZ.unit.cm", 1. * cm);
+  tree.put("HypHI_FiberTracker2_posZ",20);
+  tree.put("HypHI_FiberTracker2_posZ.unit","cm");
+  tree.put("HypHI_FiberTracker2_posZ.unit.cm",1.*cm);
 
-  tree.put("HypHI_EndCap_maxR", 30);
-  tree.put("HypHI_EndCap_maxR.unit", "cm");
-  tree.put("HypHI_EndCap_maxR.unit.cm", 1. * cm);
+  tree.put("HypHI_FiberTracker3_posZ",35);
+  tree.put("HypHI_FiberTracker3_posZ.unit","cm");
+  tree.put("HypHI_FiberTracker3_posZ.unit.cm",1.*cm);
 
-  tree.put("FRS_FMF2_posZ", 2);
-  tree.put("FRS_FMF2_posZ.unit", "m");
-  tree.put("FRS_FMF2_posZ.unit.m", 1. * m);
+  tree.put("FRS_TR1_posZ",40);
+  tree.put("FRS_TR1_posZ.unit","cm");
+  tree.put("FRS_TR1_posZ.unit.cm",1.*cm);
 
-  tree.put("FRS_TR1_posZ", 40);
-  tree.put("FRS_TR1_posZ.unit", "cm");
-  tree.put("FRS_TR1_posZ.unit.cm", 1. * cm);
+  tree.put("FRS_TR2_posZ",70);
+  tree.put("FRS_TR2_posZ.unit","cm");
+  tree.put("FRS_TR2_posZ.unit.cm",1.*cm);
+  
+  tree.put("CDS_RelativePosTarget",-0.7);
 
-  tree.put("FRS_TR2_posZ", 70);
-  tree.put("FRS_TR2_posZ.unit", "cm");
-  tree.put("FRS_TR2_posZ.unit.cm", 1. * cm);
+  tree.put("Output_Namefile","Default_Output.root");
 
-  tree.put("CDS_RelativePosTarget", -0.7);
+  tree.put("Geometry_Namefile","geometry.root");
+  
+  tree.put("SimpleGeo",1);
+  tree.put("Geo","CDS");
+  
+  tree.put("Physicslist","G4Default_FTFP_BERT");
 
-  tree.put("Output_Namefile", "Default_Output.root");
+  tree.put("HyperNuclei_H4L_br_mode1",1.); 
+  tree.put("HyperNuclei_H4L_br_mode2",0.); 
+  tree.put("HyperNuclei_H4L_br_mode3",0.); 
+  tree.put("HyperNuclei_H4L_br_mode4",0.); 
+  tree.put("HyperNuclei_H4L_br_mode5",0.); 
 
-  tree.put("Geometry_Namefile", "geometry.root");
+  tree.put("HyperNuclei_H4LT12",0.194);
+  tree.put("HyperNuclei_H4LT12.unit","ns");
+  tree.put("HyperNuclei_H4LT12.unit.ns",1.*ns);
+  
+  tree.put("HyperNuclei_H3L_br_mode1",0); 
+  tree.put("HyperNuclei_H3L_br_mode2",1); 
+  tree.put("HyperNuclei_H3L_br_mode3",0); 
+  tree.put("HyperNuclei_H3L_br_mode4",0); 
+  tree.put("HyperNuclei_H3L_br_mode5",0);
 
-  tree.put("SimpleGeo", 1);
-  tree.put("Geo", "CDS");
+  tree.put("HyperNuclei_H3L_T12",0.246);
+  tree.put("HyperNuclei_H3L_T12.unit","ns");
+  tree.put("HyperNuclei_H3L_T12.unit.ns",1.*ns);
 
-  tree.put("Physicslist", "G4Default_FTFP_BERT");
+  tree.put("HyperNuclei_He4L_br_mode1",0); 
+  tree.put("HyperNuclei_He4L_br_mode2",1); 
+  tree.put("HyperNuclei_He4L_br_mode3",0); 
+  tree.put("HyperNuclei_He4L_br_mode4",0); 
+  tree.put("HyperNuclei_He4L_br_mode5",0); 
+  tree.put("HyperNuclei_He4L_br_mode6",0); 
+  tree.put("HyperNuclei_He4L_br_mode7",0);
 
-  tree.put("HyperNuclei_H4L_br_mode1", 1.);
-  tree.put("HyperNuclei_H4L_br_mode2", 0.);
-  tree.put("HyperNuclei_H4L_br_mode3", 0.);
-  tree.put("HyperNuclei_H4L_br_mode4", 0.);
-  tree.put("HyperNuclei_H4L_br_mode5", 0.);
+  tree.put("HyperNuclei_He4L_T12",0.256);
+  tree.put("HyperNuclei_He4L_T12.unit","ns");
+  tree.put("HyperNuclei_He4L_T12.unit.ns",1.*ns);
 
-  tree.put("HyperNuclei_H4LT12", 0.194);
-  tree.put("HyperNuclei_H4LT12.unit", "ns");
-  tree.put("HyperNuclei_H4LT12.unit.ns", 1. * ns);
+  tree.put("HyperNuclei_He5L_br_mode1",1); 
+  tree.put("HyperNuclei_He5L_br_mode2",0);
 
-  tree.put("HyperNuclei_H3L_br_mode1", 0);
-  tree.put("HyperNuclei_H3L_br_mode2", 1);
-  tree.put("HyperNuclei_H3L_br_mode3", 0);
-  tree.put("HyperNuclei_H3L_br_mode4", 0);
-  tree.put("HyperNuclei_H3L_br_mode5", 0);
+  tree.put("HyperNuclei_He5L_T12",0.256);
+  tree.put("HyperNuclei_He5L_T12.unit","ns");
+  tree.put("HyperNuclei_He5L_T12.unit.ns",1.*ns);
 
-  tree.put("HyperNuclei_H3L_T12", 0.246);
-  tree.put("HyperNuclei_H3L_T12.unit", "ns");
-  tree.put("HyperNuclei_H3L_T12.unit.ns", 1. * ns);
+  tree.put("HyperNuclei_nnL_br_mode1",1);
+  tree.put("HyperNuclei_nnL_br_mode2",0);
 
-  tree.put("HyperNuclei_He4L_br_mode1", 0);
-  tree.put("HyperNuclei_He4L_br_mode2", 1);
-  tree.put("HyperNuclei_He4L_br_mode3", 0);
-  tree.put("HyperNuclei_He4L_br_mode4", 0);
-  tree.put("HyperNuclei_He4L_br_mode5", 0);
-  tree.put("HyperNuclei_He4L_br_mode6", 0);
-  tree.put("HyperNuclei_He4L_br_mode7", 0);
+  tree.put("HyperNuclei_nnL_T12",0.256);
+  tree.put("HyperNuclei_nnL_T12.unit","ns");
+  tree.put("HyperNuclei_nnL_T12.unit.ns",1.*ns);
 
-  tree.put("HyperNuclei_He4L_T12", 0.256);
-  tree.put("HyperNuclei_He4L_T12.unit", "ns");
-  tree.put("HyperNuclei_He4L_T12.unit.ns", 1. * ns);
+  tree.put("DefaultRegionCut",10.);
+  tree.put("DefaultRegionCut.unit","mm");
+  tree.put("DefaultRegionCut.unit.mm",1.*mm);
 
-  tree.put("HyperNuclei_He5L_br_mode1", 1);
-  tree.put("HyperNuclei_He5L_br_mode2", 0);
-
-  tree.put("HyperNuclei_He5L_T12", 0.256);
-  tree.put("HyperNuclei_He5L_T12.unit", "ns");
-  tree.put("HyperNuclei_He5L_T12.unit.ns", 1. * ns);
-
-  tree.put("HyperNuclei_nnL_br_mode1", 1);
-  tree.put("HyperNuclei_nnL_br_mode2", 0);
-
-  tree.put("HyperNuclei_nnL_T12", 0.256);
-  tree.put("HyperNuclei_nnL_T12.unit", "ns");
-  tree.put("HyperNuclei_nnL_T12.unit.ns", 1. * ns);
-
-  tree.put("DefaultRegionCut", 10.);
-  tree.put("DefaultRegionCut.unit", "mm");
-  tree.put("DefaultRegionCut.unit.mm", 1. * mm);
-
-  tree.put("DetectorRegionCut", 50.);
-  tree.put("DetectorRegionCut.unit", "mm");
-  tree.put("DetectorRegionCut.unit.mm", 1. * mm);
-
-  tree.put("TargetRegionCut", 10.);
-  tree.put("TargetRegionCut.unit", "mm");
-  tree.put("TargetRegionCut.unit.mm", 1. * mm);
+  tree.put("DetectorRegionCut",50.);
+  tree.put("DetectorRegionCut.unit","mm");
+  tree.put("DetectorRegionCut.unit.mm",1.*mm);
+    
+  tree.put("TargetRegionCut",10.);
+  tree.put("TargetRegionCut.unit","mm");
+  tree.put("TargetRegionCut.unit.mm",1.*mm);
 }
