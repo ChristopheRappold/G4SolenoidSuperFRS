@@ -440,9 +440,6 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	std::vector<G4double> posZshift = {-4.*mm, 0.*mm, 4.*mm};
 	G4ThreeVector posFib;
 
-	G4Colour color_x(1., 1., 0.8);
-	G4Colour color_u(1., 0.8, 1.);
-	G4Colour color_v(0.8, 1., 1.);
 
 	G4VisAttributes* visAttributes_x = new G4VisAttributes(color_x);
 	G4VisAttributes* visAttributes_u = new G4VisAttributes(color_u);

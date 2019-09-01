@@ -103,6 +103,10 @@ private:
   const G4Colour  Orange      = {1.0,0.647,0};
   const G4Colour  Pink        = {1.0,0.753,0.796};  
 
+  const G4Colour  color_x     = {1., 1., 0.8};
+  const G4Colour  color_u     = {1., 0.8, 1.};
+  const G4Colour  color_v     = {0.8, 1., 1.};
+  
   // G4Colour  white   (1.0, 1.0, 1.0) ;
   // G4Colour  grey    (0.5, 0.5, 0.5) ;
   // G4Colour  lgrey   (.85, .85, .85) ;
