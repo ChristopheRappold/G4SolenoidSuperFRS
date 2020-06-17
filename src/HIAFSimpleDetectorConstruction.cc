@@ -304,7 +304,7 @@ void HIAFSimpleDetectorConstruction::ConstructSDandField()
   //   HypHI_InTracker_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   
   G4AutoDelete::Register(fMagneticField);
-  G4AutoDelete::Register(fFieldMgr);
+  //  G4AutoDelete::Register(fFieldMgr);
     
    
 }
