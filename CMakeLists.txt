@@ -24,12 +24,15 @@ elseif(${VGM_INSTALL} MATCHES 4\\.4)
 elseif(${VGM_INSTALL} MATCHES 4\\.5)
   set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.5.0)
   message(STATUS "VGM dir 4.5:" ${VGM_DIR})
+elseif(${VGM_INSTALL} MATCHES 4\\.8)
+  set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.8.0)
+  message(STATUS "VGM dir 4.8:" ${VGM_DIR})
 else()
   message(STATUS "no match for VGM version" ${VGM_INSTALL})
 endif()
 
 set(CMAKE_MODULE_PATH 
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+#  ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${VGM_DIR}/Modules
   ${CMAKE_MODULE_PATH}) 
 
@@ -74,7 +77,7 @@ endif()
 # Setup include directory for this project
 #
 include(${Geant4_USE_FILE})
-#include(${ROOT_USE_FILE})
+include(${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -98,8 +101,8 @@ add_executable(G4SolenoidSimple G4SolenoidSimple.cc ${sources} ${headers})
 target_link_libraries(G4SolenoidSimple ${library_name} ${VGM_LIBRARIES} ${ROOT_LIBRARIES} ${Geant4_LIBRARIES})
 
 ROOT_GENERATE_DICTIONARY(
-  ${CMAKE_SHARED_LIBRARY_PREFIX}${library_name}
-  no_rootmap
+  ${CMAKE_SHARED_LIBRARY_PREFIX}${library_name}_dict
+#  no_rootmap
   ${CMAKE_CURRENT_SOURCE_DIR}/include/TG4Sol_Hit.hh
   ${CMAKE_CURRENT_SOURCE_DIR}/include/TG4Sol_Event.hh
   LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/include/TG4Sol_LinkDef.h
