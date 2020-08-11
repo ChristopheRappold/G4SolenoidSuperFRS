@@ -29,6 +29,10 @@
 //--------------------------------------------------------------
 
 #include "HypernuclearPhysics.hh"
+#include "G4ProcessManager.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4hIonisation.hh"
+
 
 #include "TH3L.hh"
 #include "TH4L.hh"
@@ -40,7 +44,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HypernuclearPhysics::HypernuclearPhysics(const G4String& name, const G4SolConfig& _par)
-    : G4VPhysicsConstructor(name), Par(_par)
+  : G4VPhysicsConstructor(name), Par(_par)
 {
 }
 
@@ -101,4 +105,38 @@ void HypernuclearPhysics::ConstructParticle()
   nnL->setLT(Par.Get<double>("HyperNuclei_nnL_T12"));
 }
 
-void HypernuclearPhysics::ConstructProcess() {}
+void HypernuclearPhysics::ConstructProcess() {
+
+  ConstructEM();
+
+}
+
+
+void HypernuclearPhysics::ConstructEM(){
+
+  auto theParticleIterator = GetParticleIterator();
+  theParticleIterator-> reset();
+  while( (*theParticleIterator)() ){
+    G4ParticleDefinition* particle = theParticleIterator->value();
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    G4String particleName = particle->GetParticleName();
+
+    if (particleName == "H3L" || particleName == "H4L" || particleName == "He4L" || particleName == "He5L") {
+      G4VProcess* aMultipleScattering = new G4hMultipleScattering();
+      G4VProcess* anIonisation        = new G4hIonisation();
+      //
+      // add processes
+      pmanager->AddProcess(anIonisation);
+      pmanager->AddProcess(aMultipleScattering);
+      //
+      // set ordering for AlongStepDoIt
+      pmanager->SetProcessOrdering(aMultipleScattering, idxAlongStep,1);
+      pmanager->SetProcessOrdering(anIonisation,        idxAlongStep,2);
+      //
+      // set ordering for PostStepDoIt
+      pmanager->SetProcessOrdering(aMultipleScattering, idxPostStep,1);
+      pmanager->SetProcessOrdering(anIonisation,        idxPostStep,2);
+    }
+
+  }
+}

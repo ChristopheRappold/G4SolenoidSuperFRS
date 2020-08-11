@@ -48,6 +48,8 @@ protected:
   void ConstructProcess();
   // virtual void SetCuts();
 
+  void ConstructEM();
+
 private:
   const G4SolConfig& Par;
 };
