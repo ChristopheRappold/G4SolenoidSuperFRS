@@ -83,13 +83,14 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step* aStep, G4TouchableHistory*)
       G4SolHit* newHit = new G4SolHit(fHCID);
 
       newHit->Pname       = aStep->GetTrack()->GetDefinition()->GetParticleName();
+      newHit->Pdg         = aStep->GetTrack()->GetDefinition()->GetPDGEncoding();
       newHit->TrackID     = aStep->GetTrack()->GetTrackID();
       newHit->Energy      = energ_depos;
       newHit->Time        = aStep->GetPreStepPoint()->GetGlobalTime();
       newHit->TrackLength = aStep->GetTrack()->GetTrackLength();
-      newHit->HitPosX     = aStep->GetTrack()->GetPosition().x();
-      newHit->HitPosY     = aStep->GetTrack()->GetPosition().y();
-      newHit->HitPosZ     = aStep->GetTrack()->GetPosition().z();
+      newHit->HitPosX     = aStep->GetPreStepPoint()->GetPosition().x();
+      newHit->HitPosY     = aStep->GetPreStepPoint()->GetPosition().y();
+      newHit->HitPosZ     = aStep->GetPreStepPoint()->GetPosition().z();
       newHit->ExitPosX    = aStep->GetTrack()->GetPosition().x();
       newHit->ExitPosY    = aStep->GetTrack()->GetPosition().y();
       newHit->ExitPosZ    = aStep->GetTrack()->GetPosition().z();
@@ -124,13 +125,14 @@ G4bool G4Sol_SD_Det::ProcessHits(G4Step* aStep, G4TouchableHistory*)
           G4SolHit* newHit = new G4SolHit(fHCID);
 
           newHit->Pname       = aStep->GetTrack()->GetDefinition()->GetParticleName();
+          newHit->Pdg         = aStep->GetTrack()->GetDefinition()->GetPDGEncoding();
           newHit->TrackID     = aStep->GetTrack()->GetTrackID();
           newHit->Energy      = energ_depos;
           newHit->Time        = aStep->GetPreStepPoint()->GetGlobalTime();
           newHit->TrackLength = aStep->GetTrack()->GetTrackLength();
-          newHit->HitPosX     = aStep->GetTrack()->GetPosition().x();
-          newHit->HitPosY     = aStep->GetTrack()->GetPosition().y();
-          newHit->HitPosZ     = aStep->GetTrack()->GetPosition().z();
+          newHit->HitPosX     = aStep->GetPreStepPoint()->GetPosition().x();
+          newHit->HitPosY     = aStep->GetPreStepPoint()->GetPosition().y();
+          newHit->HitPosZ     = aStep->GetPreStepPoint()->GetPosition().z();
           newHit->ExitPosX    = aStep->GetTrack()->GetPosition().x();
           newHit->ExitPosY    = aStep->GetTrack()->GetPosition().y();
           newHit->ExitPosZ    = aStep->GetTrack()->GetPosition().z();

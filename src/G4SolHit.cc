@@ -18,7 +18,7 @@ G4ThreadLocal G4Allocator<G4SolHit>* G4SolHitAllocator;
 G4SolHit::G4SolHit()
     : TrackID(-1), HitPosX(-9999.), HitPosY(-9999.), HitPosZ(-9999.), ExitPosX(-9999.), ExitPosY(-9999.),
       ExitPosZ(-9999.), MomX(-9999.), MomY(-9999.), MomZ(-9999.), Mass(-9999), Energy(-9999.), Time(-9999.),
-      TrackLength(-9999.), Pname(""), LayerID(-1)
+      TrackLength(-9999.), Pname(""), LayerID(-1), Pdg(-999999)
 
 {
 }
@@ -26,7 +26,7 @@ G4SolHit::G4SolHit()
 G4SolHit::G4SolHit(G4int z)
     : TrackID(-1), HitPosX(-9999.), HitPosY(-9999.), HitPosZ(-9999.), ExitPosX(-9999.), ExitPosY(-9999.),
       ExitPosZ(-9999.), MomX(-9999.), MomY(-9999.), MomZ(-9999.), Mass(-9999), Energy(-9999.), Time(-9999.),
-      TrackLength(-9999.), Pname(""), LayerID(z)
+      TrackLength(-9999.), Pname(""), LayerID(z), Pdg(-999999)
 
 {
 }
@@ -49,6 +49,7 @@ G4SolHit::G4SolHit(const G4SolHit& hit) : G4VHit()
   TrackLength = hit.TrackLength;
   Pname       = hit.Pname;
   LayerID     = hit.LayerID;
+  Pdg         = hit.Pdg;
 }
 
 const G4SolHit& G4SolHit::operator=(const G4SolHit& hit)
@@ -69,6 +70,7 @@ const G4SolHit& G4SolHit::operator=(const G4SolHit& hit)
   TrackLength = hit.TrackLength;
   Pname       = hit.Pname;
   LayerID     = hit.LayerID;
+  Pdg         = hit.Pdg;
 
   return *this;
 }
