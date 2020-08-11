@@ -263,7 +263,6 @@ void G4SolRunData::FillPerEvent(const G4Event* event)
             {
               G4SolHit* TempHit   = (*TempCol)[ihit];
               TG4Sol_Hit* RootHit = dynamic_cast<TG4Sol_Hit*>(TempCArray->ConstructedAt(TempCArray->GetEntries()));
-
               RootHit->TrackID     = TempHit->TrackID;
               RootHit->LayerID     = TempHit->LayerID;
               RootHit->HitPosX     = TempHit->HitPosX / cm;
@@ -280,6 +279,7 @@ void G4SolRunData::FillPerEvent(const G4Event* event)
               RootHit->TrackLength = TempHit->TrackLength / cm;
               RootHit->Pname       = TempHit->Pname;
               RootHit->Mass        = TempHit->Mass / GeV;
+              RootHit->Pdg         = TempHit->Pdg;
             }
         }
       else

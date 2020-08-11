@@ -38,6 +38,7 @@ public:
   Double32_t TrackLength;
 
   std::string Pname;
+  Int_t       Pdg;
 
   ClassDef(TG4Sol_Hit, 2)
 };

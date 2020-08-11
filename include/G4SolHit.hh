@@ -53,6 +53,7 @@ public:
   G4String Pname;
 
   G4int LayerID;
+  G4int Pdg;
 };
 typedef G4THitsCollection<G4SolHit> G4SolHitsCollection;
 

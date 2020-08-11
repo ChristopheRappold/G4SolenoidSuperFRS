@@ -319,6 +319,14 @@ void G4SolConfig::SetDefault()
   tree.put("HypHI_FiberTracker3_posZ.unit","cm");
   tree.put("HypHI_FiberTracker3_posZ.unit.cm",1.*cm);
 
+  tree.put("HypHI_FiberTracker4_posZ",220);
+  tree.put("HypHI_FiberTracker4_posZ.unit","cm");
+  tree.put("HypHI_FiberTracker4_posZ.unit.cm",1.*cm);
+
+  tree.put("HypHI_FiberTracker5_posZ",240);
+  tree.put("HypHI_FiberTracker5_posZ.unit","cm");
+  tree.put("HypHI_FiberTracker5_posZ.unit.cm",1.*cm);
+
   tree.put("FRS_TR1_posZ",40);
   tree.put("FRS_TR1_posZ.unit","cm");
   tree.put("FRS_TR1_posZ.unit.cm",1.*cm);
