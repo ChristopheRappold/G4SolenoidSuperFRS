@@ -6,6 +6,7 @@
 #include "KnuclDetectorConstruction.hh"
 #include "WasaDetectorConstruction.hh"
 #include "WasaSimpleDetectorConstruction.hh"
+#include "HIAFSimpleDetectorConstruction.hh"
 
 G4SolGeometryController::G4SolGeometryController(const G4SolConfig& _par) : Par(_par) {}
 
@@ -48,6 +49,11 @@ int G4SolGeometryController::SetGeometry(G4String nameGeo)
   else if(nameGeo == "Wasa")
     {
       detectorBuilder = new WasaDetectorConstruction(Par);
+      registerGeometry(detectorBuilder);
+    }
+  else if(nameGeo == "HIAFSimple")
+    {
+      detectorBuilder = new HIAFSimpleDetectorConstruction(Par);
       registerGeometry(detectorBuilder);
     }
   else

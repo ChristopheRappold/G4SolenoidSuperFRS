@@ -6,7 +6,7 @@ project(G4SolSimple)
 include(CheckCXXCompilerFlag)
 set(HAVE_ISYSTEM true)
 
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 
 SET(VGM_INSTALL $ENV{VGM_INSTALL})
 SET(Geant4_DIR $ENV{GEANT4_DIR})
@@ -21,21 +21,33 @@ elseif(${VGM_INSTALL} MATCHES 4\\.3)
 elseif(${VGM_INSTALL} MATCHES 4\\.4)
   set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.4.0)
   message(STATUS "VGM dir 4.4:" ${VGM_DIR})
+elseif(${VGM_INSTALL} MATCHES 4\\.5)
+  set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.5.0)
+  message(STATUS "VGM dir 4.5:" ${VGM_DIR})
+elseif(${VGM_INSTALL} MATCHES 4\\.8)
+  set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.8.0)
+  message(STATUS "VGM dir 4.8:" ${VGM_DIR})
 else()
   message(STATUS "no match for VGM version" ${VGM_INSTALL})
 endif()
 
 set(CMAKE_MODULE_PATH 
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+#  ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${VGM_DIR}/Modules
   ${CMAKE_MODULE_PATH}) 
 
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 
 find_package(ROOT REQUIRED)
-message(STATUS "ROOT Config :" ${ROOT_USE_FILE})
-message(STATUS "PATH: " $ENV{PATH})
+if(ROOT_FOUND)
+  add_definitions(-DCEXMC_USE_ROOT)
+  include_directories(${ROOT_INCLUDE_DIRS})
+  list(APPEND EXTRA_LIBRARIES ${ROOT_LIBRARIES})
+  message(STATUS "ROOT Config :" ${ROOT_USE_FILE})
+  message(STATUS "PATH: " $ENV{PATH})
+endif()
 
-find_package(VGM QUIET)
+find_package(VGM REQUIRED)
 if (VGM_FOUND)
   message(STATUS "VGM :" ${VGM_INCLUDE_DIRS})
   add_definitions(-DG4SOLCONVERT)
@@ -65,6 +77,7 @@ endif()
 # Setup include directory for this project
 #
 include(${Geant4_USE_FILE})
+include(${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -73,7 +86,7 @@ include(${Geant4_USE_FILE})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include 
                     ${Geant4_INCLUDE_DIR}
                     ${ROOT_INCLUDE_DIRS}
-#		    ${VGM_INCLUDE_DIRS}
+		    ${VGM_INCLUDE_DIRS}
 		    )
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
@@ -88,15 +101,15 @@ add_executable(G4SolenoidSimple G4SolenoidSimple.cc ${sources} ${headers})
 target_link_libraries(G4SolenoidSimple ${library_name} ${VGM_LIBRARIES} ${ROOT_LIBRARIES} ${Geant4_LIBRARIES})
 
 ROOT_GENERATE_DICTIONARY(
-  ${CMAKE_SHARED_LIBRARY_PREFIX}${library_name}
-  no_rootmap
+  ${CMAKE_SHARED_LIBRARY_PREFIX}${library_name}_dict
+#  no_rootmap
   ${CMAKE_CURRENT_SOURCE_DIR}/include/TG4Sol_Hit.hh
   ${CMAKE_CURRENT_SOURCE_DIR}/include/TG4Sol_Event.hh
   LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/include/TG4Sol_LinkDef.h
   )
 set(SourceLib ${PROJECT_SOURCE_DIR}/src/TG4Sol_Event.cc ${PROJECT_SOURCE_DIR}/src/TG4Sol_Hit.cc)
 add_library(${library_name} SHARED ${SourceLib} ${CMAKE_SHARED_LIBRARY_PREFIX}${library_name}_dict.cxx ${headers})
-target_link_libraries(${library_name})
+target_link_libraries(${library_name} ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
