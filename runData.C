@@ -478,7 +478,7 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 				 if(it_par != ParticleList.end())
 				   {
 				     validTrack.insert(trackID);
-				     nameTrack.insert(std::make_pair(trackID,event->BeamNames[id]));
+				     nameTrack.insert(std::make_pair(trackID,event->BeamNames[id]+"Decay"));
 				   }
 			       }
 			     else
