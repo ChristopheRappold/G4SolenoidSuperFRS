@@ -9,9 +9,8 @@ set(HAVE_ISYSTEM true)
 set (CMAKE_CXX_STANDARD 17)
 
 SET(VGM_INSTALL $ENV{VGM_INSTALL})
-SET(Geant4_DIR $ENV{GEANT4_DIR})
-SET(ROOT_DIR $ENV{ROOTSYS})
-
+#SET(Geant4_DIR $ENV{GEANT4_DIR})
+#SET(ROOT_DIR $ENV{ROOTSYS})
 if(${VGM_INSTALL} MATCHES 4\\.2)
   set(VGM_DIR ${VGM_INSTALL}/lib/VGM-4.2.0)
   message(STATUS "VGM dir 4.2:" ${VGM_DIR})
@@ -31,12 +30,13 @@ else()
   message(STATUS "no match for VGM version" ${VGM_INSTALL})
 endif()
 
-set(CMAKE_MODULE_PATH 
+#set(CMAKE_MODULE_PATH 
 #  ${CMAKE_CURRENT_SOURCE_DIR}/cmake
-  ${VGM_DIR}/Modules
-  ${CMAKE_MODULE_PATH}) 
+#  ${VGM_DIR}/Modules
+#  ${CMAKE_MODULE_PATH}) 
 
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+message(STATUS "CMAKE_PREFIX_PATH " ${CMAKE_PREFIX_PATH})
 
 find_package(ROOT REQUIRED)
 if(ROOT_FOUND)
@@ -66,10 +66,19 @@ endif()
 # to build a batch mode only executable
 #
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
+message(STATUS "Geant4 Setup:" ${CMAKE_CONFIG_PATH})
+
 if(WITH_GEANT4_UIVIS)
-  find_package(Geant4 REQUIRED ui_all vis_all)
+  find_package(Geant4 REQUIRED ui_all vis_all qt)
+  if(Geant4_FOUND)
+    message(STATUS "Geant4 UI:" ${Geant4_INCLUDE_DIRS})
+    message(STATUS "Geant4 def " ${Geant4_DEFINITIONS})
+  endif()
 else()
   find_package(Geant4 REQUIRED)
+  if(Geant4_FOUND)
+    message(STATUS "Geant4 :" ${Geant4_INCLUDE_DIRS})
+  endif()
 endif()
 
 #----------------------------------------------------------------------------
