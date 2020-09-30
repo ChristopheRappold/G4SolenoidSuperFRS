@@ -239,6 +239,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	    G4ThreeVector transMDC_move(0., 0., PosZShiftMDC);
 	    G4ThreeVector transMDC_new = transMDC + transMDC_move;
 	    MDC_temp->SetTranslation(transMDC_new);
+	    if(CurrentName == "MDB" && PosZShiftMDC < -7.5*cm)
+	      {
+		std::cout<<"MDB -> outside : removed \n";
+		//MDC_temp->SetMotherLogical(MFLD_log);
+		INNER_log->RemoveDaughter(MDC_temp);
+	      }
 	  }
     }
 
