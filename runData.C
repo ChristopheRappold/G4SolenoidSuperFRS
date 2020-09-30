@@ -451,6 +451,7 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 			 for(size_t id = 0;id<event->BeamNames.size();++id)
 			   {
 			     int trackID = event->BeamTrackID[id];
+			     std::string nameP = event->BeamNames[id];
 			     //std::cout<<"beam : "<<event->BeamNames[id]<<" #"<<trackID<<"\n";
 			     if(ParticleList.size()>0)
 			       {
@@ -458,33 +459,35 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 				 if(it_par != ParticleList.end())
 				   {
 				     validTrack.insert(trackID);
-				     nameTrack.insert(std::make_pair(trackID,event->BeamNames[id]));
-				     h_particleStatus->Fill(event->BeamNames[id].c_str(),1.);
+				     nameTrack.insert(std::make_pair(trackID,nameP));
+				     h_particleStatus->Fill(nameP.c_str(),1.);
 				   }
 			       }
 			     else
 			       {
 				 validTrack.insert(trackID);
-				 nameTrack.insert(std::make_pair(trackID,event->BeamNames[id]));
-				 h_particleStatus->Fill(event->BeamNames[id].c_str(),1.);
+				 nameTrack.insert(std::make_pair(trackID,nameP));
+				 h_particleStatus->Fill(nameP.c_str(),1.);
 			       }
 			   }
 			 for(size_t id = 0;id<event->DaughterNames.size();++id)
 			   {
 			     int trackID = event->DaughterTrackID[id];
+			     std::string nameP = event->DaughterNames[id];
+			     nameP += "Decay";
 			     if(ParticleList.size()>0)
 			       {
 				 auto it_par = ParticleList.find(event->DaughterNames[id]);
 				 if(it_par != ParticleList.end())
 				   {
 				     validTrack.insert(trackID);
-				     nameTrack.insert(std::make_pair(trackID,event->BeamNames[id]+"Decay"));
+				     nameTrack.insert(std::make_pair(trackID,nameP));
 				   }
 			       }
 			     else
 			       {
 				 validTrack.insert(trackID);
-				 nameTrack.insert(std::make_pair(trackID,event->BeamNames[id]));
+				 nameTrack.insert(std::make_pair(trackID,nameP));
 			       }
 			   }
 
