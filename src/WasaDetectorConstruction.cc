@@ -207,32 +207,41 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
-  // int iColorT = 0;
-
-  double PosZShiftMDC = 0.;
-  if(Par.IsAvailable("PosZ_ShiftMDC"))
-    PosZShiftMDC = Par.Get<double>("PosZ_ShiftMDC");
-
-
-
-  for(auto& CurrentName : NameCDC2_Invisible)
+    for(auto& CurrentName : NameCDC2_Invisible)
     {
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
       // G4VisAttributes MG_Color(ColorCDC[iColorT]);
       // UTracker->SetVisAttributes(MG_Color);
       //++iColorT;
-      if(TMath::Abs(PosZShiftMDC)>1e-9)
-	{
-	  G4VPhysicalVolume* MDC_temp = FindVolPhys(CurrentName);
-	  G4ThreeVector transMDC = MDC_temp->GetObjectTranslation();
-	  G4ThreeVector transMDC_move(0., 0., PosZShiftMDC);
-	  G4ThreeVector transMDC_new = transMDC + transMDC_move;
-	  MDC_temp->SetTranslation(transMDC_new);
-	}
-      
       UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
-  FindVolume("SOL")->SetVisAttributes(G4VisAttributes::Invisible);
+
+    FindVolume("SOL")->SetVisAttributes(G4VisAttributes::Invisible);
+
+  // int iColorT = 0;
+
+  double PosZShiftMDC = 0.;
+  if(Par.IsAvailable("PosZ_ShiftMDC"))
+    {
+      std::vector<G4String> Name_MDC_Shift = {"MD01", "MD02", "MD03", "MD04", "MD05", "MD06", "MD07", "MD08", "MD09",
+	"MD10", "MD11", "MD12", "MD13", "MD14", "MD15", "MD16", "MD17", "MDO","MDB","MDF","PSB","PTB0","PTB1","PTB2","PTB3"};
+
+      PosZShiftMDC = Par.Get<double>("PosZ_ShiftMDC");
+      if(TMath::Abs(PosZShiftMDC)>1e-9)
+	for(auto& CurrentName : Name_MDC_Shift)
+	  {
+	    G4VPhysicalVolume* MDC_temp = FindVolPhys(CurrentName);
+	    if(MDC_temp == nullptr)
+	      {
+		std::cout<<"E> no volume :"<<CurrentName<<"\n";
+	      }
+	    G4ThreeVector transMDC = MDC_temp->GetObjectTranslation();
+	    G4ThreeVector transMDC_move(0., 0., PosZShiftMDC);
+	    G4ThreeVector transMDC_new = transMDC + transMDC_move;
+	    MDC_temp->SetTranslation(transMDC_new);
+	  }
+    }
+
 
   std::vector<G4String> NameSD = {"MG01", "MG02", "MG03", "MG04", "MG05", "MG06", "MG07", "MG08", "MG09", "MG10",
                                   "MG11", "MG12", "MG13", "MG14", "MG15", "MG16", "MG17", "PSCE", "PSBE", "PSFE"};
