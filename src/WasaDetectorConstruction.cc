@@ -224,9 +224,15 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   if(Par.IsAvailable("PosZ_ShiftMDC"))
     {
       std::vector<G4String> Name_MDC_Shift = {"MD01", "MD02", "MD03", "MD04", "MD05", "MD06", "MD07", "MD08", "MD09",
-	"MD10", "MD11", "MD12", "MD13", "MD14", "MD15", "MD16", "MD17", "MDO","MDB","MDF","PSB","PTB0","PTB1","PTB2","PTB3"};
+	"MD10", "MD11", "MD12", "MD13", "MD14", "MD15", "MD16", "MD17", "MDO","MDB","MDF","PTB0","PTB1","PTB2","PTB3"};
 
       PosZShiftMDC = Par.Get<double>("PosZ_ShiftMDC");
+
+      if(PosZShiftMDC < 0.)
+	Name_MDC_Shift.emplace_back("PSB");
+      else
+	Name_MDC_Shift.emplace_back("PSF");
+
       if(TMath::Abs(PosZShiftMDC)>1e-9)
 	for(auto& CurrentName : Name_MDC_Shift)
 	  {
@@ -242,6 +248,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	    if(CurrentName == "MDB" && PosZShiftMDC < -7.5*cm)
 	      {
 		std::cout<<"MDB -> outside : removed \n";
+		//MDC_temp->SetMotherLogical(MFLD_log);
+		INNER_log->RemoveDaughter(MDC_temp);
+	      }
+	    if(CurrentName == "MDF" && PosZShiftMDC > 2.95*cm)
+	      {
+		std::cout<<"MDF -> outside : removed \n";
 		//MDC_temp->SetMotherLogical(MFLD_log);
 		INNER_log->RemoveDaughter(MDC_temp);
 	      }
