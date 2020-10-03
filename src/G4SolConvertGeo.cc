@@ -48,6 +48,15 @@ int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeo
       std::cout << "E> set_color : no GeoVolume with this name :" << nameV << std::endl;
   };
 
+  auto set_invisible = [](const std::string& nameV) {
+    TGeoVolume* geoVol = nullptr;
+    geoVol             = gGeoManager->GetVolume(nameV.c_str());
+    if(geoVol != nullptr)
+      geoVol->SetVisibility(false);
+    else
+      std::cout << "E> set_invisible : no GeoVolume with this name :" << nameV << std::endl;
+  };
+
   if(nameGeometry == "CDS" && nameGeometry == "WasaSimple")
     {
       std::string tempNameGeo("CDC_SetLogR_");
@@ -82,8 +91,8 @@ int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeo
       set_color("PSL0", kYellow + 1);
       set_color("PSL1", kYellow + 1);
 
-      std::vector<std::string> namesDC = {"MG01", "MG02", "MG03", "MG04", "MG05", "MG06", "MG07", "MG08", "MG09",
-                                          "MG10", "MG11", "MG12", "MG13", "MG14", "MG15", "MG16", "MG17"};
+      std::vector<std::string> namesDC = {"ME01", "ME02", "ME03", "ME04", "ME05", "ME06", "ME07", "ME08", "ME09",
+                                          "ME10", "ME11", "ME12", "ME13", "ME14", "ME15", "ME16", "ME17"};
 
       int index_color = -8;
 
@@ -100,6 +109,28 @@ int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeo
       set_color("MDO", kMagenta - 8);
       set_color("MDB", kMagenta - 8);
       set_color("MDF", kMagenta - 8);
+
+      std::vector<std::string> namesSub1 = {"_Core_log_","_Cladding_log_"};
+      std::vector<std::string> namesSub2 = {"x","u","v"};
+      std::vector<std::string> namesFiber = {"FiberD1","FiberD2","FiberD3","FiberD4","FiberD5"};
+
+      for(auto nameF1 : namesFiber)
+	for(auto nameS2 : namesSub2)
+	  set_color(nameF1+namesSub1[0]+nameS2, kViolet -1);
+
+      for(auto nameF1 : namesFiber)
+	for(auto nameS2 : namesSub2)
+	  set_invisible(nameF1+namesSub1[1]+nameS2);
+
+
+      std::vector<std::string> namesMiniFiber = {"MiniFiberD1_Core_log_x1","MiniFiberD1_Core_log_u1","MiniFiberD1_Core_log_v1","MiniFiberD1_Core_log_x2","MiniFiberD1_Core_log_u2","MiniFiberD1_Core_log_v2"};
+      for(auto nameF : namesMiniFiber)
+	set_color(nameF, kMagenta - 9);
+
+      std::vector<std::string> namesMiniFiberInv = {"MiniFiberD1_Cladding_log_x1","MiniFiberD1_Cladding_log_u1","MiniFiberD1_Cladding_log_v1","MiniFiberD1_Cladding_log_x2","MiniFiberD1_Cladding_log_u2","MiniFiberD1_Cladding_log_v2"};
+      for(auto nameF : namesMiniFiberInv)
+	set_invisible(nameF);
+
     }
   else if(nameGeometry == "HIAFSimple")
     {
