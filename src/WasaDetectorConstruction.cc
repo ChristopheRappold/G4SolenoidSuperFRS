@@ -400,7 +400,115 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	    }
 	}
     }
-  
+
+// ----------------------------- @@ -----------------------------
+//         Silicon Detectors
+// ----------------------------- @@ -----------------------------
+
+if(Par.IsAvailable("HypHI_Si1_On"))
+    {
+      G4double HypHI_Si1_length = Par.Get<double>("HypHI_Si1_length");
+      G4double HypHI_Si1_thickness = Par.Get<double>("HypHI_Si1_thickness");
+      G4double HypHI_Si1_stripwidth = Par.Get<double>("HypHI_Si1_stripwidth");
+      G4double HypHI_Si1_posZ = Par.Get<double>("HypHI_Si1_posZ");
+
+      G4VSolid* Si1_MothVol_solid = new G4Box("Si1_solid", HypHI_Si1_length/2., HypHI_Si1_length/2., HypHI_Si1_thickness/2.);
+      G4VSolid* Si1_layerX_MothVol_solid  = new G4Box("Si1_layerX_solid", HypHI_Si1_length/2., HypHI_Si1_length/2., HypHI_Si1_thickness/4.);
+      G4VSolid* Si1_layerY_MothVol_solid  = new G4Box("Si1_layerY_solid", HypHI_Si1_length/2., HypHI_Si1_length/2., HypHI_Si1_thickness/4.);
+      G4LogicalVolume* Si1_MothVol_log = new G4LogicalVolume(Si1_MothVol_solid, Air, "Si1_log", 0, 0, 0);
+      G4LogicalVolume* Si1_MothVol_log_x = new G4LogicalVolume(Si1_layerX_MothVol_solid, Air, "Si1_log_x", 0, 0, 0);
+      G4LogicalVolume* Si1_MothVol_log_y = new G4LogicalVolume(Si1_layerY_MothVol_solid, Air, "Si1_log_y", 0, 0, 0);
+
+      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_Si1_posZ + Systematic_shift)-transMFLD_new), Si1_MothVol_log, "Silicon1", MFLD_log,false,0)); 
+      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , -HypHI_Si1_thickness/4.)), Si1_MothVol_log_x, "Si1_x", Si1_MothVol_log,false,0));
+      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , +HypHI_Si1_thickness/4.)), Si1_MothVol_log_y, "Si1_y", Si1_MothVol_log,false,0));
+
+
+      G4VSolid* Si1_Strip_solid_x  = new G4Box("Si1_Strip_solid_x", HypHI_Si1_stripwidth/2., HypHI_Si1_length/2., HypHI_Si1_thickness/4.);
+      G4VSolid* Si1_Strip_solid_y  = new G4Box("Si1_Strip_solid_y", HypHI_Si1_length/2., HypHI_Si1_stripwidth/2., HypHI_Si1_thickness/4.);
+      G4LogicalVolume* Si1_Strip_log_x = new G4LogicalVolume(Si1_Strip_solid_x, Si, "Si1_Strip_log_x", 0, 0, 0);
+      G4LogicalVolume* Si1_Strip_log_y = new G4LogicalVolume(Si1_Strip_solid_y, Si, "Si1_Strip_log_y", 0, 0, 0);
+
+
+      G4int HypHI_Si1_Nstrips = (int)(HypHI_Si1_length/HypHI_Si1_stripwidth);
+
+
+      for (G4int idStrip = 0; idStrip < HypHI_Si1_Nstrips; ++idStrip)
+      {
+        G4double posStrip = -HypHI_Si1_length/2. + HypHI_Si1_stripwidth*(0.5 + idStrip);
+
+        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si1_Strip_log_x, "Si1_Strip_x", Si1_MothVol_log_x,false,idStrip));
+        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si1_Strip_log_y, "Si1_Strip_y", Si1_MothVol_log_y,false,idStrip));
+      }
+
+
+
+      NameDetectorsSD.push_back(Si1_Strip_log_x->GetName());
+      NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+
+      Si1_Strip_log_x->SetVisAttributes(Si_att);
+      Si1_Strip_log_y->SetVisAttributes(Si_att);
+      Si1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+      Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+      Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+
+
+
+
+if(Par.IsAvailable("HypHI_Si2_On"))
+    {
+      G4double HypHI_Si2_length = Par.Get<double>("HypHI_Si2_length");
+      G4double HypHI_Si2_thickness = Par.Get<double>("HypHI_Si2_thickness");
+      G4double HypHI_Si2_stripwidth = Par.Get<double>("HypHI_Si2_stripwidth");
+      G4double HypHI_Si2_posZ = Par.Get<double>("HypHI_Si2_posZ");
+
+      G4VSolid* Si2_MothVol_solid = new G4Box("Si2_solid", HypHI_Si2_length/2., HypHI_Si2_length/2., HypHI_Si2_thickness/2.);
+      G4VSolid* Si2_layerX_MothVol_solid  = new G4Box("Si2_layerX_solid", HypHI_Si2_length/2., HypHI_Si2_length/2., HypHI_Si2_thickness/4.);
+      G4VSolid* Si2_layerY_MothVol_solid  = new G4Box("Si2_layerY_solid", HypHI_Si2_length/2., HypHI_Si2_length/2., HypHI_Si2_thickness/4.);
+      G4LogicalVolume* Si2_MothVol_log = new G4LogicalVolume(Si2_MothVol_solid, Air, "Si2_log", 0, 0, 0);
+      G4LogicalVolume* Si2_MothVol_log_x = new G4LogicalVolume(Si2_layerX_MothVol_solid, Air, "Si2_log_x", 0, 0, 0);
+      G4LogicalVolume* Si2_MothVol_log_y = new G4LogicalVolume(Si2_layerY_MothVol_solid, Air, "Si2_log_y", 0, 0, 0);
+
+      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_Si2_posZ + Systematic_shift)-transMFLD_new), Si2_MothVol_log, "Silicon1", MFLD_log,false,0)); 
+      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , -HypHI_Si2_thickness/4.)), Si2_MothVol_log_x, "Si2_x", Si2_MothVol_log,false,0));
+      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , +HypHI_Si2_thickness/4.)), Si2_MothVol_log_y, "Si2_y", Si2_MothVol_log,false,0));
+
+
+      G4VSolid* Si2_Strip_solid_x  = new G4Box("Si2_Strip_solid_x", HypHI_Si2_stripwidth/2., HypHI_Si2_length/2., HypHI_Si2_thickness/4.);
+      G4VSolid* Si2_Strip_solid_y  = new G4Box("Si2_Strip_solid_y", HypHI_Si2_length/2., HypHI_Si2_stripwidth/2., HypHI_Si2_thickness/4.);
+      G4LogicalVolume* Si2_Strip_log_x = new G4LogicalVolume(Si2_Strip_solid_x, Si, "Si2_Strip_log_x", 0, 0, 0);
+      G4LogicalVolume* Si2_Strip_log_y = new G4LogicalVolume(Si2_Strip_solid_y, Si, "Si2_Strip_log_y", 0, 0, 0);
+
+
+      G4int HypHI_Si2_Nstrips = (int)(HypHI_Si2_length/HypHI_Si2_stripwidth);
+
+
+      for (G4int idStrip = 0; idStrip < HypHI_Si2_Nstrips; ++idStrip)
+      {
+        G4double posStrip = -HypHI_Si2_length/2. + HypHI_Si2_stripwidth*(0.5 + idStrip);
+
+        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si2_Strip_log_x, "Si2_Strip_x", Si2_MothVol_log_x,false,idStrip));
+        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si2_Strip_log_y, "Si2_Strip_y", Si2_MothVol_log_y,false,idStrip));
+      }
+
+
+
+      NameDetectorsSD.push_back(Si2_Strip_log_x->GetName());
+      NameDetectorsSD.push_back(Si2_Strip_log_y->GetName());
+
+      Si2_Strip_log_x->SetVisAttributes(Si_att);
+      Si2_Strip_log_y->SetVisAttributes(Si_att);
+      Si2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+      Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+      Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+
+
+// ----------------------------- @@ -----------------------------
+//         Virtual Detectors
+// ----------------------------- @@ -----------------------------
+
   if(Par.IsAvailable("HypHI_VirtualTR_On"))
     {
       const double TR1_posZ = Par.Get<double>("HypHI_TR1_posZ");
