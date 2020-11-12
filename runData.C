@@ -393,7 +393,7 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 	id_TrckFwd = id;
       if(nameDet[id] == "PSCE")
 	id_PSCE = id;
-      if(nameDet[id] == "PSFE")
+      if(nameDet[id] == "PSBE")
 	id_PSFE = id;
       if(auto found = nameDet[id].find("MG") ;  found != std::string::npos)
 	id_MDCs.insert(id);
