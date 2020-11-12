@@ -17,9 +17,10 @@
 #include <set>
 #include <unordered_map>
 #include <iostream>
-
+#include <tuple>
 
 #include "ROOT/TSeq.hxx"
+
 //#include "ROOT/TThreadedObject.hxx"
 //#include "ROOT/TProcessExecutor.hxx"
 //#include "TTreeProcessorMT.hxx"
@@ -427,6 +428,10 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 		     TH2F* h_ParticlePhi = new TH2F("h_Phi","h_Phi",360*5,-180,180,30,0,30);
 
 		     TH2F* h_CoincidenceMDC_TOF =  new TH2F("h_MDC_TOF","h_MDC_TOF",100,0,100,20,0,20);
+
+		     TH2F* h_R_Z_MDC = new TH2F("h_R_Z_MDC","h_R_Z_MDC",500,0.,2.,400.,0.,0.4);
+		     TH2F* h_X_Z_MDC = new TH2F("h_X_Z_MDC","h_X_Z_MDC",500,0.,2.,400.,-0.4,0.4);
+		     TH2F* h_Y_Z_MDC = new TH2F("h_Y_Z_MDC","h_Y_Z_MDC",500,0.,2.,400.,-0.4,0.4);
 		     // auto h_HitPatternX = h_HitPatternX.Get();
 		     // auto h_HitPatternY = h_HitPatternY.Get();
 		     // auto h_ParticlePhi = h_ParticlePhiAll.Get();
@@ -435,6 +440,7 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 		     std::cout << " Entries :" << Entries << std::endl;
 		     int timing = 0;
 		     int first_event = 0;
+		     int view_event = 1;
 		     while(reader.Next())
 		       {
 			 int nb = reader.GetCurrentEntry();
@@ -452,7 +458,8 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 			   {
 			     int trackID = event->BeamTrackID[id];
 			     std::string nameP = event->BeamNames[id];
-			     //std::cout<<"beam : "<<event->BeamNames[id]<<" #"<<trackID<<"\n";
+			     if(view_event==nb)
+			       std::cout<<"beam : "<<event->BeamNames[id]<<" #"<<trackID<<"\n";
 			     if(ParticleList.size()>0)
 			       {
 				 auto it_par = ParticleList.find(event->BeamNames[id]);
@@ -475,6 +482,8 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 			     int trackID = event->DaughterTrackID[id];
 			     std::string nameP = event->DaughterNames[id];
 			     nameP += "Decay";
+			     if(view_event==nb)
+			       std::cout<<"beam : "<<event->DaughterNames[id]<<" #"<<trackID<<"\n";
 			     if(ParticleList.size()>0)
 			       {
 				 auto it_par = ParticleList.find(event->DaughterNames[id]);
@@ -491,13 +500,13 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 			       }
 			   }
 
-			 std::unordered_map<int, double> trackOnPSCE, trackOnPSFE; 
+			 std::unordered_map<int, std::tuple<double,double,double> > trackOnPSCE, trackOnPSFE;
 			 for(auto hit : *AllHits[id_PSCE])
 			   {
 			     auto it_find = validTrack.find(hit.TrackID);
 			     if(it_find != validTrack.end())
 			       {
-				 trackOnPSCE.insert(std::make_pair(hit.TrackID,hit.HitPosZ));
+				 trackOnPSCE.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
 			       }
 			   }
 
@@ -506,11 +515,11 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 			     auto it_find = validTrack.find(hit.TrackID);
 			     if(it_find != validTrack.end())
 			       {
-				 trackOnPSFE.insert(std::make_pair(hit.TrackID,hit.HitPosZ));
+				 trackOnPSFE.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
 			       }
 			   }
 			 
-			 std::unordered_map<int, std::vector<int> > TracksInMDC;
+			 std::unordered_map<int, std::vector<std::tuple<int,double,double,double> > > TracksInMDC;
 			 
 			 for(size_t it_br = 0 ;it_br < AllHits.size(); ++it_br)
 			   {
@@ -560,9 +569,9 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 				       {
 					 auto it_trackInMDC = TracksInMDC.find(hit.TrackID);
 					 if(it_trackInMDC == TracksInMDC.end())
-					   TracksInMDC.insert(std::make_pair(hit.TrackID, std::vector<int>(1,*it_MDC)));
+					   TracksInMDC.insert(std::make_pair(hit.TrackID, std::vector<std::tuple<int,double,double,double>>(1,std::make_tuple(*it_MDC,hit.HitPosX,hit.HitPosY,hit.HitPosZ))));
 					 else
-					   it_trackInMDC->second.emplace_back(*it_MDC);
+					   it_trackInMDC->second.emplace_back(std::make_tuple(*it_MDC,hit.HitPosX,hit.HitPosY,hit.HitPosZ));
 				       }
 									   
 				     if(auto it_findPSCE = trackOnPSCE.find(hit.TrackID) ; it_findPSCE != trackOnPSCE.end())
@@ -574,18 +583,28 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 				       {
 					 h_HitPatternX_PSFE->Fill(hit.HitPosX,nameBranch,1.);
 					 h_HitPatternY_PSFE->Fill(hit.HitPosY,nameBranch,1.);
-				       }				     
+				       }
 				   }
 			       }
 			   }
-			 if(first_event==0)
-			   ++first_event;
-
 
 			 for(auto [idTrack, InMDC] : TracksInMDC )
 			   {
 			     std::string tempName (nameTrack[idTrack].c_str());
 			     h_CoincidenceMDC_TOF->Fill( InMDC.size(),tempName.c_str(), 1.);
+			     auto f_R = [](double X,double Y) {
+			       return TMath::Sqrt(X*X +Y*Y);
+			     };
+			     if(view_event==nb)
+			       {
+				 for(auto [idLayer, LayerX, LayerY, LayerZ] : InMDC)
+				   {
+				     std::cout<<" MDC idTrack"<< idTrack <<" : "<<idLayer<<" "<<LayerX/100.<<" "<<LayerY/100.<<" "<<LayerZ/100.<<"\n";
+				     h_R_Z_MDC->Fill(LayerZ/100.,f_R(LayerX/100.,LayerY/100.));
+				     h_X_Z_MDC->Fill(LayerZ/100.,LayerX/100.);
+				     h_Y_Z_MDC->Fill(LayerZ/100.,LayerY/100.);
+				   }
+			       }
 			     if(auto it_TOF = trackOnPSFE.find(idTrack) ; it_TOF!=trackOnPSFE.end())
 			       {
 				 std::string tempName2 (tempName);
@@ -597,9 +616,15 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 				 std::string tempName2 (tempName);
 				 tempName2 += "_onPSCE";
 				 h_CoincidenceMDC_TOF->Fill( InMDC.size(),tempName2.c_str(), 1.);
+				 if(view_event==nb)
+				   {
+				     std::cout<<"PSCE :"<<it_TOF->first<<" "<<std::get<0>(it_TOF->second)/100.<<" "<<std::get<1>(it_TOF->second)/100.<<" "<<std::get<2>(it_TOF->second)/100.<<"\n";
+				     h_R_Z_MDC->Fill(std::get<2>(it_TOF->second)/100., f_R(std::get<0>(it_TOF->second)/100.,std::get<1>(it_TOF->second)/100.) );
+				     h_X_Z_MDC->Fill(std::get<2>(it_TOF->second)/100., std::get<0>(it_TOF->second)/100.);
+				     h_Y_Z_MDC->Fill(std::get<2>(it_TOF->second)/100., std::get<1>(it_TOF->second)/100.);
+				   }
 			       }
 			   }
-			 
 			 std::unordered_map<int,double> PhiPerTrack;
 			 
 			 for(auto hit : *AllHits[id_Si3])
@@ -629,7 +654,10 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 				   }
 			       }
 			   }
-	  
+
+			 if(first_event==0)
+			   ++first_event;
+
 			 // for(size_t id = 0;id<event->DaughterNames.size();++id)
 			 // 	{
 			 // 	  int trackID = event->DaughterTrackID[id];
@@ -658,8 +686,8 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 		     //obj_ret->Add(h_ParticlePhi);
 		     
 		     //return h_HitPatternX;//obj_ret;
-		     return std::make_tuple(h_particleStatus,h_HitPatternX,h_HitPatternY,h_ParticlePhi,h_HitPatternX_PSCE,h_HitPatternY_PSCE,h_HitPatternX_PSFE,h_HitPatternY_PSFE,h_CoincidenceMDC_TOF);
-		   };			    
+		     return std::make_tuple(h_particleStatus,h_HitPatternX,h_HitPatternY,h_ParticlePhi,h_HitPatternX_PSCE,h_HitPatternY_PSCE,h_HitPatternX_PSFE,h_HitPatternY_PSFE,h_CoincidenceMDC_TOF,h_R_Z_MDC,h_X_Z_MDC,h_Y_Z_MDC);
+		   };
 					    
 
   // Create the pool of processes
@@ -678,8 +706,11 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
   TH2F* h_HitPatternX_PSFEM = nullptr;
   TH2F* h_HitPatternY_PSFEM = nullptr;
   TH2F* h_CoincidenceMDC_TOFM = nullptr;
+  TH2F* h_R_Z_TOFM = nullptr;
+  TH2F* h_X_Z_TOFM = nullptr;
+  TH2F* h_Y_Z_TOFM = nullptr;
 
-  std::tie(h_particleStatusM,h_HitPatternXM,h_HitPatternYM,h_ParticlePhiM,h_HitPatternX_PSCEM,h_HitPatternY_PSCEM,h_HitPatternX_PSFEM,h_HitPatternY_PSFEM,h_CoincidenceMDC_TOFM) = f_Process(reader);
+  std::tie(h_particleStatusM,h_HitPatternXM,h_HitPatternYM,h_ParticlePhiM,h_HitPatternX_PSCEM,h_HitPatternY_PSCEM,h_HitPatternX_PSFEM,h_HitPatternY_PSFEM,h_CoincidenceMDC_TOFM,h_R_Z_TOFM,h_X_Z_TOFM,h_Y_Z_TOFM) = f_Process(reader);
 
 
   //TH2F* h_HitPatternXM = static_cast<TH2F*>(ObjArray);
@@ -734,7 +765,9 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
       plotHist(h_HitPatternX_PSFEM);
       plotHist(h_HitPatternY_PSFEM);
       plotHist(h_CoincidenceMDC_TOFM);
-
+      plotHist(h_R_Z_TOFM);
+      plotHist(h_X_Z_TOFM);
+      plotHist(h_Y_Z_TOFM);
     }
   else
     {
@@ -753,6 +786,7 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
       h_HitPatternY_PSFEM->Write();
       h_CoincidenceMDC_TOFM->Write();
 
+      h_R_Z_TOFM->Write();
       f_out->Close();
     }
   std::cout<<"Done !\n";
@@ -760,6 +794,141 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 
   
 
+void runDose(const std::string& nameList)
+{
+  //int nthreads = 4;
+  //ROOT::EnableImplicitMT(
+
+  TChain* Chain = new TChain("G4Tree");
+  TFile* f_first = nullptr;
+  std::cout << "Files :" << nameList << std::endl;
+  if(nameList.find(".root") != std::string::npos)
+    {
+      std::cout << "Load from single file " << nameList << std::endl;
+      int temp_nb = Chain->AddFile(nameList.c_str());
+      f_first = new TFile(nameList.c_str());
+      std::cout << " Loaded " << temp_nb << " files " << std::endl;
+
+    }
+  else
+    {
+      std::cout << "Adding Chain from List files" << std::endl;
+      std::ifstream List(nameList.c_str());
+      std::string infiles;
+      int nb_file = 0;
+      while(std::getline(List, infiles))
+        {
+	  std::cout << infiles << std::endl;
+	  int temp_nb = Chain->AddFile(infiles.c_str());
+          if(nb_file==0)
+	    f_first = new TFile(infiles.c_str());
+	  ++nb_file;
+	}
+      std::cout << " Loaded " << nb_file << " files " << std::endl;
+    }
+
+  //TTree* tt = (TTree*) f->Get("G4Tree");
+  std::vector<std::string>* nameDetInFile = (std::vector<std::string>*)(f_first->Get("nameDet"));
+  std::vector<std::string> nameDet ;
+  for(auto name : *nameDetInFile)
+    nameDet.emplace_back(name);
+  f_first->Close();
+  //f_first->Delete();
+  std::cout<<" load nameDet done !\n";
+  for(auto name : nameDet)
+    std::cout<<name<<"\n";
+
+
+  std::set<std::string> setNameDet;
+  for(size_t id = 0; id < nameDet.size(); ++id)
+    {
+      if(nameDet[id]=="Si1_Strip_log_x")
+	setNameDet.insert(nameDet[id]);
+      if(nameDet[id]=="Si1_Strip_log_y")
+	setNameDet.insert(nameDet[id]);
+      if(nameDet[id]=="Si2_Strip_log_x")
+	setNameDet.insert(nameDet[id]);
+      if(nameDet[id]=="Si2_Strip_log_y")
+	setNameDet.insert(nameDet[id]);
+    }
+
+  std::unordered_map<std::string,double> detector_mass = {{"Si1",4.*4.*0.03*2.333},{"Si2",6.*6.*0.03*2.333},{"MiniFiber",10*10*0.5*1.032}};
+  std::vector<std::string> orderDetName;
+
+  //ROOT::TTreeProcessorMT tp(Chain);
+  TTreeReader reader(Chain);
+
+  //ROOT::TThreadedObject<TH2F> h_HitPatternXAll("h_HitPatternX","h_HitPatternX",2000,-20,20,20,0,20);
+  //ROOT::TThreadedObject<TH2F> h_HitPatternYAll("h_HitPatternY","h_HitPatternY",2000,-20,20,20,0,20);
+  //ROOT::TThreadedObject<TH2F> h_ParticlePhiAll("h_Phi","h_Phi",360*5,-180,180,30,0,30);
+
+  std::vector<TTreeReaderArray<TG4Sol_Hit>*> AllHits;
+  for(auto name : setNameDet)
+    {
+      AllHits.emplace_back(new TTreeReaderArray<TG4Sol_Hit>(reader,name.c_str()));
+      for(auto it_detmass : detector_mass)
+	{
+	  if(auto it_s = name.find(it_detmass.first); it_s!=std::string::npos)
+	    orderDetName.emplace_back(it_detmass.first);
+	}
+    }
+  const auto Entries = Chain->GetEntries();
+  std::cout << " Entries :" << Entries << std::endl;
+  int timing = 0;
+  int first_event = 0;
+
+  std::unordered_map<std::string,std::array<double,2> > TotalEnergy = {{"Si1",{0.,0.}},{"Si2",{0.,0.}}};
+
+  while(reader.Next())
+    {
+      int nb = reader.GetCurrentEntry();
+      if(static_cast<int>(static_cast<double>(nb) / static_cast<double>(Entries) * 10) == timing)
+	{
+	  std::cout <<" Processing :" << timing * 10 << "%  Event #"<<nb<<" \n";
+	  ++timing;
+	}
+
+      for(size_t it_br = 0 ;it_br < AllHits.size(); ++it_br)
+	{
+
+	  for(auto hit : *AllHits[it_br])
+	    {
+	      double tempE = hit.Energy;
+	      TotalEnergy[orderDetName[it_br]][0] += tempE;
+	      TotalEnergy[orderDetName[it_br]][1] += tempE*tempE;
+	    }
+	}
+    }
+
+  for(auto it_E : TotalEnergy)
+    {
+      std::cout<<" det :"<<it_E.first<<" "<<it_E.second[0]<<" "<<it_E.second[1]<<"\n";
+
+      double mass = detector_mass[it_E.first]*1e-3; // kg
+
+      double tE = it_E.second[0];
+      double tE2 = it_E.second[1];
+
+      double rmsE = tE2 /(double)Entries - tE*tE/(double)Entries/(double)Entries;
+      rmsE = TMath::Sqrt(rmsE);
+      rmsE *= (double)Entries;
+
+      std::cout<<" --> total E [MeV] = "<< tE <<  " +- "<<rmsE<<" ";
+
+      tE *= TMath::Qe()*1e6; // J
+      rmsE *= TMath::Qe()*1e6; //J
+
+      std::cout<<" [J] = "<<tE<<" +- "<<rmsE<<"\n";
+
+      double dose = tE / mass ; // Gray = J/kg
+      double rms_dose = rmsE/mass;
+
+      std::cout<<" --> dose [Gray] = "<<dose<<" +- "<<rms_dose<<"\n";
+      std::cout<<" --> dose [Gray/reaction] = "<<dose/(double)Entries<<" +- "<<rms_dose/(double)Entries<<"\n";
+    }
+
+  std::cout<<"Done !\n";
+}
 
 
 void runDataOld(std::string nameF)
