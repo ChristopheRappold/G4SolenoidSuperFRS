@@ -344,7 +344,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   G4VSolid* HypHI_Target = new G4Box("HypHI_Target", TargetLength, TargetLength, TargetLength);
   // G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
-  G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Vacuum, "HypHI_Target_log", 0, 0, 0);
+  G4Material* MatTarget = Par.IsAvailable("Target_Carbon") ? Carbon : Vacuum;
+  G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, MatTarget, "HypHI_Target_log", 0, 0, 0);
   // G4PVPlacement*   HypHI_Target_phys =
   G4ThreeVector TargetTrans   = G4ThreeVector(TargetPosX, TargetPosY, TargetPosZ) - transMFLD_new;
   G4RotationMatrix* TargetRot = new G4RotationMatrix;
@@ -401,11 +402,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	}
     }
 
-// ----------------------------- @@ -----------------------------
-//         Silicon Detectors
-// ----------------------------- @@ -----------------------------
+  // ----------------------------- @@ -----------------------------
+  //         Silicon Detectors
+  // ----------------------------- @@ -----------------------------
 
-if(Par.IsAvailable("HypHI_Si1_On"))
+  if(Par.IsAvailable("HypHI_Si1_On"))
     {
       G4double HypHI_Si1_length = Par.Get<double>("HypHI_Si1_length");
       G4double HypHI_Si1_thickness = Par.Get<double>("HypHI_Si1_thickness");
@@ -434,12 +435,12 @@ if(Par.IsAvailable("HypHI_Si1_On"))
 
 
       for (G4int idStrip = 0; idStrip < HypHI_Si1_Nstrips; ++idStrip)
-      {
-        G4double posStrip = -HypHI_Si1_length/2. + HypHI_Si1_stripwidth*(0.5 + idStrip);
+	{
+	  G4double posStrip = -HypHI_Si1_length/2. + HypHI_Si1_stripwidth*(0.5 + idStrip);
 
-        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si1_Strip_log_x, "Si1_Strip_x", Si1_MothVol_log_x,false,idStrip));
-        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si1_Strip_log_y, "Si1_Strip_y", Si1_MothVol_log_y,false,idStrip));
-      }
+	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si1_Strip_log_x, "Si1_Strip_x", Si1_MothVol_log_x,false,idStrip));
+	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si1_Strip_log_y, "Si1_Strip_y", Si1_MothVol_log_y,false,idStrip));
+	}
 
 
 
@@ -456,7 +457,7 @@ if(Par.IsAvailable("HypHI_Si1_On"))
 
 
 
-if(Par.IsAvailable("HypHI_Si2_On"))
+  if(Par.IsAvailable("HypHI_Si2_On"))
     {
       G4double HypHI_Si2_length = Par.Get<double>("HypHI_Si2_length");
       G4double HypHI_Si2_thickness = Par.Get<double>("HypHI_Si2_thickness");
@@ -485,12 +486,12 @@ if(Par.IsAvailable("HypHI_Si2_On"))
 
 
       for (G4int idStrip = 0; idStrip < HypHI_Si2_Nstrips; ++idStrip)
-      {
-        G4double posStrip = -HypHI_Si2_length/2. + HypHI_Si2_stripwidth*(0.5 + idStrip);
+	{
+	  G4double posStrip = -HypHI_Si2_length/2. + HypHI_Si2_stripwidth*(0.5 + idStrip);
 
-        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si2_Strip_log_x, "Si2_Strip_x", Si2_MothVol_log_x,false,idStrip));
-        AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si2_Strip_log_y, "Si2_Strip_y", Si2_MothVol_log_y,false,idStrip));
-      }
+	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si2_Strip_log_x, "Si2_Strip_x", Si2_MothVol_log_x,false,idStrip));
+	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si2_Strip_log_y, "Si2_Strip_y", Si2_MothVol_log_y,false,idStrip));
+	}
 
 
 
@@ -505,9 +506,9 @@ if(Par.IsAvailable("HypHI_Si2_On"))
     }
 
 
-// ----------------------------- @@ -----------------------------
-//         Virtual Detectors
-// ----------------------------- @@ -----------------------------
+  // ----------------------------- @@ -----------------------------
+  //         Virtual Detectors
+  // ----------------------------- @@ -----------------------------
 
   if(Par.IsAvailable("HypHI_VirtualTR_On"))
     {
@@ -1161,6 +1162,32 @@ if(Par.IsAvailable("HypHI_Si2_On"))
                                                    HypHI_Endcap_log, false, idRPC));
     }
 
+  // Region
+
+  G4Region* aDetectorRegion = G4RegionStore::GetInstance()->FindOrCreateRegion("DetectorRegion"); //new G4Region("DetectorRegion");
+
+  for(auto& CurrentName : NameDetectorsSD)
+    {
+      G4LogicalVolume* Det = FindVolume(CurrentName);
+      Det->SetRegion(aDetectorRegion);
+      aDetectorRegion->AddRootLogicalVolume(Det);
+    }
+  std::vector<double> cutsDet(4, Par.Get<double>("DetectorRegionCut"));
+  aDetectorRegion->SetProductionCuts(new G4ProductionCuts());
+
+  aDetectorRegion->GetProductionCuts()->SetProductionCuts(cutsDet);
+
+  G4Region* aTargetRegion = G4RegionStore::GetInstance()->FindOrCreateRegion("TargetRegion");
+  HypHI_Target_log->SetRegion(aTargetRegion);
+  aTargetRegion->AddRootLogicalVolume(HypHI_Target_log);
+  std::vector<double> cutsTarget (4,Par.Get<double>("TargetRegionCut"));
+  aTargetRegion->SetProductionCuts(new G4ProductionCuts());
+  aTargetRegion->GetProductionCuts()->SetProductionCuts(cutsTarget);
+
+
+
+
+
   //--- Visualization ---//
   G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
   HypHI_RPC_att->SetForceWireframe(false);
@@ -1223,24 +1250,6 @@ void WasaDetectorConstruction::ConstructSDandField()
   for(auto NameD : NameDetectorsSD)
     std::cout << NameD << std::endl;
 
-  G4Region* aDetectorRegion = new G4Region("DetectorRegion");
-
-  for(auto& CurrentName : NameDetectorsSD)
-    {
-      G4LogicalVolume* Det = FindVolume(CurrentName);
-      Det->SetRegion(aDetectorRegion);
-      aDetectorRegion->AddRootLogicalVolume(Det);
-    }
-  std::vector<double> cutsDet(4, Par.Get<double>("DetectorRegionCut"));
-  aDetectorRegion->SetProductionCuts(new G4ProductionCuts());
-  aDetectorRegion->GetProductionCuts()->SetProductionCuts(cutsDet);
-
-  // G4Region* aTargetRegion = new G4Region("TargetRegion");
-  // HypHI_Target_log->SetRegion(aTargetRegion);
-  // aTargetRegion->AddRootLogicalVolume(HypHI_Target_log);
-  // std::vector<double> cutsTarget (4,Par.Get<double>("TargetRegionCut"));
-  // aTargetRegion->SetProductionCuts(new G4ProductionCuts());
-  // aTargetRegion->GetProductionCuts()->SetProductionCuts(cutsTarget);
 
   experimentalHall_log->SetUserLimits(new G4UserLimits(DBL_MAX, 2 * m, 10 * s, 0., 0.));
 

@@ -167,8 +167,9 @@ int main(int argc,char** argv)
 	  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
 	  physicsList->RegisterPhysics(new HypernuclearPhysics("Hypernuclear",config));
 	  physicsList->SetDefaultCutValue(config.Get<double>("DefaultRegionCut"));
-	  physicsList->SetCutsForRegion(config.Get<double>("DetectorRegionCut"), "DetectorRegion");
-	  physicsList->SetCutsForRegion(config.Get<double>("TargetRegionCut"), "TargetRegion");
+	  //physicsList->SetCutsForRegion(config.Get<double>("DetectorRegionCut"), "DetectorRegion");
+	  //physicsList->SetCutsForRegion(config.Get<double>("TargetRegionCut"), "TargetRegion");
+	  //physicsList->DumpCutValuesTable(0);
 	}
       else if(namePhysList == "G4_FTFP_BERT_HP")
 	{
