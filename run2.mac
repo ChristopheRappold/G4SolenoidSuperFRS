@@ -8,9 +8,9 @@
 #
 #  turn off randomization 
 #
-/G4SolSimple/generator/randomizePrimary FALSE
-/G4SolSimple/generator/sigmaMomentum 0. 
-/G4SolSimple/generator/sigmaAngle 0.
+#/G4SolSimple/generator/randomizePrimary FALSE
+#/G4SolSimple/generator/sigmaMomentum 0. 
+#/G4SolSimple/generator/sigmaAngle 0.
 /run/verbose 1
 /run/printProgress 0
 #
