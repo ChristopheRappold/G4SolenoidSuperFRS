@@ -964,7 +964,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
     const G4double spacingX = 0.55 *mm;
     const G4double startZ1 = 0.*mm;
     const G4double startZ2 = 0.47631397*mm;
-    const std::vector<G4double> posZshift = {-10.*mm, -6.*mm, -2.*mm, 2.*mm, 6.*mm, 10.*mm};
+    const std::vector<G4double> posZshift = {-24.*mm, -20.*mm, -16.*mm, 16.*mm, 20.*mm, 24.*mm};
 
     G4ThreeVector posFib;
 
@@ -996,16 +996,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
     AllPlacements.emplace_back(new G4PVPlacement(rotFibM2,Sign*(G4ThreeVector(0. ,0. , posZshift[4])), MiniFiberD1_MothVol_log_u2, "MiniFiberD1_u2", MiniFiberD1_MothVol_log,false,0));
     AllPlacements.emplace_back(new G4PVPlacement(rotFibM3,Sign*(G4ThreeVector(0. ,0. , posZshift[5])), MiniFiberD1_MothVol_log_v2, "MiniFiberD1_v2", MiniFiberD1_MothVol_log,false,0));
 
-    const std::vector<G4double> FD1_startX1 = {-70.125*mm, -39.325*mm, -4.125*mm,  31.075*mm};
-    const std::vector<G4double> FD1_startX2 = {-69.85*mm,  -30.25*mm,   4.95*mm,   40.15*mm };
-    const std::vector<G4double> numMiniFibersTopLayer1 = {56, 64, 64, 72};
+    const std::vector<G4double> FD1_startX1 = {-82.312*mm, -51.512*mm, 12.688*mm,  43.488*mm};
+    const std::vector<G4double> FD1_startX2 = {-82.037*mm, -42.437*mm, 12.963*mm,  52.563*mm };
+    const std::vector<G4double> numMiniFibersTopLayer1 = {56, 72, 56, 72};
 
-    G4VSolid* MiniFiberD1_Core_solid_x1 = new G4Tubs("MiniFiberD1_Core_solid_x1",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_u1 = new G4Tubs("MiniFiberD1_Core_solid_u1",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_v1 = new G4Tubs("MiniFiberD1_Core_solid_v1",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_x2 = new G4Tubs("MiniFiberD1_Core_solid_x2",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_u2 = new G4Tubs("MiniFiberD1_Core_solid_u2",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_v2 = new G4Tubs("MiniFiberD1_Core_solid_v2",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Core_solid_x1 = new G4Tubs("MiniFiberD1_Core_solid_x1",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Core_solid_u1 = new G4Tubs("MiniFiberD1_Core_solid_u1",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Core_solid_v1 = new G4Tubs("MiniFiberD1_Core_solid_v1",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Core_solid_x2 = new G4Tubs("MiniFiberD1_Core_solid_x2",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Core_solid_u2 = new G4Tubs("MiniFiberD1_Core_solid_u2",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Core_solid_v2 = new G4Tubs("MiniFiberD1_Core_solid_v2",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
     G4LogicalVolume* MiniFiberD1_Core_log_x1 = new G4LogicalVolume(MiniFiberD1_Core_solid_x1,FiberCoreScinti, "MiniFiberD1_Core_log_x1", 0, 0, 0);
     G4LogicalVolume* MiniFiberD1_Core_log_u1 = new G4LogicalVolume(MiniFiberD1_Core_solid_u1,FiberCoreScinti, "MiniFiberD1_Core_log_u1", 0, 0, 0);
     G4LogicalVolume* MiniFiberD1_Core_log_v1 = new G4LogicalVolume(MiniFiberD1_Core_solid_v1,FiberCoreScinti, "MiniFiberD1_Core_log_v1", 0, 0, 0);
@@ -1013,12 +1013,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
     G4LogicalVolume* MiniFiberD1_Core_log_u2 = new G4LogicalVolume(MiniFiberD1_Core_solid_u2,FiberCoreScinti, "MiniFiberD1_Core_log_u2", 0, 0, 0);
     G4LogicalVolume* MiniFiberD1_Core_log_v2 = new G4LogicalVolume(MiniFiberD1_Core_solid_v2,FiberCoreScinti, "MiniFiberD1_Core_log_v2", 0, 0, 0);
 
-    G4VSolid* MiniFiberD1_Cladding_solid_x1 = new G4Tubs("MiniFiberD1_Cladding_solid_x1",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_u1 = new G4Tubs("MiniFiberD1_Cladding_solid_u1",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_v1 = new G4Tubs("MiniFiberD1_Cladding_solid_v1",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_x2 = new G4Tubs("MiniFiberD1_Cladding_solid_x2",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_u2 = new G4Tubs("MiniFiberD1_Cladding_solid_u2",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_v2 = new G4Tubs("MiniFiberD1_Cladding_solid_v2",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Cladding_solid_x1 = new G4Tubs("MiniFiberD1_Cladding_solid_x1",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Cladding_solid_u1 = new G4Tubs("MiniFiberD1_Cladding_solid_u1",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Cladding_solid_v1 = new G4Tubs("MiniFiberD1_Cladding_solid_v1",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Cladding_solid_x2 = new G4Tubs("MiniFiberD1_Cladding_solid_x2",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Cladding_solid_u2 = new G4Tubs("MiniFiberD1_Cladding_solid_u2",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
+    G4VSolid* MiniFiberD1_Cladding_solid_v2 = new G4Tubs("MiniFiberD1_Cladding_solid_v2",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
     G4LogicalVolume* MiniFiberD1_Cladding_log_x1 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_x1, Scinti, "MiniFiberD1_Cladding_log_x1", 0, 0, 0);
     G4LogicalVolume* MiniFiberD1_Cladding_log_u1 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_u1, Scinti, "MiniFiberD1_Cladding_log_u1", 0, 0, 0);
     G4LogicalVolume* MiniFiberD1_Cladding_log_v1 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_v1, Scinti, "MiniFiberD1_Cladding_log_v1", 0, 0, 0);
