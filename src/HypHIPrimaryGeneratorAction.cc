@@ -128,7 +128,7 @@ void HypHIPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
           G4double phi = 2.0 * CLHEP::pi * G4UniformRand();
           ofpos_x      = r0 * cos(phi);
           ofpos_y      = r0 * sin(phi);
-          ofpos_z      = fTargetSize * (0.5 - G4UniformRand());
+          ofpos_z      = 2.*fTargetSize * (0.5 - G4UniformRand());
 
           if(std::abs(ofpos_x) <= fTargetSize && std::abs(ofpos_y) <= fTargetSize &&
              std::abs(ofpos_z) <= fTargetSize) // Par.Get_Geometry_TargetLength()/2.0 &&
