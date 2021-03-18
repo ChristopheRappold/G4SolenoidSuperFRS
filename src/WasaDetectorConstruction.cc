@@ -439,7 +439,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	  G4double posStrip = -HypHI_Si1_length/2. + HypHI_Si1_stripwidth*(0.5 + idStrip);
 
 	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si1_Strip_log_x, "Si1_Strip_x", Si1_MothVol_log_x,false,idStrip));
-	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si1_Strip_log_y, "Si1_Strip_y", Si1_MothVol_log_y,false,idStrip));
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0. ,posStrip , 0.), Si1_Strip_log_y, "Si1_Strip_y", Si1_MothVol_log_y,false,idStrip));
 	}
 
 
@@ -490,7 +490,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	  G4double posStrip = -HypHI_Si2_length/2. + HypHI_Si2_stripwidth*(0.5 + idStrip);
 
 	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si2_Strip_log_x, "Si2_Strip_x", Si2_MothVol_log_x,false,idStrip));
-	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,posStrip , 0.)), Si2_Strip_log_y, "Si2_Strip_y", Si2_MothVol_log_y,false,idStrip));
+	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0. ,posStrip , 0.), Si2_Strip_log_y, "Si2_Strip_y", Si2_MothVol_log_y,false,idStrip));
 	}
 
 
