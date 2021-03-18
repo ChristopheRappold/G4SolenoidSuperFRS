@@ -405,73 +405,73 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* MD_1 = gGeoManager->MakeTube("MD01", med2, 3.897, 4.303, 16.48);
   TGeoVolume* ME_1 = gGeoManager->MakeTube("ME01", med9, 0, 0.2025, 16.48);
   TGeoVolume* MG_1 = gGeoManager->MakeTube("MG01", med69, 0, 0.2, 16.48);
-  MG_1->SetLineColor(kOrange-8);
+  ME_1->SetLineColor(kOrange-8);
   TGeoVolume* MD_2 = gGeoManager->MakeTube("MD02", med2, 4.302974, 5.4475, 17.435);
   TGeoVolume* ME_2 = gGeoManager->MakeTube("ME02", med9, 0, 0.2025, 17.435);
   TGeoVolume* MG_2 = gGeoManager->MakeTube("MG02", med69, 0, 0.2, 17.435);
-  MG_2->SetLineColor(kOrange-7);
+  ME_2->SetLineColor(kOrange-7);
   TGeoVolume* MD_3 = gGeoManager->MakeTube("MD03", med2, 5.497, 5.903, 18.67);
   TGeoVolume* ME_3 = gGeoManager->MakeTube("ME03", med9, 0, 0.2025, 18.67);
   TGeoVolume* MG_3 = gGeoManager->MakeTube("MG03", med69, 0, 0.2, 18.67);
-  MG_3->SetLineColor(kOrange-6);
+  ME_3->SetLineColor(kOrange-6);
   TGeoVolume* MD_4 = gGeoManager->MakeTube("MD04", med2, 5.900502, 7.0475, 19.9);
   TGeoVolume* ME_4 = gGeoManager->MakeTube("ME04", med9, 0, 0.2025, 19.9);
   TGeoVolume* MG_4 = gGeoManager->MakeTube("MG04", med69, 0, 0.2, 19.9);
-  MG_4->SetLineColor(kOrange-5);
+  ME_4->SetLineColor(kOrange-5);
   //TGeoVolume* MD_5 = gGeoManager->MakeTube("MD05", med2, 7.097, 7.503, 21.13); 
   TGeoVolume* MD_5 = gGeoManager->MakeTube("MD05", med2, 7.097, 7.50, 21.13); //overlap
   TGeoVolume* ME_5 = gGeoManager->MakeTube("ME05", med9, 0, 0.2025, 21.13);
   TGeoVolume* MG_5 = gGeoManager->MakeTube("MG05", med69, 0, 0.2, 21.13);
-  MG_5->SetLineColor(kOrange-4);
+  ME_5->SetLineColor(kOrange-4);
   //TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med2, 7.491163, 8.8475, 22.36);
   TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med2, 7.50, 8.8475, 22.36); // overlap
   TGeoVolume* ME_6 = gGeoManager->MakeTube("ME06", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_6 = gGeoManager->MakeTube("MG06", med69, 0, 0.3, 22.36);
-  MG_6->SetLineColor(kOrange-3);
+  ME_6->SetLineColor(kOrange-3);
   TGeoVolume* MD_7 = gGeoManager->MakeTube("MD07", med2, 8.897, 9.502999, 22.36);
   TGeoVolume* ME_7 = gGeoManager->MakeTube("ME07", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_7 = gGeoManager->MakeTube("MG07", med69, 0, 0.3, 22.36);
-  MG_7->SetLineColor(kOrange-2);
+  ME_7->SetLineColor(kOrange-2);
   TGeoVolume* MD_8 = gGeoManager->MakeTube("MD08", med2, 9.497369, 10.8475, 22.36);
   TGeoVolume* ME_8 = gGeoManager->MakeTube("ME08", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_8 = gGeoManager->MakeTube("MG08", med69, 0, 0.3, 22.36);
-  MG_8->SetLineColor(kOrange-1);
+  ME_8->SetLineColor(kOrange-1);
   TGeoVolume* MD_9 = gGeoManager->MakeTube("MD09", med2, 10.897, 11.503, 22.36);
   TGeoVolume* ME_9 = gGeoManager->MakeTube("ME09", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_9 = gGeoManager->MakeTube("MG09", med69, 0, 0.3, 22.36);
-  MG_9->SetLineColor(kOrange);
+  ME_9->SetLineColor(kOrange);
   TGeoVolume* MD10 = gGeoManager->MakeTube("MD10", med2, 11.5039, 12.8475, 22.36);
   TGeoVolume* ME10 = gGeoManager->MakeTube("ME10", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG10 = gGeoManager->MakeTube("MG10", med69, 0, 0.3, 22.36);
-  MG10->SetLineColor(kOrange+1);
+  ME10->SetLineColor(kOrange+1);
   TGeoVolume* MD11 = gGeoManager->MakeTube("MD11", med2, 12.897, 13.503, 22.36);
   TGeoVolume* ME11 = gGeoManager->MakeTube("ME11", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG11 = gGeoManager->MakeTube("MG11", med69, 0, 0.3, 22.36);
-  MG11->SetLineColor(kOrange+2);
+  ME11->SetLineColor(kOrange+2);
   TGeoVolume* MD12 = gGeoManager->MakeTube("MD12", med2, 13.49739, 15.0475, 22.36);
   TGeoVolume* ME12 = gGeoManager->MakeTube("ME12", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG12 = gGeoManager->MakeTube("MG12", med69, 0, 0.4, 22.36);
-  MG12->SetLineColor(kOrange+3);
+  ME12->SetLineColor(kOrange+3);
   TGeoVolume* MD13 = gGeoManager->MakeTube("MD13", med2, 15.097, 15.903, 22.36);
   TGeoVolume* ME13 = gGeoManager->MakeTube("ME13", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG13 = gGeoManager->MakeTube("MG13", med69, 0, 0.4, 22.36);
-  MG13->SetLineColor(kOrange+4);
+  ME13->SetLineColor(kOrange+4);
   TGeoVolume* MD14 = gGeoManager->MakeTube("MD14", med2, 15.89664, 17.4475, 22.36);
   TGeoVolume* ME14 = gGeoManager->MakeTube("ME14", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG14 = gGeoManager->MakeTube("MG14", med69, 0, 0.4, 22.36);
-  MG14->SetLineColor(kOrange+5);
+  ME14->SetLineColor(kOrange+5);
   TGeoVolume* MD15 = gGeoManager->MakeTube("MD15", med2, 17.497, 18.303, 22.36);
   TGeoVolume* ME15 = gGeoManager->MakeTube("ME15", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG15 = gGeoManager->MakeTube("MG15", med69, 0, 0.4, 22.36);
-  MG15->SetLineColor(kOrange+6);
+  ME15->SetLineColor(kOrange+6);
   TGeoVolume* MD16 = gGeoManager->MakeTube("MD16", med2, 18.30906, 19.8475, 22.36);
   TGeoVolume* ME16 = gGeoManager->MakeTube("ME16", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG16 = gGeoManager->MakeTube("MG16", med69, 0, 0.4, 22.36);
-  MG16->SetLineColor(kOrange+7);
+  ME16->SetLineColor(kOrange+7);
   TGeoVolume* MD17 = gGeoManager->MakeTube("MD17", med2, 19.897, 20.703, 22.36);
   TGeoVolume* ME17 = gGeoManager->MakeTube("ME17", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG17 = gGeoManager->MakeTube("MG17", med69, 0, 0.4, 22.36);
-  MG17->SetLineColor(kOrange+8);
+  ME17->SetLineColor(kOrange+8);
 
   // MDC structure
   TGeoVolume* MDO_ = gGeoManager->MakeTube("MDO", med7, 21.375, 21.425, 22.5);
@@ -482,9 +482,11 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   MDF_->SetLineColor(kMagenta-8);
 
   // Plastic Back / Forward Ring
-  TGeoVolume* PSB_ = gGeoManager->MakeTube("PSB", med72, 6, 22, 0.4);
+  TGeoVolume* PSB_ = gGeoManager->MakeTube("PSB", med1, 6, 22, 0.4);
+  TGeoVolume* PSBE = gGeoManager->MakeTubs("PSBE",med72, 6., 22., 0.4, -0.5*7.5,0.5*7.5);
 
-  TGeoVolume* PSF_ = gGeoManager->MakeTube("PSF", med72, 9, 24.5, 0.4);
+  TGeoVolume* PSF_ = gGeoManager->MakeTube("PSF", med1, 9, 24.5, 0.4);
+  TGeoVolume* PSFE = gGeoManager->MakeTubs("PSFE",med72, 9., 24.5, 0.4, -0.5*7.5,0.5*7.5);
 
   // Cone Structure B/F EMC
   //TGeoVolume* PSL0 = gGeoManager->MakeCone("PSL0", med10, 12.5, 22.2, 24.2, 30.5, 32.5);
@@ -3693,13 +3695,33 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   INNER_->AddNode(PSCE->GetVolume(0)/*PSCE->GetVolume(48)*/, 47, new TGeoCombiTrans(22.27613, -2.932703, 0.25-0.25, rot1123));
   INNER_->AddNode(PSCE->GetVolume(0)/*PSCE->GetVolume(49)*/, 48, new TGeoCombiTrans(23.53166, -0.1192093E-05, 0.25-0.25, rot1124));
 
-  TGeoVolume* PSBE = PSB_->Divide("PSBE", 2, 48, 0, 7.5);
+  //TGeoVolume* PSBE = PSB_->Divide("PSBE", 2, 48, 0, 7.5);
+  for(int i=1;i<=48;++i)
+    {
+      TString nameRotBE = "temp_rotBE_";
+      nameRotBE += i;
+      double rotAngle = 360. / 48. * i;
+      TGeoRotation* tempRot_PSBE = new TGeoRotation(nameRotBE);
+      tempRot_PSBE->RotateZ(rotAngle);
+      PSB_->AddNode(PSBE,i,tempRot_PSBE);
+    }
+
   PSBE->SetLineColor(kRed+1);
   TGeoRotation* rot1076 = new TGeoRotation("rot1076", 90, 3.75, 90, 93.75, 0, 0);
   //MFLD->AddNode(PSB_, 1, new TGeoCombiTrans(0, 0, -27.8, rot1076));
   MFLD->AddNode(PSB_, 1, new TGeoCombiTrans(0, 0, -28.5, rot1076));
 
-  TGeoVolume* PSFE = PSF_->Divide("PSFE", 2, 48, 0, 7.5);
+  //TGeoVolume* PSFE = PSF_->Divide("PSFE", 2, 48, 0, 7.5);
+  for(int i=1;i<=48;++i)
+    {
+      TString nameRotFE = "temp_rotFE_";
+      nameRotFE += i;
+      double rotAngle = 360. / 48. * i;
+      TGeoRotation* tempRot_PSFE = new TGeoRotation(nameRotFE);
+      tempRot_PSFE->RotateZ(rotAngle);
+      PSF_->AddNode(PSFE,i,tempRot_PSFE);
+    }
+
   PSFE->SetLineColor(kRed+1);
   TGeoRotation* rot1125 = new TGeoRotation("rot1125", 90, 3.75, 90, 93.75, 0, 0);
   MFLD->AddNode(PSF_, 1, new TGeoCombiTrans(0, 0, 29.03165, rot1125));
