@@ -170,6 +170,12 @@ int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeo
       set_color(nameTemp, kPink + 1);
     }
 
+  set_color("SD1_Strip_log_u",kPink+1);
+  set_color("SD1_Strip_log_v",kPink+1);
+  set_color("SD2_Strip_log_u",kPink+2);
+  set_color("SD2_Strip_log_v",kPink+2);
+
+
   gGeoManager->CloseGeometry();
 
   TFile* f_outGeo = new TFile(nameOut.c_str(), "RECREATE");
