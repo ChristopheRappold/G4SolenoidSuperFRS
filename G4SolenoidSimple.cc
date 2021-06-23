@@ -53,6 +53,7 @@
 #include "G4RegionStore.hh"
 
 #include "G4StepLimiterPhysics.hh"
+#include "G4RadioactiveDecayPhysics.hh"
 
 #include "G4SolConfig.hh"
 
@@ -166,6 +167,8 @@ int main(int argc,char** argv)
 	  physicsList = new FTFP_BERT;
 	  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
 	  physicsList->RegisterPhysics(new HypernuclearPhysics("Hypernuclear",config));
+	  physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics());
+
 	  physicsList->SetDefaultCutValue(config.Get<double>("DefaultRegionCut"));
 	  //physicsList->SetCutsForRegion(config.Get<double>("DetectorRegionCut"), "DetectorRegion");
 	  //physicsList->SetCutsForRegion(config.Get<double>("TargetRegionCut"), "TargetRegion");
