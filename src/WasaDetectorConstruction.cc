@@ -514,6 +514,14 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD1_gap = 0.5*mm;
       G4double HypHI_SD1_padding = (0.235+0.510)*mm;
       G4int HypHI_SD1_Nch = Par.Get<int>("HypHI_SD1_Nch");
+      G4int HypHI_SD1_stripPerCh = Par.IsAvailable("HypHI_SD1_stripPerCh") ? Par.Get<int>("HypHI_SD1_stripPerCh") : 1;
+      if(HypHI_SD1_Nch*HypHI_SD1_stripPerCh != 512)
+	{
+	  std::cout<<"E> SD1 number of channel does not correspond to the design ! "<<HypHI_SD1_Nch<<" "<<HypHI_SD1_stripPerCh<<"\n";
+	  exit(-1);
+	}
+      if(HypHI_SD1_stripPerCh != 1)
+	HypHI_SD1_stripwidth *= static_cast<double>(HypHI_SD1_stripPerCh);
       G4double HypHI_SD1_posZ = Par.Get<double>("HypHI_SD1_posZ");
 
       {
@@ -613,6 +621,15 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD2_gap = 0.5*mm;
       G4double HypHI_SD2_padding = (0.235+0.510)*mm;
       G4int HypHI_SD2_Nch = Par.Get<int>("HypHI_SD2_Nch");
+      G4int HypHI_SD2_stripPerCh = Par.IsAvailable("HypHI_SD2_stripPerCh") ? Par.Get<int>("HypHI_SD2_stripPerCh") : 1;
+      if(HypHI_SD2_Nch*HypHI_SD2_stripPerCh != 512)
+	{
+	  std::cout<<"E> SD2 number of channel does not correspond to the design ! "<<HypHI_SD2_Nch<<" "<<HypHI_SD2_stripPerCh<<"\n";
+	  exit(-1);
+	}
+      if(HypHI_SD2_stripPerCh != 1)
+	HypHI_SD2_stripwidth *= static_cast<double>(HypHI_SD2_stripPerCh);
+
       G4double HypHI_SD2_posZ = Par.Get<double>("HypHI_SD2_posZ");
 
       {
