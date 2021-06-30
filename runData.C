@@ -7,6 +7,10 @@
 #include "TTreeReader.h"
 #include "TTreeReaderValue.h"
 #include "TTreeReaderArray.h"
+#include "TDatabasePDG.h"
+#include "TLorentzVector.h"
+// #include "TGeoManager.h"
+// #include "TGeoElement.h"
 
 #include "TH2F.h"
 #include "TVector3.h"
@@ -850,9 +854,17 @@ void runDose(const std::string& nameList)
 	setNameDet.insert(nameDet[id]);
       if(nameDet[id]=="Si2_Strip_log_y")
 	setNameDet.insert(nameDet[id]);
+      if(nameDet[id]=="SD1_Strip_log_u")
+	setNameDet.insert(nameDet[id]);
+      //if(nameDet[id]=="SD1_Strip_log_v")
+      //setNameDet.insert(nameDet[id]);
+      //if(nameDet[id]=="SD2_Strip_log_u")
+      //setNameDet.insert(nameDet[id]);
+      if(nameDet[id]=="SD2_Strip_log_u")
+	setNameDet.insert(nameDet[id]);
     }
 
-  std::unordered_map<std::string,double> detector_mass = {{"Si1",4.*4.*0.03*2.333},{"Si2",6.*6.*0.03*2.333},{"MiniFiber",10*10*0.5*1.032}};
+  std::unordered_map<std::string,double> detector_mass = {{"Si1",4.*4.*0.03*2.333},{"Si2",6.*6.*0.03*2.333},{"MiniFiber",10*10*0.5*1.032},{"SD1",9.7*9.7*0.032*2.333},{"SD2",9.7*9.7*0.032*2.333}};
   std::vector<std::string> orderDetName;
 
   //ROOT::TTreeProcessorMT tp(Chain);
@@ -877,7 +889,7 @@ void runDose(const std::string& nameList)
   int timing = 0;
   int first_event = 0;
 
-  std::unordered_map<std::string,std::array<double,2> > TotalEnergy = {{"Si1",{0.,0.}},{"Si2",{0.,0.}}};
+  std::unordered_map<std::string,std::array<double,2> > TotalEnergy = {{"Si1",{0.,0.}},{"Si2",{0.,0.}},{"SD1",{0.,0.}},{"SD2",{0.,0.}}};
 
   while(reader.Next())
     {
@@ -1006,6 +1018,247 @@ void runPhaseSpace(std::string nameF)
   h21->Draw("colz");
   
 }
+
+// class PDG_fromName
+// {
+
+//   static const std::string ElName2[];
+
+//   TGeoElementTable* tableRN;
+//   std::unordered_map<std::string, double> cache_NucleiPID;
+
+//   const double u        = 0.931494061;
+//   const double m_eminus = 5.10998909999999971e-04; // GeV
+
+//   int lastPDGIon = 10004;
+
+// public:
+//   PDG_fromName() : tableRN(nullptr) {
+
+//     TDatabasePDG::Instance()->AddParticle("deuteron", "deuteron", 1.875477 /*1.875613*/, kTRUE, 0., 1. * 3., "Ions", 10000);
+//     TDatabasePDG::Instance()->AddParticle("triton", "triton", 2.807971/*2.80892*/ /*2.80925*/, kTRUE, 0., 1. * 3., "Ions", 10001);
+//     TDatabasePDG::Instance()->AddParticle("alpha", "alpha", 3.726954 /*3.72738*/ /*3.727417*/, kTRUE, 0., 2. * 3., "Ions", 10002);
+//     TDatabasePDG::Instance()->AddParticle("He3", "He3", 2.80746 /*2.80839*/ /*2.80923*/, kTRUE, 0., 2. * 3., "Ions", 10003);
+//     TDatabasePDG::Instance()->AddParticle("Li6", "Li6", 5.601432 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10004);
+//     TDatabasePDG::Instance()->AddParticle("H3L", "H3L", 2.99114, kFALSE, 0., 1. * 3., "Ions", 20001);
+//     TDatabasePDG::Instance()->AddParticle("H4L", "H4L", 3.9225, kFALSE, 0., 1. * 3., "Ions", 20002);
+//     TDatabasePDG::Instance()->AddParticle("He5L", "He5L", 4.8399, kFALSE, 0., 1. * 3., "Ions", 20003);
+
+//   }
+//   ~PDG_fromName()
+//   {
+//     std::stringstream ss;
+//     ss << "PDG_fromName cache \n";
+//     for(const auto& it : cache_NucleiPID)
+//       ss << "[" << it.first << ", " << it.second << "] ";
+//     std::cout<<ss.str()<<"\n";
+//   }
+
+//   int operator()(const std::string& name)
+//   {
+//     // std::cout<<"!> PID from name:"<<name<<"\n";
+
+//     if(name == "proton")
+//       return 2212;
+//     if(name == "He3")
+//       return 10003;
+//     if(name == "pi-")
+//       return -211;
+//     if(name == "pi+")
+//       return 211;
+//     if(name == "neutron")
+//       return 2112;
+//     if(name == "kaon0")
+//       return 311;
+//     if(name == "kaon+")
+//       return 321;
+//     if(name == "kaon-")
+//       return -321;
+//     if(name == "H3L")
+//       return 20001;
+//     if(name == "pi0")
+//       return 111;
+//     if(name == "triton")
+//       return 10001;
+//     if(name == "deuteron")
+//       return 10000;
+//     if(name == "alpha")
+//       return 10002;
+//     if(name == "He3")
+//       return 10003;
+//     if(name == "Li6")
+//       return 10004;
+
+//     auto it_name = cache_NucleiPID.find(name);
+//     if(it_name != cache_NucleiPID.end())
+//       return it_name->second;
+
+//     // std::cout<<"ADD NEW ELEM TO PDG DATABASE: "<<name<<"\n";
+
+//     std::size_t posCharge = name.find_first_of("0123456789");
+
+//     if(posCharge == std::string::npos)
+//       return 0;
+
+//     // std::cout<<"found Charge at"<<posCharge;
+//     int AtomMass            = std::stoi(name.substr(posCharge, std::string::npos));
+//     std::string nameElement = name.substr(0, posCharge);
+
+//     // std::cout<<" Unpack into:"<<nameElement<<" "<<AtomMass<<"\n";
+
+//     int id_Elem = -1;
+//     for(size_t i = 0; i < 111; ++i)
+//       if(nameElement == ElName2[i])
+//         {
+//           id_Elem = i;
+//           break;
+//         }
+//     if(id_Elem <= 0)
+//       return 0;
+
+//     // std::cout<<"Element found :"<<id_Elem<<" "<<ElName2[id_Elem]<<"\n";
+
+//     if(tableRN == nullptr)
+//       tableRN = gGeoManager->GetElementTable();
+
+//     auto* TempElement = tableRN->GetElementRN(AtomMass, id_Elem);
+//     double Dmass      = 0.;
+//     if(TempElement == nullptr)
+//       {
+// 	std::cout<<"E> no element ! "<<AtomMass<<" "<<id_Elem<<" "<<TempElement<<"\n";
+//         if(AtomMass == 23 && id_Elem == 14)
+//           Dmass = 23.073 * 1e-3; // MeV -> GeV
+//         else
+//           return 0;
+//       }
+//     else
+//       Dmass = TempElement->MassEx() * 1e-3; // MeV -> GeV
+
+//     double Mass = Dmass + AtomMass * u - id_Elem * m_eminus;
+
+//     TDatabasePDG::Instance()->AddParticle(name.c_str(), name.c_str(), Mass, kFALSE, 0., id_Elem * 3., "Ions",
+//                                           ++lastPDGIon);
+
+//     cache_NucleiPID.insert(std::make_pair(name, lastPDGIon));
+
+//     return lastPDGIon;
+
+//     // return 0;
+//   }
+// };
+
+
+void runRapidity(std::string nameF)
+{
+
+  //PDG_fromName PDGname ;
+
+  TDatabasePDG::Instance()->AddParticle("deuteron", "deuteron", 1.875477 /*1.875613*/, kTRUE, 0., 1. * 3., "Ions", 10000);
+  TDatabasePDG::Instance()->AddParticle("triton", "triton", 2.807971/*2.80892*/ /*2.80925*/, kTRUE, 0., 1. * 3., "Ions", 10001);
+
+  TDatabasePDG::Instance()->AddParticle("He3", "He3", 2.80746 /*2.80839*/ /*2.80923*/, kTRUE, 0., 2. * 3., "Ions", 10002);
+  TDatabasePDG::Instance()->AddParticle("alpha", "alpha", 3.726954 /*3.72738*/ /*3.727417*/, kTRUE, 0., 2. * 3., "Ions", 10003);
+  TDatabasePDG::Instance()->AddParticle("He5", "He5", 4.667448 /*2.80839*/ /*2.80923*/, kTRUE, 0., 2. * 3., "Ions", 10004);
+  TDatabasePDG::Instance()->AddParticle("He6", "He6", 5.604942 /*2.80839*/ /*2.80923*/, kTRUE, 0., 2. * 3., "Ions", 10005);
+  TDatabasePDG::Instance()->AddParticle("He8", "He8", 7.481931 /*2.80839*/ /*2.80923*/, kTRUE, 0., 2. * 3., "Ions", 10006);
+
+  TDatabasePDG::Instance()->AddParticle("Li6", "Li6", 5.601432 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10007);
+  TDatabasePDG::Instance()->AddParticle("Li7", "Li7", 6.532926 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10008);
+  TDatabasePDG::Instance()->AddParticle("Li8", "Li8", 7.47042 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10009);
+  TDatabasePDG::Instance()->AddParticle("Li9", "Li9", 8.405914 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10010);
+
+  TDatabasePDG::Instance()->AddParticle("Be7", "Be7", 6.533415 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10011);
+  TDatabasePDG::Instance()->AddParticle("Be9", "Be9", 8.392403 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10012);
+  TDatabasePDG::Instance()->AddParticle("Be10", "Be10", 9.324897 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10013);
+  TDatabasePDG::Instance()->AddParticle("Be11", "Be11", 10.264391 /*5.60152*/ /*5.6015194*/, kTRUE, 0., 3. * 3., "Ions", 10014);
+
+  TDatabasePDG::Instance()->AddParticle("H3L", "H3L", 2.99114, kFALSE, 0., 1. * 3., "Ions", 20001);
+  TDatabasePDG::Instance()->AddParticle("H4L", "H4L", 3.9225, kFALSE, 0., 1. * 3., "Ions", 20002);
+  TDatabasePDG::Instance()->AddParticle("He5L", "He5L", 4.8399, kFALSE, 0., 1. * 3., "Ions", 20003);
+
+
+  TFile* f = new TFile(nameF.c_str());
+  TTree* tt = (TTree*) f->Get("G4Tree");
+
+  TTreeReader reader(tt);
+
+  TTreeReaderValue<TG4Sol_Event> Revent(reader,"TG4Sol_Event");
+  std::vector<TTreeReaderArray<TG4Sol_Hit>*> AllHits;
+  std::vector<std::string>* nameDetInFile = (std::vector<std::string>*)(f->Get("nameDet"));
+  std::vector<std::string> nameDet ;
+  for(auto name : *nameDetInFile)
+    nameDet.emplace_back(name);
+
+  std::cout<<" load nameDet done !\n";
+  for(auto name : nameDet)
+    std::cout<<name<<"\n";
+
+  std::set<std::string> setNameDet;
+  for(size_t id = 0; id < nameDet.size(); ++id)
+    {
+      if(nameDet[id]=="SD1_Strip_log_u")
+	setNameDet.insert(nameDet[id]);
+      if(nameDet[id]=="SD1_Strip_log_v")
+	setNameDet.insert(nameDet[id]);
+      // if(nameDet[id]=="SD2_Strip_log_u")
+      // 	setNameDet.insert(nameDet[id]);
+      // if(nameDet[id]=="SD2_Strip_log_v")
+      // 	setNameDet.insert(nameDet[id]);
+    }
+
+  TH2F* h_Rapidity[2] = {nullptr,nullptr};
+
+  for(auto name : setNameDet)
+    {
+      std::cout<<"name Det :"<<name<<"\n";
+      AllHits.emplace_back(new TTreeReaderArray<TG4Sol_Hit>(reader,name.c_str()));
+      std::string nameH ("h_Rapidity_");
+      nameH+=name;
+      h_Rapidity[AllHits.size()-1]=new TH2F(nameH.c_str(),nameH.c_str(),1200,-3,3,40,0,40);
+    }
+
+  int timing = 0;
+  auto Entries = tt->GetEntries();
+  while(reader.Next())
+    {
+      int nb = reader.GetCurrentEntry();
+      if(static_cast<int>(static_cast<double>(nb) / static_cast<double>(Entries) * 10) == timing)
+	{
+	  std::cout <<" Processing :" << timing * 10 << "%  Event #"<<nb<<" \n";
+	  ++timing;
+	}
+
+      for(size_t it_br = 0 ;it_br < AllHits.size(); ++it_br)
+	{
+	  for(auto tempHit : *AllHits[it_br])
+	    {
+	      //std::cout<<"det:"<<nameDet[it_br]<<" "<<tempHit.Pname;
+	      TLorentzVector TempP;
+	      auto Part = TDatabasePDG::Instance()->GetParticle(tempHit.Pname.c_str());
+	      if(Part == nullptr)
+		{
+		  //std::cout<<"E> did not find particle / fragments in the databasePDG ! "<<tempHit.Pname<<" "<<tempHit.Pdg<<"\n";
+		  continue;
+		}
+
+	      double mass = Part->Mass();
+	      //std::cout<<mass<<"\n";
+	      TempP.SetXYZM(tempHit.MomX,tempHit.MomY,tempHit.MomZ,mass);
+
+	      h_Rapidity[it_br]->Fill(TempP.Rapidity(),tempHit.Pname.c_str(),1.);
+	    }
+	}
+    }
+
+  TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  c1->cd();
+  h_Rapidity[0]->Draw("colz");
+  TCanvas* c2 = new TCanvas("c2","c2",600,600);
+  c2->cd();
+  h_Rapidity[1]->Draw("colz");
+
+}
+
 
 
 int main(int argc,char** argv)
