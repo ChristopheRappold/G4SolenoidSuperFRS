@@ -75,6 +75,9 @@ private:
   G4double fPosY;
   G4double fPosZ;
   G4double fSpotSizeSigma;
+  G4int    SpotElliptical = 0;
+  G4double fSpotSizeSigmaX = -1;
+  G4double fSpotSizeSigmaY = -1;
   G4double fTargetSize;
 
   G4long nEvents;

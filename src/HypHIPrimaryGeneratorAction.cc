@@ -64,6 +64,16 @@ HypHIPrimaryGeneratorAction::HypHIPrimaryGeneratorAction(const G4SolConfig& conf
       fPosZ = Par.Get<double>("Target_PosZ");
 
       fSpotSizeSigma = Par.Get<double>("Beam_SpotSizeSigma");
+      if(Par.IsAvailable("Beam_SpotSizeSigmaX"))
+	{
+	  SpotElliptical = 1;
+	  fSpotSizeSigmaX = Par.Get<double>("Beam_SpotSizeSigmaX");
+	}
+      if(Par.IsAvailable("Beam_SpotSizeSigmaY"))
+	{
+	  SpotElliptical = 1;
+	  fSpotSizeSigmaY = Par.Get<double>("Beam_SpotSizeSigmaY");
+	}
       fTargetSize    = Par.Get<double>("Target_Size");
 
       ConstParticle = GetParticle("pi-");
@@ -121,15 +131,38 @@ void HypHIPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
       while(not_acc_position)
         {
-          G4double r0;
-          // r0 = s*std::sqrt(G4UniformRand()); // Uniformly distributed
+	  if(SpotElliptical == 0)
+	    {
+	      G4double r0;
+	      // r0 = s*std::sqrt(G4UniformRand()); // Uniformly distributed
 
-          r0           = sigma * std::sqrt(-std::log(G4UniformRand())); // Gaus
-          G4double phi = 2.0 * CLHEP::pi * G4UniformRand();
-          ofpos_x      = r0 * cos(phi);
-          ofpos_y      = r0 * sin(phi);
-          ofpos_z      = 2.*fTargetSize * (0.5 - G4UniformRand());
+	      r0           = sigma * std::sqrt(-std::log(G4UniformRand())); // Gaus
+	      G4double phi = 2.0 * CLHEP::pi * G4UniformRand();
+	      ofpos_x      = r0 * cos(phi);
+	      ofpos_y      = r0 * sin(phi);
+	      ofpos_z      = 2.*fTargetSize * (0.5 - G4UniformRand());
+	    }
+	  else
+	    {
 
+	      G4double r;
+	      G4double v1,v2,fac,valG1,valG2;
+ 	      do
+		{
+		  v1 = 2.0 * G4UniformRand() - 1.0;
+		  v2 = 2.0 * G4UniformRand() - 1.0;
+		  r = v1*v1 + v2*v2;
+		}
+	      while ( r > 1.0 );
+
+	      fac = std::sqrt(-2.0*std::log(r)/r);
+	      valG1 = v1*fac;
+	      valG2 = v2*fac;
+
+	      ofpos_x = fSpotSizeSigmaX * valG1;
+	      ofpos_y = fSpotSizeSigmaY * valG2;
+	      ofpos_z = fTargetSize * (0.5 - G4UniformRand());
+	    }
           if(std::abs(ofpos_x) <= fTargetSize && std::abs(ofpos_y) <= fTargetSize &&
              std::abs(ofpos_z) <= fTargetSize) // Par.Get_Geometry_TargetLength()/2.0 &&
                                                // std::abs(ofpos_y)<=Par.Get_Geometry_TargetHeight()/2.0)
