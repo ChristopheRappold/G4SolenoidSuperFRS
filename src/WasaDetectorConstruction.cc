@@ -649,7 +649,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	  }
 	G4ThreeVector TransSD2u = G4ThreeVector(0. ,0. , HypHI_SD2_posZ + Systematic_shift)-transMFLD_new;
 
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_u,Sign*TransSD2u, SD2u_MothVol_log, "Silicon1u", MFLD_log,false,0));
+	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_u,Sign*TransSD2u, SD2u_MothVol_log, "Silicon2u", MFLD_log,false,0));
 	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(-0.5*(HypHI_SD2_striplength+HypHI_SD2_gap) ,0. , 0.)), SD2u_MothVol_log_1, "SD2_u1", SD2u_MothVol_log,false,0));
 	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector( 0.5*(HypHI_SD2_striplength+HypHI_SD2_gap) ,0. , 0.)), SD2u_MothVol_log_2, "SD2_u2", SD2u_MothVol_log,false,0));
 
@@ -692,7 +692,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	  }
 	G4ThreeVector TransSD2v = G4ThreeVector(0. ,0. , HypHI_SD2_posZ+ 0.5*mm + Systematic_shift)-transMFLD_new;
 
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_v,Sign*TransSD2v, SD2v_MothVol_log, "Silicon1v", MFLD_log,false,0));
+	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_v,Sign*TransSD2v, SD2v_MothVol_log, "Silicon2v", MFLD_log,false,0));
 	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., -0.5*(HypHI_SD2_striplength+HypHI_SD2_gap), 0.)), SD2v_MothVol_log_1, "SD2_v1", SD2v_MothVol_log,false,0));
 	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0.,  0.5*(HypHI_SD2_striplength+HypHI_SD2_gap), 0.)), SD2v_MothVol_log_2, "SD2_v2", SD2v_MothVol_log,false,0));
 
