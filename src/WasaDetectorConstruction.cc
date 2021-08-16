@@ -512,7 +512,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD1_thickness = 0.320*mm;
       G4double HypHI_SD1_stripwidth = 0.190*mm;
       G4double HypHI_SD1_striplength = 48.365*mm;
-      G4double HypHI_SD1_gap = 0.5*mm;
+      G4double HypHI_SD1_gap = Par.IsAvailable("HypHI_SD_NoGap") ? 0.0*mm : 0.5*mm;
       G4double HypHI_SD1_padding = (0.235+0.510)*mm;
       G4int HypHI_SD1_Nch = Par.Get<int>("HypHI_SD1_Nch");
       G4int HypHI_SD1_stripPerCh = Par.IsAvailable("HypHI_SD1_stripPerCh") ? Par.Get<int>("HypHI_SD1_stripPerCh") : 1;
@@ -628,7 +628,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD2_thickness = 0.320*mm;
       G4double HypHI_SD2_stripwidth = 0.190*mm;
       G4double HypHI_SD2_striplength = 48.365*mm;
-      G4double HypHI_SD2_gap = 0.5*mm;
+      G4double HypHI_SD2_gap = Par.IsAvailable("HypHI_SD_NoGap") ? 0.0*mm : 0.5*mm;
       G4double HypHI_SD2_padding = (0.235+0.510)*mm;
       G4int HypHI_SD2_Nch = Par.Get<int>("HypHI_SD2_Nch");
       G4int HypHI_SD2_stripPerCh = Par.IsAvailable("HypHI_SD2_stripPerCh") ? Par.Get<int>("HypHI_SD2_stripPerCh") : 1;
