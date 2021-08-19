@@ -198,6 +198,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   // aTargetRegion->AddRootLogicalVolume(TargetLV);
 
   // G4Region* aDetectorRegion = new G4Region("DetectorRegion");
+
+  bool MiniVis = Par.IsAvailable("Gui_MiniVis");
+
   std::vector<G4String> NameCDC1_Invisible = {"ME01", "ME02", "ME03", "ME04", "ME05", "ME06", "ME07", "ME08", "ME09",
                                               "ME10", "ME11", "ME12", "ME13", "ME14", "ME15", "ME16", "ME17"};
   std::vector<G4String> NameCDC2_Invisible = {"MD01", "MD02", "MD03", "MD04", "MD05", "MD06", "MD07", "MD08", "MD09",
@@ -208,59 +211,63 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
-    for(auto& CurrentName : NameCDC2_Invisible)
+  for(int iColorT = 0; auto& CurrentName : NameCDC2_Invisible)
     {
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
-      // G4VisAttributes MG_Color(ColorCDC[iColorT]);
-      // UTracker->SetVisAttributes(MG_Color);
-      //++iColorT;
-      UTracker->SetVisAttributes(G4VisAttributes::Invisible);
+      if(MiniVis)
+        {
+          G4VisAttributes MG_Color(ColorCDC[iColorT]);
+          UTracker->SetVisAttributes(MG_Color);
+          ++iColorT;
+        }
+      else
+        UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
-    FindVolume("SOL")->SetVisAttributes(G4VisAttributes::Invisible);
+  FindVolume("SOL")->SetVisAttributes(G4VisAttributes::Invisible);
 
   // int iColorT = 0;
 
   double PosZShiftMDC = 0.;
   if(Par.IsAvailable("PosZ_ShiftMDC"))
     {
-      std::vector<G4String> Name_MDC_Shift = {"MD01", "MD02", "MD03", "MD04", "MD05", "MD06", "MD07", "MD08", "MD09",
-	"MD10", "MD11", "MD12", "MD13", "MD14", "MD15", "MD16", "MD17", "MDO","MDB","MDF","PTB0","PTB1","PTB2","PTB3"};
+      std::vector<G4String> Name_MDC_Shift = {"MD01", "MD02", "MD03", "MD04", "MD05", "MD06", "MD07", "MD08",
+                                              "MD09", "MD10", "MD11", "MD12", "MD13", "MD14", "MD15", "MD16",
+                                              "MD17", "MDO",  "MDB",  "MDF",  "PTB0", "PTB1", "PTB2", "PTB3"};
 
       PosZShiftMDC = Par.Get<double>("PosZ_ShiftMDC");
 
       if(PosZShiftMDC < 0.)
-	Name_MDC_Shift.emplace_back("PSB");
+        Name_MDC_Shift.emplace_back("PSB");
       else
-	Name_MDC_Shift.emplace_back("PSF");
+        Name_MDC_Shift.emplace_back("PSF");
 
-      if(TMath::Abs(PosZShiftMDC)>1e-9)
-	for(auto& CurrentName : Name_MDC_Shift)
-	  {
-	    G4VPhysicalVolume* MDC_temp = FindVolPhys(CurrentName);
-	    if(MDC_temp == nullptr)
-	      {
-		std::cout<<"E> no volume :"<<CurrentName<<"\n";
-	      }
-	    G4ThreeVector transMDC = MDC_temp->GetObjectTranslation();
-	    G4ThreeVector transMDC_move(0., 0., PosZShiftMDC);
-	    G4ThreeVector transMDC_new = transMDC + transMDC_move;
-	    MDC_temp->SetTranslation(transMDC_new);
-	    if(CurrentName == "MDB" && PosZShiftMDC < -7.5*cm)
-	      {
-		std::cout<<"MDB -> outside : removed \n";
-		//MDC_temp->SetMotherLogical(MFLD_log);
-		INNER_log->RemoveDaughter(MDC_temp);
-	      }
-	    if(CurrentName == "MDF" && PosZShiftMDC > 2.95*cm)
-	      {
-		std::cout<<"MDF -> outside : removed \n";
-		//MDC_temp->SetMotherLogical(MFLD_log);
-		INNER_log->RemoveDaughter(MDC_temp);
-	      }
-	  }
+      if(TMath::Abs(PosZShiftMDC) > 1e-9)
+        for(auto& CurrentName : Name_MDC_Shift)
+          {
+            G4VPhysicalVolume* MDC_temp = FindVolPhys(CurrentName);
+            if(MDC_temp == nullptr)
+              {
+                std::cout << "E> no volume :" << CurrentName << "\n";
+              }
+            G4ThreeVector transMDC = MDC_temp->GetObjectTranslation();
+            G4ThreeVector transMDC_move(0., 0., PosZShiftMDC);
+            G4ThreeVector transMDC_new = transMDC + transMDC_move;
+            MDC_temp->SetTranslation(transMDC_new);
+            if(CurrentName == "MDB" && PosZShiftMDC < -7.5 * cm)
+              {
+                std::cout << "MDB -> outside : removed \n";
+                // MDC_temp->SetMotherLogical(MFLD_log);
+                INNER_log->RemoveDaughter(MDC_temp);
+              }
+            if(CurrentName == "MDF" && PosZShiftMDC > 2.95 * cm)
+              {
+                std::cout << "MDF -> outside : removed \n";
+                // MDC_temp->SetMotherLogical(MFLD_log);
+                INNER_log->RemoveDaughter(MDC_temp);
+              }
+          }
     }
-
 
   std::vector<G4String> NameSD = {"MG01", "MG02", "MG03", "MG04", "MG05", "MG06", "MG07", "MG08", "MG09", "MG10",
                                   "MG11", "MG12", "MG13", "MG14", "MG15", "MG16", "MG17", "PSCE", "PSBE", "PSFE"};
@@ -282,9 +289,13 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   for(size_t iColor = 0; iColor < NameSD_Color.size(); ++iColor)
     {
       G4LogicalVolume* UTracker = FindVolume(NameSD_Color[iColor]);
-      G4VisAttributes MG_Color(ColorCDC[iColor]);
-      UTracker->SetVisAttributes(MG_Color);
-      // UTracker->SetVisAttributes(G4VisAttributes::Invisible);
+      if(!MiniVis)
+        {
+          G4VisAttributes MG_Color(ColorCDC[iColor]);
+          UTracker->SetVisAttributes(MG_Color);
+        }
+      else
+        UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
   // SetupLV->SetUserLimits( new G4UserLimits(DBL_MAX,Par.Get_CutLength_Track(),10*s,0.,0.) );
@@ -331,10 +342,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   // G4Material* Air = materialMgr->FindOrBuildMaterial("G4_AIR");
   G4Material* Air    = materialMgr->FindOrBuildMaterial("G4_AIR");
   G4Material* Vacuum = materialMgr->FindOrBuildMaterial("G4_Galactic");
-  G4Material* Si     = materialMgr->FindOrBuildMaterial("G4_Si");                      //"Plastic");
-  G4Material* Scinti = materialMgr->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"); // G4_POLYETHYLENE");//"Plastic");
-  G4Material* FiberCoreScinti =  materialMgr->FindOrBuildMaterial("G4_POLYSTYRENE");
-  G4Material* Carbon = materialMgr->FindOrBuildMaterial("G4_C");                       //"Plastic");
+  G4Material* Si     = materialMgr->FindOrBuildMaterial("G4_Si"); //"Plastic");
+  G4Material* Scinti =
+      materialMgr->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"); // G4_POLYETHYLENE");//"Plastic");
+  G4Material* FiberCoreScinti = materialMgr->FindOrBuildMaterial("G4_POLYSTYRENE");
+  G4Material* Carbon          = materialMgr->FindOrBuildMaterial("G4_C"); //"Plastic");
 
   G4VisAttributes* Si_att = new G4VisAttributes(Pink);
 
@@ -345,7 +357,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   G4VSolid* HypHI_Target = new G4Box("HypHI_Target", TargetLength, TargetLength, TargetLength);
   // G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
-  G4Material* MatTarget = Par.IsAvailable("Target_Carbon") ? Carbon : Vacuum;
+  G4Material* MatTarget             = Par.IsAvailable("Target_Carbon") ? Carbon : Vacuum;
   G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, MatTarget, "HypHI_Target_log", 0, 0, 0);
   // G4PVPlacement*   HypHI_Target_phys =
   G4ThreeVector TargetTrans   = G4ThreeVector(TargetPosX, TargetPosY, TargetPosZ) - transMFLD_new;
@@ -355,52 +367,51 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4Transform3D posTarget(*TargetRot, Sign * TargetTrans);
   AllPlacements.emplace_back(new G4PVPlacement(posTarget, HypHI_Target_log, "HypHI_Target_Phys", MFLD_log, false, 0));
 
-
   if(Par.IsAvailable("HypHI_InnerTracker_On"))
     {
       G4int nb_panel         = 16;
       G4double HypHI_Si_minR = Par.Get<double>("HypHI_Si_minR");
       G4double HypHI_Si_maxR = Par.Get<double>("HypHI_Si_maxR");
 
-      G4VSolid* HypHI_SiliciumSeg =
-	new G4Tubs("HypHI_SiSeg", HypHI_Si_minR, HypHI_Si_maxR, 3 * mm, -CLHEP::twopi / static_cast<double>(2 * nb_panel),
-		   2. * CLHEP::twopi / static_cast<double>(2 * nb_panel));
+      G4VSolid* HypHI_SiliciumSeg = new G4Tubs("HypHI_SiSeg", HypHI_Si_minR, HypHI_Si_maxR, 3 * mm,
+                                               -CLHEP::twopi / static_cast<double>(2 * nb_panel),
+                                               2. * CLHEP::twopi / static_cast<double>(2 * nb_panel));
 
       std::vector<double> posZ = {20. * cm, 25. * cm, 30. * cm, 40. * cm};
       if(Par.IsAvailable("HypHI_InnerTracker_Spec"))
-	{
-	  double PosZInTracker = Par.Get<double>("HypHI_InnerTracker_PosZ");
-	  int NbInTracker      = Par.Get<int>("HypHI_InnerTracker_Nb");
-	  double DistInTracker = Par.Get<double>("HypHI_InnerTracker_Spacing");
-	  posZ.resize(NbInTracker);
-	  for(size_t idL = 0; idL < posZ.size(); ++idL)
-	    posZ[idL] = TargetLength + TargetPosZ + PosZInTracker + static_cast<double>(idL) * DistInTracker;
-	}
+        {
+          double PosZInTracker = Par.Get<double>("HypHI_InnerTracker_PosZ");
+          int NbInTracker      = Par.Get<int>("HypHI_InnerTracker_Nb");
+          double DistInTracker = Par.Get<double>("HypHI_InnerTracker_Spacing");
+          posZ.resize(NbInTracker);
+          for(size_t idL = 0; idL < posZ.size(); ++idL)
+            posZ[idL] = TargetLength + TargetPosZ + PosZInTracker + static_cast<double>(idL) * DistInTracker;
+        }
 
       for(size_t idLayer = 0; idLayer < posZ.size(); ++idLayer)
-	{
-	  std::string name_Si("HypHI_InSi_log");
-	  name_Si += std::to_string(idLayer);
-	  G4LogicalVolume* HypHI_InSi_log = new G4LogicalVolume(HypHI_SiliciumSeg, Si, name_Si, 0, 0, 0);
-	  NameDetectorsSD.push_back(HypHI_InSi_log->GetName());
+        {
+          std::string name_Si("HypHI_InSi_log");
+          name_Si += std::to_string(idLayer);
+          G4LogicalVolume* HypHI_InSi_log = new G4LogicalVolume(HypHI_SiliciumSeg, Si, name_Si, 0, 0, 0);
+          NameDetectorsSD.push_back(HypHI_InSi_log->GetName());
 
-	  for(G4int IdSi = 0; IdSi < nb_panel; ++IdSi)
-	    {
-	      G4RotationMatrix* rotSi = new G4RotationMatrix;
-	      double rotAngle         = CLHEP::twopi / static_cast<double>(nb_panel) * static_cast<double>(IdSi);
-	      rotSi->rotateZ(rotAngle);
-	      std::string nameSi("HypHI_Layer");
-	      nameSi += std::to_string(idLayer);
-	      nameSi += "_SiSeg_";
-	      nameSi += std::to_string(IdSi);
-	      G4ThreeVector SiTrans = G4ThreeVector(0., 0., posZ[idLayer]) - transMFLD_new;
-	      // if(WasaSide==1)
-	      //   rotSi->rotateY(-180*degree);
-	      G4Transform3D posSi(*rotSi, Sign * SiTrans);
+          for(G4int IdSi = 0; IdSi < nb_panel; ++IdSi)
+            {
+              G4RotationMatrix* rotSi = new G4RotationMatrix;
+              double rotAngle         = CLHEP::twopi / static_cast<double>(nb_panel) * static_cast<double>(IdSi);
+              rotSi->rotateZ(rotAngle);
+              std::string nameSi("HypHI_Layer");
+              nameSi += std::to_string(idLayer);
+              nameSi += "_SiSeg_";
+              nameSi += std::to_string(IdSi);
+              G4ThreeVector SiTrans = G4ThreeVector(0., 0., posZ[idLayer]) - transMFLD_new;
+              // if(WasaSide==1)
+              //   rotSi->rotateY(-180*degree);
+              G4Transform3D posSi(*rotSi, Sign * SiTrans);
 
-	      AllPlacements.emplace_back(new G4PVPlacement(posSi, HypHI_InSi_log, nameSi, MFLD_log, false, IdSi));
-	    }
-	}
+              AllPlacements.emplace_back(new G4PVPlacement(posSi, HypHI_InSi_log, nameSi, MFLD_log, false, IdSi));
+            }
+        }
     }
 
   // ----------------------------- @@ -----------------------------
@@ -409,337 +420,488 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   if(Par.IsAvailable("HypHI_Si1_On"))
     {
-      G4double HypHI_Si1_length = Par.Get<double>("HypHI_Si1_length");
-      G4double HypHI_Si1_thickness = Par.Get<double>("HypHI_Si1_thickness");
+      G4double HypHI_Si1_length     = Par.Get<double>("HypHI_Si1_length");
+      G4double HypHI_Si1_thickness  = Par.Get<double>("HypHI_Si1_thickness");
       G4double HypHI_Si1_stripwidth = Par.Get<double>("HypHI_Si1_stripwidth");
-      G4double HypHI_Si1_posZ = Par.Get<double>("HypHI_Si1_posZ");
+      G4double HypHI_Si1_posZ       = Par.Get<double>("HypHI_Si1_posZ");
 
-      G4VSolid* Si1_MothVol_solid = new G4Box("Si1_solid", HypHI_Si1_length/2., HypHI_Si1_length/2., HypHI_Si1_thickness/2.);
-      G4VSolid* Si1_layerX_MothVol_solid  = new G4Box("Si1_layerX_solid", HypHI_Si1_length/2., HypHI_Si1_length/2., HypHI_Si1_thickness/4.);
-      G4VSolid* Si1_layerY_MothVol_solid  = new G4Box("Si1_layerY_solid", HypHI_Si1_length/2., HypHI_Si1_length/2., HypHI_Si1_thickness/4.);
-      G4LogicalVolume* Si1_MothVol_log = new G4LogicalVolume(Si1_MothVol_solid, Air, "Si1_log", 0, 0, 0);
+      G4VSolid* Si1_MothVol_solid =
+          new G4Box("Si1_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 2.);
+      G4VSolid* Si1_layerX_MothVol_solid =
+          new G4Box("Si1_layerX_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 4.);
+      G4VSolid* Si1_layerY_MothVol_solid =
+          new G4Box("Si1_layerY_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 4.);
+      G4LogicalVolume* Si1_MothVol_log   = new G4LogicalVolume(Si1_MothVol_solid, Air, "Si1_log", 0, 0, 0);
       G4LogicalVolume* Si1_MothVol_log_x = new G4LogicalVolume(Si1_layerX_MothVol_solid, Air, "Si1_log_x", 0, 0, 0);
       G4LogicalVolume* Si1_MothVol_log_y = new G4LogicalVolume(Si1_layerY_MothVol_solid, Air, "Si1_log_y", 0, 0, 0);
 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_Si1_posZ + Systematic_shift)-transMFLD_new), Si1_MothVol_log, "Silicon1", MFLD_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , -HypHI_Si1_thickness/4.)), Si1_MothVol_log_x, "Si1_x", Si1_MothVol_log,false,0));
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , +HypHI_Si1_thickness/4.)), Si1_MothVol_log_y, "Si1_y", Si1_MothVol_log,false,0));
+      AllPlacements.emplace_back(
+          new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., HypHI_Si1_posZ + Systematic_shift) - transMFLD_new),
+                            Si1_MothVol_log, "Silicon1", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., -HypHI_Si1_thickness / 4.)),
+                                                   Si1_MothVol_log_x, "Si1_x", Si1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., +HypHI_Si1_thickness / 4.)),
+                                                   Si1_MothVol_log_y, "Si1_y", Si1_MothVol_log, false, 0));
 
-
-      G4VSolid* Si1_Strip_solid_x  = new G4Box("Si1_Strip_solid_x", HypHI_Si1_stripwidth/2., HypHI_Si1_length/2., HypHI_Si1_thickness/4.);
-      G4VSolid* Si1_Strip_solid_y  = new G4Box("Si1_Strip_solid_y", HypHI_Si1_length/2., HypHI_Si1_stripwidth/2., HypHI_Si1_thickness/4.);
+      G4VSolid* Si1_Strip_solid_x =
+          new G4Box("Si1_Strip_solid_x", HypHI_Si1_stripwidth / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 4.);
+      G4VSolid* Si1_Strip_solid_y =
+          new G4Box("Si1_Strip_solid_y", HypHI_Si1_length / 2., HypHI_Si1_stripwidth / 2., HypHI_Si1_thickness / 4.);
       G4LogicalVolume* Si1_Strip_log_x = new G4LogicalVolume(Si1_Strip_solid_x, Si, "Si1_Strip_log_x", 0, 0, 0);
       G4LogicalVolume* Si1_Strip_log_y = new G4LogicalVolume(Si1_Strip_solid_y, Si, "Si1_Strip_log_y", 0, 0, 0);
 
+      G4int HypHI_Si1_Nstrips = (int)(HypHI_Si1_length / HypHI_Si1_stripwidth);
 
-      G4int HypHI_Si1_Nstrips = (int)(HypHI_Si1_length/HypHI_Si1_stripwidth);
+      for(G4int idStrip = 0; idStrip < HypHI_Si1_Nstrips; ++idStrip)
+        {
+          G4double posStrip = -HypHI_Si1_length / 2. + HypHI_Si1_stripwidth * (0.5 + idStrip);
 
-
-      for (G4int idStrip = 0; idStrip < HypHI_Si1_Nstrips; ++idStrip)
-	{
-	  G4double posStrip = -HypHI_Si1_length/2. + HypHI_Si1_stripwidth*(0.5 + idStrip);
-
-	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si1_Strip_log_x, "Si1_Strip_x", Si1_MothVol_log_x,false,idStrip));
-	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0. ,posStrip , 0.), Si1_Strip_log_y, "Si1_Strip_y", Si1_MothVol_log_y,false,idStrip));
-	}
-
-
+          AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(posStrip, 0., 0.)), Si1_Strip_log_x,
+                                                       "Si1_Strip_x", Si1_MothVol_log_x, false, idStrip));
+          AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0., posStrip, 0.), Si1_Strip_log_y,
+                                                       "Si1_Strip_y", Si1_MothVol_log_y, false, idStrip));
+        }
 
       NameDetectorsSD.push_back(Si1_Strip_log_x->GetName());
       NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
 
-      Si1_Strip_log_x->SetVisAttributes(Si_att);
-      Si1_Strip_log_y->SetVisAttributes(Si_att);
-      Si1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-      Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-      Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+      if(!MiniVis)
+        {
+          Si1_Strip_log_x->SetVisAttributes(Si_att);
+          Si1_Strip_log_y->SetVisAttributes(Si_att);
+          Si1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          Si1_Strip_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_Strip_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_MothVol_log->SetVisAttributes(Si_att);
+          Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+        }
     }
-
-
-
 
   if(Par.IsAvailable("HypHI_Si2_On"))
     {
-      G4double HypHI_Si2_length = Par.Get<double>("HypHI_Si2_length");
-      G4double HypHI_Si2_thickness = Par.Get<double>("HypHI_Si2_thickness");
+      G4double HypHI_Si2_length     = Par.Get<double>("HypHI_Si2_length");
+      G4double HypHI_Si2_thickness  = Par.Get<double>("HypHI_Si2_thickness");
       G4double HypHI_Si2_stripwidth = Par.Get<double>("HypHI_Si2_stripwidth");
-      G4double HypHI_Si2_posZ = Par.Get<double>("HypHI_Si2_posZ");
+      G4double HypHI_Si2_posZ       = Par.Get<double>("HypHI_Si2_posZ");
 
-      G4VSolid* Si2_MothVol_solid = new G4Box("Si2_solid", HypHI_Si2_length/2., HypHI_Si2_length/2., HypHI_Si2_thickness/2.);
-      G4VSolid* Si2_layerX_MothVol_solid  = new G4Box("Si2_layerX_solid", HypHI_Si2_length/2., HypHI_Si2_length/2., HypHI_Si2_thickness/4.);
-      G4VSolid* Si2_layerY_MothVol_solid  = new G4Box("Si2_layerY_solid", HypHI_Si2_length/2., HypHI_Si2_length/2., HypHI_Si2_thickness/4.);
-      G4LogicalVolume* Si2_MothVol_log = new G4LogicalVolume(Si2_MothVol_solid, Air, "Si2_log", 0, 0, 0);
+      G4VSolid* Si2_MothVol_solid =
+          new G4Box("Si2_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 2.);
+      G4VSolid* Si2_layerX_MothVol_solid =
+          new G4Box("Si2_layerX_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 4.);
+      G4VSolid* Si2_layerY_MothVol_solid =
+          new G4Box("Si2_layerY_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 4.);
+      G4LogicalVolume* Si2_MothVol_log   = new G4LogicalVolume(Si2_MothVol_solid, Air, "Si2_log", 0, 0, 0);
       G4LogicalVolume* Si2_MothVol_log_x = new G4LogicalVolume(Si2_layerX_MothVol_solid, Air, "Si2_log_x", 0, 0, 0);
       G4LogicalVolume* Si2_MothVol_log_y = new G4LogicalVolume(Si2_layerY_MothVol_solid, Air, "Si2_log_y", 0, 0, 0);
 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_Si2_posZ + Systematic_shift)-transMFLD_new), Si2_MothVol_log, "Silicon1", MFLD_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , -HypHI_Si2_thickness/4.)), Si2_MothVol_log_x, "Si2_x", Si2_MothVol_log,false,0));
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , +HypHI_Si2_thickness/4.)), Si2_MothVol_log_y, "Si2_y", Si2_MothVol_log,false,0));
+      AllPlacements.emplace_back(
+          new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., HypHI_Si2_posZ + Systematic_shift) - transMFLD_new),
+                            Si2_MothVol_log, "Silicon1", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., -HypHI_Si2_thickness / 4.)),
+                                                   Si2_MothVol_log_x, "Si2_x", Si2_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., +HypHI_Si2_thickness / 4.)),
+                                                   Si2_MothVol_log_y, "Si2_y", Si2_MothVol_log, false, 0));
 
-
-      G4VSolid* Si2_Strip_solid_x  = new G4Box("Si2_Strip_solid_x", HypHI_Si2_stripwidth/2., HypHI_Si2_length/2., HypHI_Si2_thickness/4.);
-      G4VSolid* Si2_Strip_solid_y  = new G4Box("Si2_Strip_solid_y", HypHI_Si2_length/2., HypHI_Si2_stripwidth/2., HypHI_Si2_thickness/4.);
+      G4VSolid* Si2_Strip_solid_x =
+          new G4Box("Si2_Strip_solid_x", HypHI_Si2_stripwidth / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 4.);
+      G4VSolid* Si2_Strip_solid_y =
+          new G4Box("Si2_Strip_solid_y", HypHI_Si2_length / 2., HypHI_Si2_stripwidth / 2., HypHI_Si2_thickness / 4.);
       G4LogicalVolume* Si2_Strip_log_x = new G4LogicalVolume(Si2_Strip_solid_x, Si, "Si2_Strip_log_x", 0, 0, 0);
       G4LogicalVolume* Si2_Strip_log_y = new G4LogicalVolume(Si2_Strip_solid_y, Si, "Si2_Strip_log_y", 0, 0, 0);
 
+      G4int HypHI_Si2_Nstrips = (int)(HypHI_Si2_length / HypHI_Si2_stripwidth);
 
-      G4int HypHI_Si2_Nstrips = (int)(HypHI_Si2_length/HypHI_Si2_stripwidth);
+      for(G4int idStrip = 0; idStrip < HypHI_Si2_Nstrips; ++idStrip)
+        {
+          G4double posStrip = -HypHI_Si2_length / 2. + HypHI_Si2_stripwidth * (0.5 + idStrip);
 
-
-      for (G4int idStrip = 0; idStrip < HypHI_Si2_Nstrips; ++idStrip)
-	{
-	  G4double posStrip = -HypHI_Si2_length/2. + HypHI_Si2_stripwidth*(0.5 + idStrip);
-
-	  AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip ,0. , 0.)), Si2_Strip_log_x, "Si2_Strip_x", Si2_MothVol_log_x,false,idStrip));
-	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0. ,posStrip , 0.), Si2_Strip_log_y, "Si2_Strip_y", Si2_MothVol_log_y,false,idStrip));
-	}
-
-
+          AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(posStrip, 0., 0.)), Si2_Strip_log_x,
+                                                       "Si2_Strip_x", Si2_MothVol_log_x, false, idStrip));
+          AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0., posStrip, 0.), Si2_Strip_log_y,
+                                                       "Si2_Strip_y", Si2_MothVol_log_y, false, idStrip));
+        }
 
       NameDetectorsSD.push_back(Si2_Strip_log_x->GetName());
       NameDetectorsSD.push_back(Si2_Strip_log_y->GetName());
-
-      Si2_Strip_log_x->SetVisAttributes(Si_att);
-      Si2_Strip_log_y->SetVisAttributes(Si_att);
-      Si2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-      Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-      Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+      if(!MiniVis)
+        {
+          Si2_Strip_log_x->SetVisAttributes(Si_att);
+          Si2_Strip_log_y->SetVisAttributes(Si_att);
+          Si2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          Si2_Strip_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_Strip_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_MothVol_log->SetVisAttributes(Si_att);
+          Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+        }
     }
 
   if(Par.IsAvailable("HypHI_SD1_On"))
     {
-      G4double HypHI_SD1_length = 98.77*mm;
-      G4double HypHI_SD1_pcb = 250*mm;
-      G4double HypHI_SD1_thickness = 0.320*mm;
-      G4double HypHI_SD1_stripwidth = 0.190*mm;
-      G4double HypHI_SD1_striplength = 48.365*mm;
-      G4double HypHI_SD1_gap = Par.IsAvailable("HypHI_SD_NoGap") ? 0.0*mm : 0.5*mm;
-      G4double HypHI_SD1_padding = (0.235+0.510)*mm;
-      G4int HypHI_SD1_Nch = Par.Get<int>("HypHI_SD1_Nch");
+      G4double HypHI_SD1_length      = 98.77 * mm;
+      G4double HypHI_SD1_pcb         = 250 * mm;
+      G4double HypHI_SD1_thickness   = 0.320 * mm;
+      G4double HypHI_SD1_stripwidth  = 0.190 * mm;
+      G4double HypHI_SD1_striplength = 48.365 * mm;
+      G4double HypHI_SD1_gap         = Par.IsAvailable("HypHI_SD_NoGap") ? 0.0 * mm : 0.5 * mm;
+      G4double HypHI_SD1_padding     = (0.235 + 0.510) * mm;
+      G4int HypHI_SD1_Nch            = Par.Get<int>("HypHI_SD1_Nch");
       G4int HypHI_SD1_stripPerCh = Par.IsAvailable("HypHI_SD1_stripPerCh") ? Par.Get<int>("HypHI_SD1_stripPerCh") : 1;
-      if(HypHI_SD1_Nch*HypHI_SD1_stripPerCh != 512)
-	{
-	  std::cout<<"E> SD1 number of channel does not correspond to the design ! "<<HypHI_SD1_Nch<<" "<<HypHI_SD1_stripPerCh<<"\n";
-	  exit(-1);
-	}
+      if(HypHI_SD1_Nch * HypHI_SD1_stripPerCh != 512)
+        {
+          std::cout << "E> SD1 number of channel does not correspond to the design ! " << HypHI_SD1_Nch << " "
+                    << HypHI_SD1_stripPerCh << "\n";
+          exit(-1);
+        }
       if(HypHI_SD1_stripPerCh != 1)
-	HypHI_SD1_stripwidth *= static_cast<double>(HypHI_SD1_stripPerCh);
+        HypHI_SD1_stripwidth *= static_cast<double>(HypHI_SD1_stripPerCh);
       G4double HypHI_SD1_posZ = Par.Get<double>("HypHI_SD1_posZ");
 
       {
-	G4VSolid* SD1u_MothVol_solid = new G4Box("SD1u_solid", HypHI_SD1_length/2., HypHI_SD1_length/2., HypHI_SD1_thickness/2.);
-	G4VSolid* SD1u_PCBext_Vol_solid = new G4Box("SD1u_PCBext_solid", HypHI_SD1_pcb/2., HypHI_SD1_pcb/2., HypHI_SD1_thickness/2.);
-	G4VSolid* SD1u_PCB_Vol_solid = new G4SubtractionSolid("SD1u_PCB_solid",SD1u_PCBext_Vol_solid,SD1u_MothVol_solid);
-	G4VSolid* SD1u_layer1_MothVol_solid  = new G4Box("SD1u_layer1_solid", HypHI_SD1_striplength/2., HypHI_SD1_Nch*(HypHI_SD1_stripwidth/2.), HypHI_SD1_thickness/2.);
-	G4VSolid* SD1u_layer2_MothVol_solid  = new G4Box("SD1u_layer2_solid", HypHI_SD1_striplength/2., HypHI_SD1_Nch*(HypHI_SD1_stripwidth/2.), HypHI_SD1_thickness/2.);
-	G4LogicalVolume* SD1u_MothVol_log = new G4LogicalVolume(SD1u_MothVol_solid, Air, "SD1u_log", 0, 0, 0);
-	G4LogicalVolume* SD1u_PCBVol_log = new G4LogicalVolume(SD1u_PCB_Vol_solid, Air, "SD1u_PCB_log", 0, 0, 0);
-	G4LogicalVolume* SD1u_MothVol_log_1 = new G4LogicalVolume(SD1u_layer1_MothVol_solid, Air, "SD1u_log_t", 0, 0, 0);
-	G4LogicalVolume* SD1u_MothVol_log_2 = new G4LogicalVolume(SD1u_layer2_MothVol_solid, Air, "SD1u_log_b", 0, 0, 0);
+        G4VSolid* SD1u_MothVol_solid =
+            new G4Box("SD1u_solid", HypHI_SD1_length / 2., HypHI_SD1_length / 2., HypHI_SD1_thickness / 2.);
+        G4VSolid* SD1u_PCBext_Vol_solid =
+            new G4Box("SD1u_PCBext_solid", HypHI_SD1_pcb / 2., HypHI_SD1_pcb / 2., HypHI_SD1_thickness / 2.);
+        G4VSolid* SD1u_PCB_Vol_solid =
+            new G4SubtractionSolid("SD1u_PCB_solid", SD1u_PCBext_Vol_solid, SD1u_MothVol_solid);
+        G4VSolid* SD1u_layer1_MothVol_solid =
+            new G4Box("SD1u_layer1_solid", HypHI_SD1_striplength / 2., HypHI_SD1_Nch * (HypHI_SD1_stripwidth / 2.),
+                      HypHI_SD1_thickness / 2.);
+        G4VSolid* SD1u_layer2_MothVol_solid =
+            new G4Box("SD1u_layer2_solid", HypHI_SD1_striplength / 2., HypHI_SD1_Nch * (HypHI_SD1_stripwidth / 2.),
+                      HypHI_SD1_thickness / 2.);
+        G4LogicalVolume* SD1u_MothVol_log = new G4LogicalVolume(SD1u_MothVol_solid, Air, "SD1u_log", 0, 0, 0);
+        G4LogicalVolume* SD1u_PCBVol_log  = new G4LogicalVolume(SD1u_PCB_Vol_solid, Air, "SD1u_PCB_log", 0, 0, 0);
+        G4LogicalVolume* SD1u_MothVol_log_1 =
+            new G4LogicalVolume(SD1u_layer1_MothVol_solid, Air, "SD1u_log_t", 0, 0, 0);
+        G4LogicalVolume* SD1u_MothVol_log_2 =
+            new G4LogicalVolume(SD1u_layer2_MothVol_solid, Air, "SD1u_log_b", 0, 0, 0);
 
-	G4RotationMatrix* rotStereoSD1_u = nullptr;
-	if(Par.IsAvailable("HypHI_SD1_stereoAngle"))
-	  {
-	    G4double HypHI_SD1_stereoAngle = Par.Get<double>("HypHI_SD1_stereoAngle");
-	    rotStereoSD1_u = new G4RotationMatrix;
-	    rotStereoSD1_u->rotateZ(HypHI_SD1_stereoAngle-90*deg);
-	  }
-	G4ThreeVector TransSD1u = G4ThreeVector(0. ,0. , HypHI_SD1_posZ + Systematic_shift)-transMFLD_new;
+        G4RotationMatrix* rotStereoSD1_u = nullptr;
+        if(Par.IsAvailable("HypHI_SD1_stereoAngle"))
+          {
+            G4double HypHI_SD1_stereoAngle = Par.Get<double>("HypHI_SD1_stereoAngle");
+            rotStereoSD1_u                 = new G4RotationMatrix;
+            rotStereoSD1_u->rotateZ(HypHI_SD1_stereoAngle - 90 * deg);
+          }
+        G4ThreeVector TransSD1u = G4ThreeVector(0., 0., HypHI_SD1_posZ + Systematic_shift) - transMFLD_new;
 
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD1_u,Sign*TransSD1u, SD1u_MothVol_log, "Silicon1u", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD1_u,Sign*TransSD1u, SD1u_PCBVol_log, "Silicon1u_PCB", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(-0.5*(HypHI_SD1_striplength+HypHI_SD1_gap) ,0. , 0.)), SD1u_MothVol_log_1, "SD1_u1", SD1u_MothVol_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector( 0.5*(HypHI_SD1_striplength+HypHI_SD1_gap) ,0. , 0.)), SD1u_MothVol_log_2, "SD1_u2", SD1u_MothVol_log,false,0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(rotStereoSD1_u, Sign * TransSD1u, SD1u_MothVol_log, "Silicon1u", MFLD_log, false, 0));
 
-	G4VSolid* SD1_Strip_solid_u  = new G4Box("SD1_Strip_solid_u", HypHI_SD1_striplength/2., HypHI_SD1_stripwidth/2., HypHI_SD1_thickness/2.);
-	G4LogicalVolume* SD1_Strip_log_u = new G4LogicalVolume(SD1_Strip_solid_u, Si, "SD1_Strip_log_u", 0, 0, 0);
+        if(Par.IsAvailable("HypHI_SD1_PCB"))
+          AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD1_u, Sign * TransSD1u, SD1u_PCBVol_log,
+                                                       "Silicon1u_PCB", MFLD_log, false, 0));
 
-	//G4LogicalVolume* SD1_Strip_log_y = new G4LogicalVolume(SD1_Strip_solid_y, Si, "SD1_Strip_log_y", 0, 0, 0);
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(-0.5 * (HypHI_SD1_striplength + HypHI_SD1_gap), 0., 0.)),
+                              SD1u_MothVol_log_1, "SD1_u1", SD1u_MothVol_log, false, 0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(0.5 * (HypHI_SD1_striplength + HypHI_SD1_gap), 0., 0.)),
+                              SD1u_MothVol_log_2, "SD1_u2", SD1u_MothVol_log, false, 0));
 
-	for (G4int idStrip = 0; idStrip < HypHI_SD1_Nch; ++idStrip)
-	  {
-	    G4double posStrip = -HypHI_SD1_Nch*(HypHI_SD1_stripwidth/2.) + HypHI_SD1_stripwidth*(0.5 + idStrip);
+        G4VSolid* SD1_Strip_solid_u      = new G4Box("SD1_Strip_solid_u", HypHI_SD1_striplength / 2.,
+                                                HypHI_SD1_stripwidth / 2., HypHI_SD1_thickness / 2.);
+        G4LogicalVolume* SD1_Strip_log_u = new G4LogicalVolume(SD1_Strip_solid_u, Si, "SD1_Strip_log_u", 0, 0, 0);
 
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., posStrip , 0.)), SD1_Strip_log_u, "SD1_Strip_u", SD1u_MothVol_log_1,false,idStrip));
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., posStrip , 0.)), SD1_Strip_log_u, "SD1_Strip_u", SD1u_MothVol_log_2,false,idStrip+2*HypHI_SD1_Nch));
-	  }
+        // G4LogicalVolume* SD1_Strip_log_y = new G4LogicalVolume(SD1_Strip_solid_y, Si, "SD1_Strip_log_y", 0, 0, 0);
 
-	NameDetectorsSD.push_back(SD1_Strip_log_u->GetName());
-	//NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        for(G4int idStrip = 0; idStrip < HypHI_SD1_Nch; ++idStrip)
+          {
+            G4double posStrip = -HypHI_SD1_Nch * (HypHI_SD1_stripwidth / 2.) + HypHI_SD1_stripwidth * (0.5 + idStrip);
 
-	SD1_Strip_log_u->SetVisAttributes(Si_att);
-	//Si1_Strip_log_y->SetVisAttributes(Si_att);
-	SD1u_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-	SD1u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-	SD1u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., posStrip, 0.)), SD1_Strip_log_u,
+                                                         "SD1_Strip_u", SD1u_MothVol_log_1, false, idStrip));
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., posStrip, 0.)), SD1_Strip_log_u,
+                                                         "SD1_Strip_u", SD1u_MothVol_log_2, false,
+                                                         idStrip + 2 * HypHI_SD1_Nch));
+          }
+
+        NameDetectorsSD.push_back(SD1_Strip_log_u->GetName());
+        // NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        if(!MiniVis)
+          {
+            SD1_Strip_log_u->SetVisAttributes(Si_att);
+            SD1u_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD1_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1u_MothVol_log->SetVisAttributes(Si_att);
+            SD1u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
       }
       {
-	G4VSolid* SD1v_MothVol_solid = new G4Box("SD1v_solid", HypHI_SD1_length/2., HypHI_SD1_length/2., HypHI_SD1_thickness/2.);
-	G4VSolid* SD1v_PCBext_Vol_solid = new G4Box("SD1v_PCBext_solid", HypHI_SD1_pcb/2., HypHI_SD1_pcb/2., HypHI_SD1_thickness/2.);
-	G4VSolid* SD1v_PCB_Vol_solid = new G4SubtractionSolid("SD1v_PCB_solid",SD1v_PCBext_Vol_solid,SD1v_MothVol_solid);
-	G4VSolid* SD1v_layer1_MothVol_solid  = new G4Box("SD1v_layer1_solid", HypHI_SD1_Nch*(HypHI_SD1_stripwidth/2.), HypHI_SD1_striplength/2., HypHI_SD1_thickness/2.);
-	G4VSolid* SD1v_layer2_MothVol_solid  = new G4Box("SD1v_layer2_solid", HypHI_SD1_Nch*(HypHI_SD1_stripwidth/2.), HypHI_SD1_striplength/2., HypHI_SD1_thickness/2.);
-	G4LogicalVolume* SD1v_MothVol_log = new G4LogicalVolume(SD1v_MothVol_solid, Air, "SD1v_log", 0, 0, 0);
-	G4LogicalVolume* SD1v_PCBVol_log = new G4LogicalVolume(SD1v_PCB_Vol_solid, Air, "SD1v_PCB_log", 0, 0, 0);
-	G4LogicalVolume* SD1v_MothVol_log_1 = new G4LogicalVolume(SD1v_layer1_MothVol_solid, Air, "SD1v_log_t", 0, 0, 0);
-	G4LogicalVolume* SD1v_MothVol_log_2 = new G4LogicalVolume(SD1v_layer2_MothVol_solid, Air, "SD1v_log_b", 0, 0, 0);
+        G4VSolid* SD1v_MothVol_solid =
+            new G4Box("SD1v_solid", HypHI_SD1_length / 2., HypHI_SD1_length / 2., HypHI_SD1_thickness / 2.);
+        G4VSolid* SD1v_PCBext_Vol_solid =
+            new G4Box("SD1v_PCBext_solid", HypHI_SD1_pcb / 2., HypHI_SD1_pcb / 2., HypHI_SD1_thickness / 2.);
+        G4VSolid* SD1v_PCB_Vol_solid =
+            new G4SubtractionSolid("SD1v_PCB_solid", SD1v_PCBext_Vol_solid, SD1v_MothVol_solid);
+        G4VSolid* SD1v_layer1_MothVol_solid =
+            new G4Box("SD1v_layer1_solid", HypHI_SD1_Nch * (HypHI_SD1_stripwidth / 2.), HypHI_SD1_striplength / 2.,
+                      HypHI_SD1_thickness / 2.);
+        G4VSolid* SD1v_layer2_MothVol_solid =
+            new G4Box("SD1v_layer2_solid", HypHI_SD1_Nch * (HypHI_SD1_stripwidth / 2.), HypHI_SD1_striplength / 2.,
+                      HypHI_SD1_thickness / 2.);
+        G4LogicalVolume* SD1v_MothVol_log = new G4LogicalVolume(SD1v_MothVol_solid, Air, "SD1v_log", 0, 0, 0);
+        G4LogicalVolume* SD1v_PCBVol_log  = new G4LogicalVolume(SD1v_PCB_Vol_solid, Air, "SD1v_PCB_log", 0, 0, 0);
+        G4LogicalVolume* SD1v_MothVol_log_1 =
+            new G4LogicalVolume(SD1v_layer1_MothVol_solid, Air, "SD1v_log_t", 0, 0, 0);
+        G4LogicalVolume* SD1v_MothVol_log_2 =
+            new G4LogicalVolume(SD1v_layer2_MothVol_solid, Air, "SD1v_log_b", 0, 0, 0);
 
-	G4RotationMatrix* rotStereoSD1_v = nullptr;
-	if(Par.IsAvailable("HypHI_SD1_stereoAngle"))
-	  {
-	    G4double HypHI_SD1_stereoAngle = Par.Get<double>("HypHI_SD1_stereoAngle");
-	    rotStereoSD1_v = new G4RotationMatrix;
-	    rotStereoSD1_v->rotateZ(-HypHI_SD1_stereoAngle);
-	  }
-	G4ThreeVector TransSD1v = G4ThreeVector(0. ,0. , HypHI_SD1_posZ+ 0.5*mm + Systematic_shift)-transMFLD_new;
+        G4RotationMatrix* rotStereoSD1_v = nullptr;
+        if(Par.IsAvailable("HypHI_SD1_stereoAngle"))
+          {
+            G4double HypHI_SD1_stereoAngle = Par.Get<double>("HypHI_SD1_stereoAngle");
+            rotStereoSD1_v                 = new G4RotationMatrix;
+            rotStereoSD1_v->rotateZ(-HypHI_SD1_stereoAngle);
+          }
+        G4ThreeVector TransSD1v = G4ThreeVector(0., 0., HypHI_SD1_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
 
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD1_v,Sign*TransSD1v, SD1v_MothVol_log, "Silicon1v", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD1_v,Sign*TransSD1v, SD1v_PCBVol_log, "Silicon1v_PCB", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., -0.5*(HypHI_SD1_striplength+HypHI_SD1_gap), 0.)), SD1v_MothVol_log_1, "SD1_v1", SD1v_MothVol_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0.,  0.5*(HypHI_SD1_striplength+HypHI_SD1_gap), 0.)), SD1v_MothVol_log_2, "SD1_v2", SD1v_MothVol_log,false,0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(rotStereoSD1_v, Sign * TransSD1v, SD1v_MothVol_log, "Silicon1v", MFLD_log, false, 0));
 
-	G4VSolid* SD1_Strip_solid_v  = new G4Box("SD1_Strip_solid_v", HypHI_SD1_stripwidth/2., HypHI_SD1_striplength/2., HypHI_SD1_thickness/2.);
-	G4LogicalVolume* SD1_Strip_log_v = new G4LogicalVolume(SD1_Strip_solid_v, Si, "SD1_Strip_log_v", 0, 0, 0);
+        if(Par.IsAvailable("HypHI_SD1_PCB"))
+          AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD1_v, Sign * TransSD1v, SD1v_PCBVol_log,
+                                                       "Silicon1v_PCB", MFLD_log, false, 0));
 
-	//G4LogicalVolume* SD1_Strip_log_y = new G4LogicalVolume(SD1_Strip_solid_y, Si, "SD1_Strip_log_y", 0, 0, 0);
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(0., -0.5 * (HypHI_SD1_striplength + HypHI_SD1_gap), 0.)),
+                              SD1v_MothVol_log_1, "SD1_v1", SD1v_MothVol_log, false, 0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0.5 * (HypHI_SD1_striplength + HypHI_SD1_gap), 0.)),
+                              SD1v_MothVol_log_2, "SD1_v2", SD1v_MothVol_log, false, 0));
 
-	for (G4int idStrip = 0; idStrip < HypHI_SD1_Nch; ++idStrip)
-	  {
-	    G4double posStrip = -HypHI_SD1_Nch*(HypHI_SD1_stripwidth/2.) + HypHI_SD1_stripwidth*(0.5 + idStrip);
+        G4VSolid* SD1_Strip_solid_v      = new G4Box("SD1_Strip_solid_v", HypHI_SD1_stripwidth / 2.,
+                                                HypHI_SD1_striplength / 2., HypHI_SD1_thickness / 2.);
+        G4LogicalVolume* SD1_Strip_log_v = new G4LogicalVolume(SD1_Strip_solid_v, Si, "SD1_Strip_log_v", 0, 0, 0);
 
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip, 0., 0.)), SD1_Strip_log_v, "SD1_Strip_v", SD1v_MothVol_log_1,false,idStrip));
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip, 0., 0.)), SD1_Strip_log_v, "SD1_Strip_v", SD1v_MothVol_log_2,false,idStrip+2*HypHI_SD1_Nch));
-	  }
+        // G4LogicalVolume* SD1_Strip_log_y = new G4LogicalVolume(SD1_Strip_solid_y, Si, "SD1_Strip_log_y", 0, 0, 0);
 
-	NameDetectorsSD.push_back(SD1_Strip_log_v->GetName());
-	//NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        for(G4int idStrip = 0; idStrip < HypHI_SD1_Nch; ++idStrip)
+          {
+            G4double posStrip = -HypHI_SD1_Nch * (HypHI_SD1_stripwidth / 2.) + HypHI_SD1_stripwidth * (0.5 + idStrip);
 
-	SD1_Strip_log_v->SetVisAttributes(Si_att);
-	//Si1_Strip_log_y->SetVisAttributes(Si_att);
-	SD1v_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-	SD1v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-	SD1v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(posStrip, 0., 0.)), SD1_Strip_log_v,
+                                                         "SD1_Strip_v", SD1v_MothVol_log_1, false, idStrip));
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(posStrip, 0., 0.)), SD1_Strip_log_v,
+                                                         "SD1_Strip_v", SD1v_MothVol_log_2, false,
+                                                         idStrip + 2 * HypHI_SD1_Nch));
+          }
+
+        NameDetectorsSD.push_back(SD1_Strip_log_v->GetName());
+        // NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        if(!MiniVis)
+          {
+            SD1_Strip_log_v->SetVisAttributes(Si_att);
+            SD1v_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD1_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1v_MothVol_log->SetVisAttributes(Si_att);
+            SD1v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
       }
     }
-
   if(Par.IsAvailable("HypHI_SD2_On"))
     {
-      G4double HypHI_SD2_length = 98.77*mm;
-      G4double HypHI_SD2_pcb = 250*mm;
-      G4double HypHI_SD2_thickness = 0.320*mm;
-      G4double HypHI_SD2_stripwidth = 0.190*mm;
-      G4double HypHI_SD2_striplength = 48.365*mm;
-      G4double HypHI_SD2_gap = Par.IsAvailable("HypHI_SD_NoGap") ? 0.0*mm : 0.5*mm;
-      G4double HypHI_SD2_padding = (0.235+0.510)*mm;
-      G4int HypHI_SD2_Nch = Par.Get<int>("HypHI_SD2_Nch");
+      G4double HypHI_SD2_length      = 98.77 * mm;
+      G4double HypHI_SD2_pcb         = 250 * mm;
+      G4double HypHI_SD2_thickness   = 0.320 * mm;
+      G4double HypHI_SD2_stripwidth  = 0.190 * mm;
+      G4double HypHI_SD2_striplength = 48.365 * mm;
+      G4double HypHI_SD2_gap         = Par.IsAvailable("HypHI_SD_NoGap") ? 0.0 * mm : 0.5 * mm;
+      G4double HypHI_SD2_padding     = (0.235 + 0.510) * mm;
+      G4int HypHI_SD2_Nch            = Par.Get<int>("HypHI_SD2_Nch");
       G4int HypHI_SD2_stripPerCh = Par.IsAvailable("HypHI_SD2_stripPerCh") ? Par.Get<int>("HypHI_SD2_stripPerCh") : 1;
-      if(HypHI_SD2_Nch*HypHI_SD2_stripPerCh != 512)
-	{
-	  std::cout<<"E> SD2 number of channel does not correspond to the design ! "<<HypHI_SD2_Nch<<" "<<HypHI_SD2_stripPerCh<<"\n";
-	  exit(-1);
-	}
+      if(HypHI_SD2_Nch * HypHI_SD2_stripPerCh != 512)
+        {
+          std::cout << "E> SD2 number of channel does not correspond to the design ! " << HypHI_SD2_Nch << " "
+                    << HypHI_SD2_stripPerCh << "\n";
+          exit(-1);
+        }
       if(HypHI_SD2_stripPerCh != 1)
-	HypHI_SD2_stripwidth *= static_cast<double>(HypHI_SD2_stripPerCh);
+        HypHI_SD2_stripwidth *= static_cast<double>(HypHI_SD2_stripPerCh);
 
       G4double HypHI_SD2_posZ = Par.Get<double>("HypHI_SD2_posZ");
 
       {
-	G4VSolid* SD2u_MothVol_solid = new G4Box("SD2u_solid", HypHI_SD2_length/2., HypHI_SD2_length/2., HypHI_SD2_thickness/2.);
-	G4VSolid* SD2u_PCBext_Vol_solid = new G4Box("SD2u_PCBext_solid", HypHI_SD2_pcb/2., HypHI_SD2_pcb/2., HypHI_SD2_thickness/2.);
-	G4VSolid* SD2u_PCB_Vol_solid = new G4SubtractionSolid("SD2u_PCB_solid",SD2u_PCBext_Vol_solid,SD2u_MothVol_solid);
-	G4VSolid* SD2u_layer1_MothVol_solid  = new G4Box("SD2u_layer1_solid", HypHI_SD2_striplength/2., HypHI_SD2_Nch*(HypHI_SD2_stripwidth/2.), HypHI_SD2_thickness/2.);
-	G4VSolid* SD2u_layer2_MothVol_solid  = new G4Box("SD2u_layer2_solid", HypHI_SD2_striplength/2., HypHI_SD2_Nch*(HypHI_SD2_stripwidth/2.), HypHI_SD2_thickness/2.);
-	G4LogicalVolume* SD2u_MothVol_log = new G4LogicalVolume(SD2u_MothVol_solid, Air, "SD2u_log", 0, 0, 0);
-	G4LogicalVolume* SD2u_PCBVol_log = new G4LogicalVolume(SD2u_PCB_Vol_solid, Air, "SD2u_PCB_log", 0, 0, 0);
-	G4LogicalVolume* SD2u_MothVol_log_1 = new G4LogicalVolume(SD2u_layer1_MothVol_solid, Air, "SD2u_log_t", 0, 0, 0);
-	G4LogicalVolume* SD2u_MothVol_log_2 = new G4LogicalVolume(SD2u_layer2_MothVol_solid, Air, "SD2u_log_b", 0, 0, 0);
+        G4VSolid* SD2u_MothVol_solid =
+            new G4Box("SD2u_solid", HypHI_SD2_length / 2., HypHI_SD2_length / 2., HypHI_SD2_thickness / 2.);
+        G4VSolid* SD2u_PCBext_Vol_solid =
+            new G4Box("SD2u_PCBext_solid", HypHI_SD2_pcb / 2., HypHI_SD2_pcb / 2., HypHI_SD2_thickness / 2.);
+        G4VSolid* SD2u_PCB_Vol_solid =
+            new G4SubtractionSolid("SD2u_PCB_solid", SD2u_PCBext_Vol_solid, SD2u_MothVol_solid);
+        G4VSolid* SD2u_layer1_MothVol_solid =
+            new G4Box("SD2u_layer1_solid", HypHI_SD2_striplength / 2., HypHI_SD2_Nch * (HypHI_SD2_stripwidth / 2.),
+                      HypHI_SD2_thickness / 2.);
+        G4VSolid* SD2u_layer2_MothVol_solid =
+            new G4Box("SD2u_layer2_solid", HypHI_SD2_striplength / 2., HypHI_SD2_Nch * (HypHI_SD2_stripwidth / 2.),
+                      HypHI_SD2_thickness / 2.);
+        G4LogicalVolume* SD2u_MothVol_log = new G4LogicalVolume(SD2u_MothVol_solid, Air, "SD2u_log", 0, 0, 0);
+        G4LogicalVolume* SD2u_PCBVol_log  = new G4LogicalVolume(SD2u_PCB_Vol_solid, Air, "SD2u_PCB_log", 0, 0, 0);
+        G4LogicalVolume* SD2u_MothVol_log_1 =
+            new G4LogicalVolume(SD2u_layer1_MothVol_solid, Air, "SD2u_log_t", 0, 0, 0);
+        G4LogicalVolume* SD2u_MothVol_log_2 =
+            new G4LogicalVolume(SD2u_layer2_MothVol_solid, Air, "SD2u_log_b", 0, 0, 0);
 
-	G4RotationMatrix* rotStereoSD2_u = nullptr;
-	if(Par.IsAvailable("HypHI_SD2_stereoAngle"))
-	  {
-	    G4double HypHI_SD2_stereoAngle = Par.Get<double>("HypHI_SD2_stereoAngle");
-	    rotStereoSD2_u = new G4RotationMatrix;
-	    rotStereoSD2_u->rotateZ(HypHI_SD2_stereoAngle-90*deg);
-	  }
-	G4ThreeVector TransSD2u = G4ThreeVector(0. ,0. , HypHI_SD2_posZ + Systematic_shift)-transMFLD_new;
+        G4RotationMatrix* rotStereoSD2_u = nullptr;
+        if(Par.IsAvailable("HypHI_SD2_stereoAngle"))
+          {
+            G4double HypHI_SD2_stereoAngle = Par.Get<double>("HypHI_SD2_stereoAngle");
+            rotStereoSD2_u                 = new G4RotationMatrix;
+            rotStereoSD2_u->rotateZ(HypHI_SD2_stereoAngle - 90 * deg);
+          }
+        G4ThreeVector TransSD2u = G4ThreeVector(0., 0., HypHI_SD2_posZ + Systematic_shift) - transMFLD_new;
 
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_u,Sign*TransSD2u, SD2u_MothVol_log, "Silicon2u", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_u,Sign*TransSD2u, SD2u_PCBVol_log, "Silicon2u_PCB", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(-0.5*(HypHI_SD2_striplength+HypHI_SD2_gap) ,0. , 0.)), SD2u_MothVol_log_1, "SD2_u1", SD2u_MothVol_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector( 0.5*(HypHI_SD2_striplength+HypHI_SD2_gap) ,0. , 0.)), SD2u_MothVol_log_2, "SD2_u2", SD2u_MothVol_log,false,0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(rotStereoSD2_u, Sign * TransSD2u, SD2u_MothVol_log, "Silicon2u", MFLD_log, false, 0));
 
-	G4VSolid* SD2_Strip_solid_u  = new G4Box("SD2_Strip_solid_u", HypHI_SD2_striplength/2., HypHI_SD2_stripwidth/2., HypHI_SD2_thickness/2.);
-	G4LogicalVolume* SD2_Strip_log_u = new G4LogicalVolume(SD2_Strip_solid_u, Si, "SD2_Strip_log_u", 0, 0, 0);
+        if(Par.IsAvailable("HypHI_SD2_PCB"))
+          AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_u, Sign * TransSD2u, SD2u_PCBVol_log,
+                                                       "Silicon2u_PCB", MFLD_log, false, 0));
 
-	//G4LogicalVolume* SD2_Strip_log_y = new G4LogicalVolume(SD2_Strip_solid_y, Si, "SD2_Strip_log_y", 0, 0, 0);
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(-0.5 * (HypHI_SD2_striplength + HypHI_SD2_gap), 0., 0.)),
+                              SD2u_MothVol_log_1, "SD2_u1", SD2u_MothVol_log, false, 0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(0.5 * (HypHI_SD2_striplength + HypHI_SD2_gap), 0., 0.)),
+                              SD2u_MothVol_log_2, "SD2_u2", SD2u_MothVol_log, false, 0));
 
-	for (G4int idStrip = 0; idStrip < HypHI_SD2_Nch; ++idStrip)
-	  {
-	    G4double posStrip = -HypHI_SD2_Nch*(HypHI_SD2_stripwidth/2.) + HypHI_SD2_stripwidth*(0.5 + idStrip);
+        G4VSolid* SD2_Strip_solid_u      = new G4Box("SD2_Strip_solid_u", HypHI_SD2_striplength / 2.,
+                                                HypHI_SD2_stripwidth / 2., HypHI_SD2_thickness / 2.);
+        G4LogicalVolume* SD2_Strip_log_u = new G4LogicalVolume(SD2_Strip_solid_u, Si, "SD2_Strip_log_u", 0, 0, 0);
 
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., posStrip , 0.)), SD2_Strip_log_u, "SD2_Strip_u", SD2u_MothVol_log_1,false,idStrip));
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., posStrip , 0.)), SD2_Strip_log_u, "SD2_Strip_u", SD2u_MothVol_log_2,false,idStrip+2*HypHI_SD2_Nch));
-	  }
+        // G4LogicalVolume* SD2_Strip_log_y = new G4LogicalVolume(SD2_Strip_solid_y, Si, "SD2_Strip_log_y", 0, 0,
+        // 0);
 
-	NameDetectorsSD.push_back(SD2_Strip_log_u->GetName());
-	//NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        for(G4int idStrip = 0; idStrip < HypHI_SD2_Nch; ++idStrip)
+          {
+            G4double posStrip = -HypHI_SD2_Nch * (HypHI_SD2_stripwidth / 2.) + HypHI_SD2_stripwidth * (0.5 + idStrip);
 
-	SD2_Strip_log_u->SetVisAttributes(Si_att);
-	//Si1_Strip_log_y->SetVisAttributes(Si_att);
-	SD2u_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-	SD2u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-	SD2u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., posStrip, 0.)), SD2_Strip_log_u,
+                                                         "SD2_Strip_u", SD2u_MothVol_log_1, false, idStrip));
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., posStrip, 0.)), SD2_Strip_log_u,
+                                                         "SD2_Strip_u", SD2u_MothVol_log_2, false,
+                                                         idStrip + 2 * HypHI_SD2_Nch));
+          }
+
+        NameDetectorsSD.push_back(SD2_Strip_log_u->GetName());
+        // NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        if(!MiniVis)
+          {
+            SD2_Strip_log_u->SetVisAttributes(Si_att);
+            SD2u_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD2_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2u_MothVol_log->SetVisAttributes(Si_att);
+            SD2u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
       }
       {
-	G4VSolid* SD2v_MothVol_solid = new G4Box("SD2v_solid", HypHI_SD2_length/2., HypHI_SD2_length/2., HypHI_SD2_thickness/2.);
-	G4VSolid* SD2v_PCBext_Vol_solid = new G4Box("SD2u_PCBext_solid", HypHI_SD2_pcb/2., HypHI_SD2_pcb/2., HypHI_SD2_thickness/2.);
-	G4VSolid* SD2v_PCB_Vol_solid = new G4SubtractionSolid("SD2u_PCB_solid",SD2v_PCBext_Vol_solid,SD2v_MothVol_solid);
-	G4VSolid* SD2v_layer1_MothVol_solid  = new G4Box("SD2v_layer1_solid", HypHI_SD2_Nch*(HypHI_SD2_stripwidth/2.), HypHI_SD2_striplength/2., HypHI_SD2_thickness/2.);
-	G4VSolid* SD2v_layer2_MothVol_solid  = new G4Box("SD2v_layer2_solid", HypHI_SD2_Nch*(HypHI_SD2_stripwidth/2.), HypHI_SD2_striplength/2., HypHI_SD2_thickness/2.);
-	G4LogicalVolume* SD2v_MothVol_log = new G4LogicalVolume(SD2v_MothVol_solid, Air, "SD2v_log", 0, 0, 0);
-	G4LogicalVolume* SD2v_PCBVol_log = new G4LogicalVolume(SD2v_PCB_Vol_solid, Air, "SD2v_PCB_log", 0, 0, 0);
-	G4LogicalVolume* SD2v_MothVol_log_1 = new G4LogicalVolume(SD2v_layer1_MothVol_solid, Air, "SD2v_log_t", 0, 0, 0);
-	G4LogicalVolume* SD2v_MothVol_log_2 = new G4LogicalVolume(SD2v_layer2_MothVol_solid, Air, "SD2v_log_b", 0, 0, 0);
+        G4VSolid* SD2v_MothVol_solid =
+            new G4Box("SD2v_solid", HypHI_SD2_length / 2., HypHI_SD2_length / 2., HypHI_SD2_thickness / 2.);
+        G4VSolid* SD2v_PCBext_Vol_solid =
+            new G4Box("SD2u_PCBext_solid", HypHI_SD2_pcb / 2., HypHI_SD2_pcb / 2., HypHI_SD2_thickness / 2.);
+        G4VSolid* SD2v_PCB_Vol_solid =
+            new G4SubtractionSolid("SD2u_PCB_solid", SD2v_PCBext_Vol_solid, SD2v_MothVol_solid);
+        G4VSolid* SD2v_layer1_MothVol_solid =
+            new G4Box("SD2v_layer1_solid", HypHI_SD2_Nch * (HypHI_SD2_stripwidth / 2.), HypHI_SD2_striplength / 2.,
+                      HypHI_SD2_thickness / 2.);
+        G4VSolid* SD2v_layer2_MothVol_solid =
+            new G4Box("SD2v_layer2_solid", HypHI_SD2_Nch * (HypHI_SD2_stripwidth / 2.), HypHI_SD2_striplength / 2.,
+                      HypHI_SD2_thickness / 2.);
+        G4LogicalVolume* SD2v_MothVol_log = new G4LogicalVolume(SD2v_MothVol_solid, Air, "SD2v_log", 0, 0, 0);
+        G4LogicalVolume* SD2v_PCBVol_log  = new G4LogicalVolume(SD2v_PCB_Vol_solid, Air, "SD2v_PCB_log", 0, 0, 0);
+        G4LogicalVolume* SD2v_MothVol_log_1 =
+            new G4LogicalVolume(SD2v_layer1_MothVol_solid, Air, "SD2v_log_t", 0, 0, 0);
+        G4LogicalVolume* SD2v_MothVol_log_2 =
+            new G4LogicalVolume(SD2v_layer2_MothVol_solid, Air, "SD2v_log_b", 0, 0, 0);
 
-	G4RotationMatrix* rotStereoSD2_v = nullptr;
-	if(Par.IsAvailable("HypHI_SD2_stereoAngle"))
-	  {
-	    G4double HypHI_SD2_stereoAngle = Par.Get<double>("HypHI_SD2_stereoAngle");
-	    rotStereoSD2_v = new G4RotationMatrix;
-	    rotStereoSD2_v->rotateZ(-HypHI_SD2_stereoAngle);
-	  }
-	G4ThreeVector TransSD2v = G4ThreeVector(0. ,0. , HypHI_SD2_posZ+ 0.5*mm + Systematic_shift)-transMFLD_new;
+        G4RotationMatrix* rotStereoSD2_v = nullptr;
+        if(Par.IsAvailable("HypHI_SD2_stereoAngle"))
+          {
+            G4double HypHI_SD2_stereoAngle = Par.Get<double>("HypHI_SD2_stereoAngle");
+            rotStereoSD2_v                 = new G4RotationMatrix;
+            rotStereoSD2_v->rotateZ(-HypHI_SD2_stereoAngle);
+          }
+        G4ThreeVector TransSD2v = G4ThreeVector(0., 0., HypHI_SD2_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
 
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_v,Sign*TransSD2v, SD2v_MothVol_log, "Silicon2v", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_v,Sign*TransSD2v, SD2v_PCBVol_log, "Silicon2v_PCB", MFLD_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0., -0.5*(HypHI_SD2_striplength+HypHI_SD2_gap), 0.)), SD2v_MothVol_log_1, "SD2_v1", SD2v_MothVol_log,false,0));
-	AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0.,  0.5*(HypHI_SD2_striplength+HypHI_SD2_gap), 0.)), SD2v_MothVol_log_2, "SD2_v2", SD2v_MothVol_log,false,0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(rotStereoSD2_v, Sign * TransSD2v, SD2v_MothVol_log, "Silicon2v", MFLD_log, false, 0));
 
-	G4VSolid* SD2_Strip_solid_v  = new G4Box("SD2_Strip_solid_v", HypHI_SD2_stripwidth/2., HypHI_SD2_striplength/2., HypHI_SD2_thickness/2.);
-	G4LogicalVolume* SD2_Strip_log_v = new G4LogicalVolume(SD2_Strip_solid_v, Si, "SD2_Strip_log_v", 0, 0, 0);
+        if(Par.IsAvailable("HypHI_SD2_PCB"))
+          AllPlacements.emplace_back(new G4PVPlacement(rotStereoSD2_v, Sign * TransSD2v, SD2v_PCBVol_log,
+                                                       "Silicon2v_PCB", MFLD_log, false, 0));
 
-	//G4LogicalVolume* SD2_Strip_log_y = new G4LogicalVolume(SD2_Strip_solid_y, Si, "SD2_Strip_log_y", 0, 0, 0);
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(0., -0.5 * (HypHI_SD2_striplength + HypHI_SD2_gap), 0.)),
+                              SD2v_MothVol_log_1, "SD2_v1", SD2v_MothVol_log, false, 0));
+        AllPlacements.emplace_back(
+            new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0.5 * (HypHI_SD2_striplength + HypHI_SD2_gap), 0.)),
+                              SD2v_MothVol_log_2, "SD2_v2", SD2v_MothVol_log, false, 0));
 
-	for (G4int idStrip = 0; idStrip < HypHI_SD2_Nch; ++idStrip)
-	  {
-	    G4double posStrip = -HypHI_SD2_Nch*(HypHI_SD2_stripwidth/2.) + HypHI_SD2_stripwidth*(0.5 + idStrip);
+        G4VSolid* SD2_Strip_solid_v      = new G4Box("SD2_Strip_solid_v", HypHI_SD2_stripwidth / 2.,
+                                                HypHI_SD2_striplength / 2., HypHI_SD2_thickness / 2.);
+        G4LogicalVolume* SD2_Strip_log_v = new G4LogicalVolume(SD2_Strip_solid_v, Si, "SD2_Strip_log_v", 0, 0, 0);
 
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip, 0., 0.)), SD2_Strip_log_v, "SD2_Strip_v", SD2v_MothVol_log_1,false,idStrip));
-	    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(posStrip, 0., 0.)), SD2_Strip_log_v, "SD2_Strip_v", SD2v_MothVol_log_2,false,idStrip+2*HypHI_SD2_Nch));
-	  }
+        // G4LogicalVolume* SD2_Strip_log_y = new G4LogicalVolume(SD2_Strip_solid_y, Si, "SD2_Strip_log_y", 0, 0,
+        // 0);
 
-	NameDetectorsSD.push_back(SD2_Strip_log_v->GetName());
-	//NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        for(G4int idStrip = 0; idStrip < HypHI_SD2_Nch; ++idStrip)
+          {
+            G4double posStrip = -HypHI_SD2_Nch * (HypHI_SD2_stripwidth / 2.) + HypHI_SD2_stripwidth * (0.5 + idStrip);
 
-	SD2_Strip_log_v->SetVisAttributes(Si_att);
-	//Si1_Strip_log_y->SetVisAttributes(Si_att);
-	SD2v_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-	SD2v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-	SD2v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(posStrip, 0., 0.)), SD2_Strip_log_v,
+                                                         "SD2_Strip_v", SD2v_MothVol_log_1, false, idStrip));
+            AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(posStrip, 0., 0.)), SD2_Strip_log_v,
+                                                         "SD2_Strip_v", SD2v_MothVol_log_2, false,
+                                                         idStrip + 2 * HypHI_SD2_Nch));
+          }
+
+        NameDetectorsSD.push_back(SD2_Strip_log_v->GetName());
+        // NameDetectorsSD.push_back(Si1_Strip_log_y->GetName());
+        if(!MiniVis)
+          {
+            SD2_Strip_log_v->SetVisAttributes(Si_att);
+            SD2v_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD2_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2v_MothVol_log->SetVisAttributes(Si_att);
+            SD2v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+          }
       }
     }
-
-
 
   // ----------------------------- @@ -----------------------------
   //         Virtual Detectors
@@ -750,43 +912,42 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       const double TR1_posZ = Par.Get<double>("HypHI_TR1_posZ");
       G4VSolid* TR1_box     = nullptr;
       if(Par.IsAvailable("HypHI_BeamHole"))
-	{
-	  G4VSolid* TR1_box_init = new G4Box("TR1_box_init", 15. * cm, 15. * cm, 1. * mm);
-	  G4VSolid* TR1_box_hole = new G4Box("TR1_box", BeamHoleSize * 0.5, BeamHoleSize * 0.5, 1. * mm);
-	  TR1_box                = new G4SubtractionSolid("TR1_box", TR1_box_init, TR1_box_hole);
-	}
+        {
+          G4VSolid* TR1_box_init = new G4Box("TR1_box_init", 15. * cm, 15. * cm, 1. * mm);
+          G4VSolid* TR1_box_hole = new G4Box("TR1_box", BeamHoleSize * 0.5, BeamHoleSize * 0.5, 1. * mm);
+          TR1_box                = new G4SubtractionSolid("TR1_box", TR1_box_init, TR1_box_hole);
+        }
       else
-	TR1_box = new G4Box("TR1_box", 15. * cm, 15. * cm, 1. * mm);
+        TR1_box = new G4Box("TR1_box", 15. * cm, 15. * cm, 1. * mm);
 
       G4LogicalVolume* TR1_log = new G4LogicalVolume(TR1_box, Scinti, "TR1_log", 0, 0, 0);
       AllPlacements.emplace_back(
-				 new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., TR1_posZ + Systematic_shift) - transMFLD_new), TR1_log,
-						   "TR1_phys", MFLD_log, false, 0));
+          new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., TR1_posZ + Systematic_shift) - transMFLD_new), TR1_log,
+                            "TR1_phys", MFLD_log, false, 0));
       NameDetectorsSD.push_back(TR1_log->GetName());
 
       const double TR2_posZ = Par.Get<double>("HypHI_TR2_posZ");
 
       G4VSolid* TR2_box = nullptr;
       if(Par.IsAvailable("HypHI_BeamHole"))
-	{
-	  G4VSolid* TR2_box_init = new G4Box("TR2_box_init", 15. * cm, 15. * cm, 1. * mm);
-	  G4VSolid* TR2_box_hole = new G4Box("TR2_box_hole", BeamHoleSize * 0.5, BeamHoleSize * 0.5, 1. * mm);
-	  TR2_box                = new G4SubtractionSolid("TR2_box", TR2_box_init, TR2_box_hole);
-	}
+        {
+          G4VSolid* TR2_box_init = new G4Box("TR2_box_init", 15. * cm, 15. * cm, 1. * mm);
+          G4VSolid* TR2_box_hole = new G4Box("TR2_box_hole", BeamHoleSize * 0.5, BeamHoleSize * 0.5, 1. * mm);
+          TR2_box                = new G4SubtractionSolid("TR2_box", TR2_box_init, TR2_box_hole);
+        }
       else
-	TR2_box = new G4Box("TR2_box", 15. * cm, 15. * cm, 1. * mm);
+        TR2_box = new G4Box("TR2_box", 15. * cm, 15. * cm, 1. * mm);
 
       G4LogicalVolume* TR2_log = new G4LogicalVolume(TR2_box, Scinti, "TR2_log", 0, 0, 0);
       AllPlacements.emplace_back(
-				 new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., TR2_posZ + Systematic_shift) - transMFLD_new), TR2_log,
-						   "TR2_phys", MFLD_log, false, 0));
+          new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., TR2_posZ + Systematic_shift) - transMFLD_new), TR2_log,
+                            "TR2_phys", MFLD_log, false, 0));
       NameDetectorsSD.push_back(TR2_log->GetName());
     }
 
-
-// ----------------------------- @@ -----------------------------
-// 		     Fiber Detectors
-// ----------------------------- @@ -----------------------------
+  // ----------------------------- @@ -----------------------------
+  // 		     Fiber Detectors
+  // ----------------------------- @@ -----------------------------
   if(Par.IsAvailable("HypHI_FiberTR_On"))
     {
 
@@ -797,18 +958,18 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       const double HypHI_FiberTracker5_posZ = Par.Get<double>("HypHI_FiberTracker5_posZ");
 
       G4RotationMatrix* rotFib1 = new G4RotationMatrix;
-      rotFib1->rotateX(90.*deg);
+      rotFib1->rotateX(90. * deg);
       G4RotationMatrix* rotFib2 = new G4RotationMatrix;
-      rotFib2->rotateX(90.*deg); 
-      rotFib2->rotateY(30.*deg);
+      rotFib2->rotateX(90. * deg);
+      rotFib2->rotateY(30. * deg);
       G4RotationMatrix* rotFib3 = new G4RotationMatrix;
-      rotFib3->rotateX(90.*deg);
-      rotFib3->rotateY(-30.*deg);
+      rotFib3->rotateX(90. * deg);
+      rotFib3->rotateY(-30. * deg);
 
-      const G4double spacingX = 0.55 *mm;
-      const G4double startZ1 = 0.*mm;
-      const G4double startZ2 = 0.47631397*mm;
-      const std::vector<G4double> posZshift = {-4.*mm, 0.*mm, 4.*mm};
+      const G4double spacingX               = 0.55 * mm;
+      const G4double startZ1                = 0. * mm;
+      const G4double startZ2                = 0.47631397 * mm;
+      const std::vector<G4double> posZshift = {-4. * mm, 0. * mm, 4. * mm};
 
       G4ThreeVector posFibX;
       G4ThreeVector posFibUV;
@@ -818,502 +979,836 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4VisAttributes* visAttributes_v = new G4VisAttributes(color_v);
 
       // -------------------------- First Fiber Detector --------------------------
-      G4VSolid* FiberD1_MothVol_solid = new G4Box("FiberDetector1",15.*cm,20.*cm,3.*cm);
-      G4VSolid* FiberD1_layerX_MothVol_solid  = new G4Box("FiberD1_layerX_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD1_layerU_MothVol_solid  = new G4Box("FiberD1_layerU_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD1_layerV_MothVol_solid  = new G4Box("FiberD1_layerV_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4LogicalVolume* FiberD1_MothVol_log = new G4LogicalVolume(FiberD1_MothVol_solid, Air, "FiberD1_log", 0, 0, 0);
-      G4LogicalVolume* FiberD1_MothVol_log_x  = new G4LogicalVolume(FiberD1_layerX_MothVol_solid, Air, "FiberD1_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD1_MothVol_log_u  = new G4LogicalVolume(FiberD1_layerU_MothVol_solid, Air, "FiberD1_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD1_MothVol_log_v  = new G4LogicalVolume(FiberD1_layerV_MothVol_solid, Air, "FiberD1_log_v", 0, 0, 0);
+      G4VSolid* FiberD1_MothVol_solid        = new G4Box("FiberDetector1", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD1_layerX_MothVol_solid = new G4Box("FiberD1_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD1_layerU_MothVol_solid = new G4Box("FiberD1_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD1_layerV_MothVol_solid = new G4Box("FiberD1_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4LogicalVolume* FiberD1_MothVol_log   = new G4LogicalVolume(FiberD1_MothVol_solid, Air, "FiberD1_log", 0, 0, 0);
+      G4LogicalVolume* FiberD1_MothVol_log_x =
+          new G4LogicalVolume(FiberD1_layerX_MothVol_solid, Air, "FiberD1_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD1_MothVol_log_u =
+          new G4LogicalVolume(FiberD1_layerU_MothVol_solid, Air, "FiberD1_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD1_MothVol_log_v =
+          new G4LogicalVolume(FiberD1_layerV_MothVol_solid, Air, "FiberD1_log_v", 0, 0, 0);
 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_FiberTracker1_posZ + Systematic_shift)-transMFLD_new), FiberD1_MothVol_log, "FiberDetector1", MFLD_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[0])), FiberD1_MothVol_log_x, "FiberD1_x", FiberD1_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[1])), FiberD1_MothVol_log_u, "FiberD1_u", FiberD1_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[2])), FiberD1_MothVol_log_v, "FiberD1_v", FiberD1_MothVol_log,false,0)); 	
+      AllPlacements.emplace_back(new G4PVPlacement(
+          0, Sign * (G4ThreeVector(0., 0., HypHI_FiberTracker1_posZ + Systematic_shift) - transMFLD_new),
+          FiberD1_MothVol_log, "FiberDetector1", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[0])),
+                                                   FiberD1_MothVol_log_x, "FiberD1_x", FiberD1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[1])),
+                                                   FiberD1_MothVol_log_u, "FiberD1_u", FiberD1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[2])),
+                                                   FiberD1_MothVol_log_v, "FiberD1_v", FiberD1_MothVol_log, false, 0));
 
-      const std::vector<G4double> FD1_startX1 = {-70.125*mm, -39.325*mm, -4.125*mm,  31.075*mm};
-      const std::vector<G4double> FD1_startX2 = {-69.85*mm,  -30.25*mm,   4.95*mm,   40.15*mm };
+      const std::vector<G4double> FD1_startX1        = {-70.125 * mm, -39.325 * mm, -4.125 * mm, 31.075 * mm};
+      const std::vector<G4double> FD1_startX2        = {-69.85 * mm, -30.25 * mm, 4.95 * mm, 40.15 * mm};
       const std::vector<G4double> numFibersTopLayer1 = {56, 64, 64, 72};
 
-      G4VSolid* FiberD1_Core_solid_x = new G4Tubs("FiberD1_Core_solid_x",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD1_Core_solid_u = new G4Tubs("FiberD1_Core_solid_u",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD1_Core_solid_v = new G4Tubs("FiberD1_Core_solid_v",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD1_Core_log_x = new G4LogicalVolume(FiberD1_Core_solid_x,FiberCoreScinti, "FiberD1_Core_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD1_Core_log_u = new G4LogicalVolume(FiberD1_Core_solid_u,FiberCoreScinti, "FiberD1_Core_log_u", 0, 0, 0);	
-      G4LogicalVolume* FiberD1_Core_log_v = new G4LogicalVolume(FiberD1_Core_solid_v,FiberCoreScinti, "FiberD1_Core_log_v", 0, 0, 0);	
+      G4VSolid* FiberD1_Core_solid_x =
+          new G4Tubs("FiberD1_Core_solid_x", 0, 0.24 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD1_Core_solid_u =
+          new G4Tubs("FiberD1_Core_solid_u", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD1_Core_solid_v =
+          new G4Tubs("FiberD1_Core_solid_v", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD1_Core_log_x =
+          new G4LogicalVolume(FiberD1_Core_solid_x, FiberCoreScinti, "FiberD1_Core_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD1_Core_log_u =
+          new G4LogicalVolume(FiberD1_Core_solid_u, FiberCoreScinti, "FiberD1_Core_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD1_Core_log_v =
+          new G4LogicalVolume(FiberD1_Core_solid_v, FiberCoreScinti, "FiberD1_Core_log_v", 0, 0, 0);
 
-      G4VSolid* FiberD1_Cladding_solid_x = new G4Tubs("FiberD1_Cladding_solid_x",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD1_Cladding_solid_u = new G4Tubs("FiberD1_Cladding_solid_u",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD1_Cladding_solid_v = new G4Tubs("FiberD1_Cladding_solid_v",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD1_Cladding_log_x = new G4LogicalVolume(FiberD1_Cladding_solid_x, Scinti, "FiberD1_Cladding_log_x", 0, 0, 0);	
-      G4LogicalVolume* FiberD1_Cladding_log_u = new G4LogicalVolume(FiberD1_Cladding_solid_u, Scinti, "FiberD1_Cladding_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD1_Cladding_log_v = new G4LogicalVolume(FiberD1_Cladding_solid_v, Scinti, "FiberD1_Cladding_log_v", 0, 0, 0);
+      G4VSolid* FiberD1_Cladding_solid_x =
+          new G4Tubs("FiberD1_Cladding_solid_x", 0.24 * mm, 0.25 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD1_Cladding_solid_u =
+          new G4Tubs("FiberD1_Cladding_solid_u", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD1_Cladding_solid_v =
+          new G4Tubs("FiberD1_Cladding_solid_v", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD1_Cladding_log_x =
+          new G4LogicalVolume(FiberD1_Cladding_solid_x, Scinti, "FiberD1_Cladding_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD1_Cladding_log_u =
+          new G4LogicalVolume(FiberD1_Cladding_solid_u, Scinti, "FiberD1_Cladding_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD1_Cladding_log_v =
+          new G4LogicalVolume(FiberD1_Cladding_solid_v, Scinti, "FiberD1_Cladding_log_v", 0, 0, 0);
 
-      for(G4int IdReadout = 0 ; IdReadout < 4; ++IdReadout)
-	for(G4int IdFib = 0 ; IdFib < 128; ++IdFib)
-	  {
-	    if(IdFib<numFibersTopLayer1[IdReadout]){
-	      posFibX  = G4ThreeVector(FD1_startX1[IdReadout] + IdFib*spacingX ,0. , -startZ1);
-        posFibUV = G4ThreeVector((FD1_startX1[IdReadout] + IdFib*spacingX)/cos(30.*deg) ,0. , -startZ1);
-      }
-	    else{
-	      posFibX  = G4ThreeVector(FD1_startX2[IdReadout] + (IdFib-numFibersTopLayer1[IdReadout])*spacingX ,0. , -startZ2);
-        posFibUV = G4ThreeVector((FD1_startX2[IdReadout] + (IdFib-numFibersTopLayer1[IdReadout])*spacingX)/cos(30.*deg) ,0. , -startZ2);
-      }
-	      
-	      
-	    AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD1_Cladding_log_x, "FiberD1_Cladding_x", FiberD1_MothVol_log_x,false,IdReadout*128+IdFib)); 
-	    AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD1_Core_log_x, "FiberD1_Core_x", FiberD1_MothVol_log_x,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD1_Cladding_log_u, "FiberD1_Cladding_u", FiberD1_MothVol_log_u,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD1_Core_log_u, "FiberD1_Core_u", FiberD1_MothVol_log_u,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD1_Cladding_log_v, "FiberD1_Cladding_v", FiberD1_MothVol_log_v,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD1_Core_log_v, "FiberD1_Core_v", FiberD1_MothVol_log_v,false,IdReadout*128+IdFib));
-	  }
-	
+      for(G4int IdReadout = 0; IdReadout < 4; ++IdReadout)
+        for(G4int IdFib = 0; IdFib < 128; ++IdFib)
+          {
+            if(IdFib < numFibersTopLayer1[IdReadout])
+              {
+                posFibX  = G4ThreeVector(FD1_startX1[IdReadout] + IdFib * spacingX, 0., -startZ1);
+                posFibUV = G4ThreeVector((FD1_startX1[IdReadout] + IdFib * spacingX) / cos(30. * deg), 0., -startZ1);
+              }
+            else
+              {
+                posFibX = G4ThreeVector(FD1_startX2[IdReadout] + (IdFib - numFibersTopLayer1[IdReadout]) * spacingX, 0.,
+                                        -startZ2);
+                posFibUV = G4ThreeVector((FD1_startX2[IdReadout] + (IdFib - numFibersTopLayer1[IdReadout]) * spacingX) /
+                                             cos(30. * deg),
+                                         0., -startZ2);
+              }
+
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD1_Cladding_log_x,
+                                                         "FiberD1_Cladding_x", FiberD1_MothVol_log_x, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD1_Core_log_x, "FiberD1_Core_x",
+                                                         FiberD1_MothVol_log_x, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD1_Cladding_log_u,
+                                                         "FiberD1_Cladding_u", FiberD1_MothVol_log_u, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD1_Core_log_u, "FiberD1_Core_u",
+                                                         FiberD1_MothVol_log_u, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD1_Cladding_log_v,
+                                                         "FiberD1_Cladding_v", FiberD1_MothVol_log_v, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD1_Core_log_v, "FiberD1_Core_v",
+                                                         FiberD1_MothVol_log_v, false, IdReadout * 128 + IdFib));
+          }
+
       NameDetectorsSD.push_back(FiberD1_Core_log_x->GetName());
       NameDetectorsSD.push_back(FiberD1_Core_log_u->GetName());
       NameDetectorsSD.push_back(FiberD1_Core_log_v->GetName());
-
-      FiberD1_Core_log_x->SetVisAttributes(visAttributes_x);
-      FiberD1_Core_log_u->SetVisAttributes(visAttributes_u);
-      FiberD1_Core_log_v->SetVisAttributes(visAttributes_v);
-      FiberD1_Cladding_log_x->SetVisAttributes(visAttributes_x);
-      FiberD1_Cladding_log_u->SetVisAttributes(visAttributes_u);
-      FiberD1_Cladding_log_v->SetVisAttributes(visAttributes_v);
-      FiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD1_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD1_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-
+      if(!MiniVis)
+        {
+          FiberD1_Core_log_x->SetVisAttributes(visAttributes_x);
+          FiberD1_Core_log_u->SetVisAttributes(visAttributes_u);
+          FiberD1_Core_log_v->SetVisAttributes(visAttributes_v);
+          FiberD1_Cladding_log_x->SetVisAttributes(visAttributes_x);
+          FiberD1_Cladding_log_u->SetVisAttributes(visAttributes_u);
+          FiberD1_Cladding_log_v->SetVisAttributes(visAttributes_v);
+          FiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          FiberD1_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_MothVol_log_x->SetVisAttributes(visAttributes_x);
+          FiberD1_MothVol_log_u->SetVisAttributes(visAttributes_u);
+          FiberD1_MothVol_log_v->SetVisAttributes(visAttributes_v);
+        }
       // -------------------------- Second Fiber Detector --------------------------
-      G4VSolid* FiberD2_MothVol_solid = new G4Box("FiberDetector2",15.*cm,20.*cm,3.*cm);
-      G4VSolid* FiberD2_layerX_MothVol_solid  = new G4Box("FiberD2_layerX_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD2_layerU_MothVol_solid  = new G4Box("FiberD2_layerU_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD2_layerV_MothVol_solid  = new G4Box("FiberD2_layerV_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4LogicalVolume* FiberD2_MothVol_log = new G4LogicalVolume(FiberD2_MothVol_solid, Air, "FiberD2_log", 0, 0, 0);
-      G4LogicalVolume* FiberD2_MothVol_log_x  = new G4LogicalVolume(FiberD2_layerX_MothVol_solid, Air, "FiberD2_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD2_MothVol_log_u  = new G4LogicalVolume(FiberD2_layerU_MothVol_solid, Air, "FiberD2_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD2_MothVol_log_v  = new G4LogicalVolume(FiberD2_layerV_MothVol_solid, Air, "FiberD2_log_v", 0, 0, 0);
+      G4VSolid* FiberD2_MothVol_solid        = new G4Box("FiberDetector2", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD2_layerX_MothVol_solid = new G4Box("FiberD2_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD2_layerU_MothVol_solid = new G4Box("FiberD2_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD2_layerV_MothVol_solid = new G4Box("FiberD2_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4LogicalVolume* FiberD2_MothVol_log   = new G4LogicalVolume(FiberD2_MothVol_solid, Air, "FiberD2_log", 0, 0, 0);
+      G4LogicalVolume* FiberD2_MothVol_log_x =
+          new G4LogicalVolume(FiberD2_layerX_MothVol_solid, Air, "FiberD2_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD2_MothVol_log_u =
+          new G4LogicalVolume(FiberD2_layerU_MothVol_solid, Air, "FiberD2_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD2_MothVol_log_v =
+          new G4LogicalVolume(FiberD2_layerV_MothVol_solid, Air, "FiberD2_log_v", 0, 0, 0);
 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_FiberTracker2_posZ + Systematic_shift)-transMFLD_new), FiberD2_MothVol_log, "FiberDetector2", MFLD_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[0])), FiberD2_MothVol_log_x, "FiberD2_x", FiberD2_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[1])), FiberD2_MothVol_log_u, "FiberD2_u", FiberD2_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[2])), FiberD2_MothVol_log_v, "FiberD2_v", FiberD2_MothVol_log,false,0)); 	
+      AllPlacements.emplace_back(new G4PVPlacement(
+          0, Sign * (G4ThreeVector(0., 0., HypHI_FiberTracker2_posZ + Systematic_shift) - transMFLD_new),
+          FiberD2_MothVol_log, "FiberDetector2", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[0])),
+                                                   FiberD2_MothVol_log_x, "FiberD2_x", FiberD2_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[1])),
+                                                   FiberD2_MothVol_log_u, "FiberD2_u", FiberD2_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[2])),
+                                                   FiberD2_MothVol_log_v, "FiberD2_v", FiberD2_MothVol_log, false, 0));
 
-      const std::vector<G4double> FD2_startX1 = {-70.125*mm, -39.325*mm, -4.125*mm,  31.075*mm};
-      const std::vector<G4double> FD2_startX2 = {-69.85*mm,  -30.25*mm,   4.95*mm,   40.15*mm };
+      const std::vector<G4double> FD2_startX1        = {-70.125 * mm, -39.325 * mm, -4.125 * mm, 31.075 * mm};
+      const std::vector<G4double> FD2_startX2        = {-69.85 * mm, -30.25 * mm, 4.95 * mm, 40.15 * mm};
       const std::vector<G4double> numFibersTopLayer2 = {56, 64, 64, 72};
 
-      G4VSolid* FiberD2_Core_solid_x = new G4Tubs("FiberD2_Core_solid_x",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD2_Core_solid_u = new G4Tubs("FiberD2_Core_solid_u",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD2_Core_solid_v = new G4Tubs("FiberD2_Core_solid_v",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD2_Core_log_x = new G4LogicalVolume(FiberD2_Core_solid_x,FiberCoreScinti, "FiberD2_Core_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD2_Core_log_u = new G4LogicalVolume(FiberD2_Core_solid_u,FiberCoreScinti, "FiberD2_Core_log_u", 0, 0, 0);	
-      G4LogicalVolume* FiberD2_Core_log_v = new G4LogicalVolume(FiberD2_Core_solid_v,FiberCoreScinti, "FiberD2_Core_log_v", 0, 0, 0);	
+      G4VSolid* FiberD2_Core_solid_x =
+          new G4Tubs("FiberD2_Core_solid_x", 0, 0.24 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD2_Core_solid_u =
+          new G4Tubs("FiberD2_Core_solid_u", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD2_Core_solid_v =
+          new G4Tubs("FiberD2_Core_solid_v", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD2_Core_log_x =
+          new G4LogicalVolume(FiberD2_Core_solid_x, FiberCoreScinti, "FiberD2_Core_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD2_Core_log_u =
+          new G4LogicalVolume(FiberD2_Core_solid_u, FiberCoreScinti, "FiberD2_Core_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD2_Core_log_v =
+          new G4LogicalVolume(FiberD2_Core_solid_v, FiberCoreScinti, "FiberD2_Core_log_v", 0, 0, 0);
 
-      G4VSolid* FiberD2_Cladding_solid_x = new G4Tubs("FiberD2_Cladding_solid_x",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD2_Cladding_solid_u = new G4Tubs("FiberD2_Cladding_solid_u",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD2_Cladding_solid_v = new G4Tubs("FiberD2_Cladding_solid_v",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD2_Cladding_log_x = new G4LogicalVolume(FiberD2_Cladding_solid_x, Scinti, "FiberD2_Cladding_log_x", 0, 0, 0);	
-      G4LogicalVolume* FiberD2_Cladding_log_u = new G4LogicalVolume(FiberD2_Cladding_solid_u, Scinti, "FiberD2_Cladding_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD2_Cladding_log_v = new G4LogicalVolume(FiberD2_Cladding_solid_v, Scinti, "FiberD2_Cladding_log_v", 0, 0, 0);
+      G4VSolid* FiberD2_Cladding_solid_x =
+          new G4Tubs("FiberD2_Cladding_solid_x", 0.24 * mm, 0.25 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD2_Cladding_solid_u =
+          new G4Tubs("FiberD2_Cladding_solid_u", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD2_Cladding_solid_v =
+          new G4Tubs("FiberD2_Cladding_solid_v", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD2_Cladding_log_x =
+          new G4LogicalVolume(FiberD2_Cladding_solid_x, Scinti, "FiberD2_Cladding_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD2_Cladding_log_u =
+          new G4LogicalVolume(FiberD2_Cladding_solid_u, Scinti, "FiberD2_Cladding_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD2_Cladding_log_v =
+          new G4LogicalVolume(FiberD2_Cladding_solid_v, Scinti, "FiberD2_Cladding_log_v", 0, 0, 0);
 
-      for(G4int IdReadout = 0 ; IdReadout < 4; ++IdReadout)
-	for(G4int IdFib = 0 ; IdFib < 128; ++IdFib)
-	  {
-      if(IdFib<numFibersTopLayer2[IdReadout]){
-        posFibX  = G4ThreeVector(FD2_startX1[IdReadout] + IdFib*spacingX ,0. , -startZ1);
-        posFibUV = G4ThreeVector((FD2_startX1[IdReadout] + IdFib*spacingX)/cos(30.*deg) ,0. , -startZ1);
-      }
-      else{
-        posFibX  = G4ThreeVector(FD2_startX2[IdReadout] + (IdFib-numFibersTopLayer2[IdReadout])*spacingX ,0. , -startZ2);
-        posFibUV = G4ThreeVector((FD2_startX2[IdReadout] + (IdFib-numFibersTopLayer2[IdReadout])*spacingX)/cos(30.*deg) ,0. , -startZ2);
-      }
-	    
+      for(G4int IdReadout = 0; IdReadout < 4; ++IdReadout)
+        for(G4int IdFib = 0; IdFib < 128; ++IdFib)
+          {
+            if(IdFib < numFibersTopLayer2[IdReadout])
+              {
+                posFibX  = G4ThreeVector(FD2_startX1[IdReadout] + IdFib * spacingX, 0., -startZ1);
+                posFibUV = G4ThreeVector((FD2_startX1[IdReadout] + IdFib * spacingX) / cos(30. * deg), 0., -startZ1);
+              }
+            else
+              {
+                posFibX = G4ThreeVector(FD2_startX2[IdReadout] + (IdFib - numFibersTopLayer2[IdReadout]) * spacingX, 0.,
+                                        -startZ2);
+                posFibUV = G4ThreeVector((FD2_startX2[IdReadout] + (IdFib - numFibersTopLayer2[IdReadout]) * spacingX) /
+                                             cos(30. * deg),
+                                         0., -startZ2);
+              }
 
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD2_Cladding_log_x, "FiberD2_Cladding_x", FiberD2_MothVol_log_x,false,IdReadout*128+IdFib)); 
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD2_Core_log_x, "FiberD2_Core_x", FiberD2_MothVol_log_x,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD2_Cladding_log_u, "FiberD2_Cladding_u", FiberD2_MothVol_log_u,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD2_Core_log_u, "FiberD2_Core_u", FiberD2_MothVol_log_u,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD2_Cladding_log_v, "FiberD2_Cladding_v", FiberD2_MothVol_log_v,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD2_Core_log_v, "FiberD2_Core_v", FiberD2_MothVol_log_v,false,IdReadout*128+IdFib));
-	  }
-	
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD2_Cladding_log_x,
+                                                         "FiberD2_Cladding_x", FiberD2_MothVol_log_x, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD2_Core_log_x, "FiberD2_Core_x",
+                                                         FiberD2_MothVol_log_x, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD2_Cladding_log_u,
+                                                         "FiberD2_Cladding_u", FiberD2_MothVol_log_u, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD2_Core_log_u, "FiberD2_Core_u",
+                                                         FiberD2_MothVol_log_u, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD2_Cladding_log_v,
+                                                         "FiberD2_Cladding_v", FiberD2_MothVol_log_v, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD2_Core_log_v, "FiberD2_Core_v",
+                                                         FiberD2_MothVol_log_v, false, IdReadout * 128 + IdFib));
+          }
+
       NameDetectorsSD.push_back(FiberD2_Core_log_x->GetName());
       NameDetectorsSD.push_back(FiberD2_Core_log_u->GetName());
       NameDetectorsSD.push_back(FiberD2_Core_log_v->GetName());
 
-      FiberD2_Core_log_x->SetVisAttributes(visAttributes_x);
-      FiberD2_Core_log_u->SetVisAttributes(visAttributes_u);
-      FiberD2_Core_log_v->SetVisAttributes(visAttributes_v);
-      FiberD2_Cladding_log_x->SetVisAttributes(visAttributes_x);
-      FiberD2_Cladding_log_u->SetVisAttributes(visAttributes_u);
-      FiberD2_Cladding_log_v->SetVisAttributes(visAttributes_v);
-      FiberD2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD2_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD2_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-
+      if(!MiniVis)
+        {
+          FiberD2_Core_log_x->SetVisAttributes(visAttributes_x);
+          FiberD2_Core_log_u->SetVisAttributes(visAttributes_u);
+          FiberD2_Core_log_v->SetVisAttributes(visAttributes_v);
+          FiberD2_Cladding_log_x->SetVisAttributes(visAttributes_x);
+          FiberD2_Cladding_log_u->SetVisAttributes(visAttributes_u);
+          FiberD2_Cladding_log_v->SetVisAttributes(visAttributes_v);
+          FiberD2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          FiberD2_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_MothVol_log_x->SetVisAttributes(visAttributes_x);
+          FiberD2_MothVol_log_u->SetVisAttributes(visAttributes_u);
+          FiberD2_MothVol_log_v->SetVisAttributes(visAttributes_v);
+        }
 
       // -------------------------- Third Fiber Detector --------------------------
-      G4VSolid* FiberD3_MothVol_solid = new G4Box("FiberDetector3",15.*cm,20.*cm,3.*cm);
-      G4VSolid* FiberD3_layerX_MothVol_solid  = new G4Box("FiberD3_layerX_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD3_layerU_MothVol_solid  = new G4Box("FiberD3_layerU_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD3_layerV_MothVol_solid  = new G4Box("FiberD3_layerV_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4LogicalVolume* FiberD3_MothVol_log = new G4LogicalVolume(FiberD3_MothVol_solid, Air, "FiberD3_log", 0, 0, 0);
-      G4LogicalVolume* FiberD3_MothVol_log_x  = new G4LogicalVolume(FiberD3_layerX_MothVol_solid, Air, "FiberD3_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD3_MothVol_log_u  = new G4LogicalVolume(FiberD3_layerU_MothVol_solid, Air, "FiberD3_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD3_MothVol_log_v  = new G4LogicalVolume(FiberD3_layerV_MothVol_solid, Air, "FiberD3_log_v", 0, 0, 0);
+      G4VSolid* FiberD3_MothVol_solid        = new G4Box("FiberDetector3", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD3_layerX_MothVol_solid = new G4Box("FiberD3_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD3_layerU_MothVol_solid = new G4Box("FiberD3_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD3_layerV_MothVol_solid = new G4Box("FiberD3_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4LogicalVolume* FiberD3_MothVol_log   = new G4LogicalVolume(FiberD3_MothVol_solid, Air, "FiberD3_log", 0, 0, 0);
+      G4LogicalVolume* FiberD3_MothVol_log_x =
+          new G4LogicalVolume(FiberD3_layerX_MothVol_solid, Air, "FiberD3_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD3_MothVol_log_u =
+          new G4LogicalVolume(FiberD3_layerU_MothVol_solid, Air, "FiberD3_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD3_MothVol_log_v =
+          new G4LogicalVolume(FiberD3_layerV_MothVol_solid, Air, "FiberD3_log_v", 0, 0, 0);
 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_FiberTracker3_posZ + Systematic_shift)-transMFLD_new), FiberD3_MothVol_log, "FiberDetector3", MFLD_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[0])), FiberD3_MothVol_log_x, "FiberD3_x", FiberD3_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[1])), FiberD3_MothVol_log_u, "FiberD3_u", FiberD3_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[2])), FiberD3_MothVol_log_v, "FiberD3_v", FiberD3_MothVol_log,false,0)); 	
+      AllPlacements.emplace_back(new G4PVPlacement(
+          0, Sign * (G4ThreeVector(0., 0., HypHI_FiberTracker3_posZ + Systematic_shift) - transMFLD_new),
+          FiberD3_MothVol_log, "FiberDetector3", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[0])),
+                                                   FiberD3_MothVol_log_x, "FiberD3_x", FiberD3_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[1])),
+                                                   FiberD3_MothVol_log_u, "FiberD3_u", FiberD3_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[2])),
+                                                   FiberD3_MothVol_log_v, "FiberD3_v", FiberD3_MothVol_log, false, 0));
 
-      const std::vector<G4double> FD3_startX1 = {-105.325*mm,-74.525*mm ,-39.325*mm, -4.125*mm,  31.075*mm, 66.275*mm};
-      const std::vector<G4double> FD3_startX2 = {-105.05*mm, -65.45*mm,  -30.25*mm,   4.95*mm,   40.15*mm,  75.35*mm};
+      const std::vector<G4double> FD3_startX1        = {-105.325 * mm, -74.525 * mm, -39.325 * mm,
+                                                 -4.125 * mm,   31.075 * mm,  66.275 * mm};
+      const std::vector<G4double> FD3_startX2        = {-105.05 * mm, -65.45 * mm, -30.25 * mm,
+                                                 4.95 * mm,    40.15 * mm,  75.35 * mm};
       const std::vector<G4double> numFibersTopLayer3 = {56, 64, 64, 64, 64, 72};
 
-      G4VSolid* FiberD3_Core_solid_x = new G4Tubs("FiberD3_Core_solid_x",0, 0.24*mm, (1.5*10.5)*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD3_Core_solid_u = new G4Tubs("FiberD3_Core_solid_u",0, 0.24*mm, (1.5*10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD3_Core_solid_v = new G4Tubs("FiberD3_Core_solid_v",0, 0.24*mm, (1.5*10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD3_Core_log_x = new G4LogicalVolume(FiberD3_Core_solid_x,FiberCoreScinti, "FiberD3_Core_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD3_Core_log_u = new G4LogicalVolume(FiberD3_Core_solid_u,FiberCoreScinti, "FiberD3_Core_log_u", 0, 0, 0);	
-      G4LogicalVolume* FiberD3_Core_log_v = new G4LogicalVolume(FiberD3_Core_solid_v,FiberCoreScinti, "FiberD3_Core_log_v", 0, 0, 0);	
+      G4VSolid* FiberD3_Core_solid_x =
+          new G4Tubs("FiberD3_Core_solid_x", 0, 0.24 * mm, (1.5 * 10.5) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD3_Core_solid_u =
+          new G4Tubs("FiberD3_Core_solid_u", 0, 0.24 * mm, (1.5 * 10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD3_Core_solid_v =
+          new G4Tubs("FiberD3_Core_solid_v", 0, 0.24 * mm, (1.5 * 10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD3_Core_log_x =
+          new G4LogicalVolume(FiberD3_Core_solid_x, FiberCoreScinti, "FiberD3_Core_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD3_Core_log_u =
+          new G4LogicalVolume(FiberD3_Core_solid_u, FiberCoreScinti, "FiberD3_Core_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD3_Core_log_v =
+          new G4LogicalVolume(FiberD3_Core_solid_v, FiberCoreScinti, "FiberD3_Core_log_v", 0, 0, 0);
 
-      G4VSolid* FiberD3_Cladding_solid_x = new G4Tubs("FiberD3_Cladding_solid_x",0.24*mm, 0.25*mm, (1.5*10.5)*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD3_Cladding_solid_u = new G4Tubs("FiberD3_Cladding_solid_u",0.24*mm, 0.25*mm, (1.5*10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD3_Cladding_solid_v = new G4Tubs("FiberD3_Cladding_solid_v",0.24*mm, 0.25*mm, (1.5*10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD3_Cladding_log_x = new G4LogicalVolume(FiberD3_Cladding_solid_x, Scinti, "FiberD3_Cladding_log_x", 0, 0, 0);	
-      G4LogicalVolume* FiberD3_Cladding_log_u = new G4LogicalVolume(FiberD3_Cladding_solid_u, Scinti, "FiberD3_Cladding_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD3_Cladding_log_v = new G4LogicalVolume(FiberD3_Cladding_solid_v, Scinti, "FiberD3_Cladding_log_v", 0, 0, 0);
+      G4VSolid* FiberD3_Cladding_solid_x =
+          new G4Tubs("FiberD3_Cladding_solid_x", 0.24 * mm, 0.25 * mm, (1.5 * 10.5) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD3_Cladding_solid_u = new G4Tubs("FiberD3_Cladding_solid_u", 0.24 * mm, 0.25 * mm,
+                                                      (1.5 * 10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD3_Cladding_solid_v = new G4Tubs("FiberD3_Cladding_solid_v", 0.24 * mm, 0.25 * mm,
+                                                      (1.5 * 10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD3_Cladding_log_x =
+          new G4LogicalVolume(FiberD3_Cladding_solid_x, Scinti, "FiberD3_Cladding_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD3_Cladding_log_u =
+          new G4LogicalVolume(FiberD3_Cladding_solid_u, Scinti, "FiberD3_Cladding_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD3_Cladding_log_v =
+          new G4LogicalVolume(FiberD3_Cladding_solid_v, Scinti, "FiberD3_Cladding_log_v", 0, 0, 0);
 
-      for(G4int IdReadout = 0 ; IdReadout < 6; ++IdReadout)
-	for(G4int IdFib = 0 ; IdFib < 128; ++IdFib)
-	  {
-      if(IdFib<numFibersTopLayer3[IdReadout]){
-        posFibX  = G4ThreeVector(FD3_startX1[IdReadout] + IdFib*spacingX ,0. , -startZ1);
-        posFibUV = G4ThreeVector((FD3_startX1[IdReadout] + IdFib*spacingX)/cos(30.*deg) ,0. , -startZ1);
-      }
-      else{
-        posFibX  = G4ThreeVector(FD3_startX2[IdReadout] + (IdFib-numFibersTopLayer3[IdReadout])*spacingX ,0. , -startZ2);
-        posFibUV = G4ThreeVector((FD3_startX2[IdReadout] + (IdFib-numFibersTopLayer3[IdReadout])*spacingX)/cos(30.*deg) ,0. , -startZ2);
-      }
-	    
+      for(G4int IdReadout = 0; IdReadout < 6; ++IdReadout)
+        for(G4int IdFib = 0; IdFib < 128; ++IdFib)
+          {
+            if(IdFib < numFibersTopLayer3[IdReadout])
+              {
+                posFibX  = G4ThreeVector(FD3_startX1[IdReadout] + IdFib * spacingX, 0., -startZ1);
+                posFibUV = G4ThreeVector((FD3_startX1[IdReadout] + IdFib * spacingX) / cos(30. * deg), 0., -startZ1);
+              }
+            else
+              {
+                posFibX = G4ThreeVector(FD3_startX2[IdReadout] + (IdFib - numFibersTopLayer3[IdReadout]) * spacingX, 0.,
+                                        -startZ2);
+                posFibUV = G4ThreeVector((FD3_startX2[IdReadout] + (IdFib - numFibersTopLayer3[IdReadout]) * spacingX) /
+                                             cos(30. * deg),
+                                         0., -startZ2);
+              }
 
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD3_Cladding_log_x, "FiberD3_Cladding_x", FiberD3_MothVol_log_x,false,IdReadout*128+IdFib)); 
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD3_Core_log_x, "FiberD3_Core_x", FiberD3_MothVol_log_x,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD3_Cladding_log_u, "FiberD3_Cladding_u", FiberD3_MothVol_log_u,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD3_Core_log_u, "FiberD3_Core_u", FiberD3_MothVol_log_u,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD3_Cladding_log_v, "FiberD3_Cladding_v", FiberD3_MothVol_log_v,false,IdReadout*128+IdFib));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD3_Core_log_v, "FiberD3_Core_v", FiberD3_MothVol_log_v,false,IdReadout*128+IdFib));
-	  }
-	
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD3_Cladding_log_x,
+                                                         "FiberD3_Cladding_x", FiberD3_MothVol_log_x, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD3_Core_log_x, "FiberD3_Core_x",
+                                                         FiberD3_MothVol_log_x, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD3_Cladding_log_u,
+                                                         "FiberD3_Cladding_u", FiberD3_MothVol_log_u, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD3_Core_log_u, "FiberD3_Core_u",
+                                                         FiberD3_MothVol_log_u, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD3_Cladding_log_v,
+                                                         "FiberD3_Cladding_v", FiberD3_MothVol_log_v, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD3_Core_log_v, "FiberD3_Core_v",
+                                                         FiberD3_MothVol_log_v, false, IdReadout * 128 + IdFib));
+          }
+
       NameDetectorsSD.push_back(FiberD3_Core_log_x->GetName());
       NameDetectorsSD.push_back(FiberD3_Core_log_u->GetName());
       NameDetectorsSD.push_back(FiberD3_Core_log_v->GetName());
 
-      FiberD3_Core_log_x->SetVisAttributes(visAttributes_x);
-      FiberD3_Core_log_u->SetVisAttributes(visAttributes_u);
-      FiberD3_Core_log_v->SetVisAttributes(visAttributes_v);
-      FiberD3_Cladding_log_x->SetVisAttributes(visAttributes_x);
-      FiberD3_Cladding_log_u->SetVisAttributes(visAttributes_u);
-      FiberD3_Cladding_log_v->SetVisAttributes(visAttributes_v);
-      FiberD3_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD3_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD3_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD3_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-
+      if(!MiniVis)
+        {
+          FiberD3_Core_log_x->SetVisAttributes(visAttributes_x);
+          FiberD3_Core_log_u->SetVisAttributes(visAttributes_u);
+          FiberD3_Core_log_v->SetVisAttributes(visAttributes_v);
+          FiberD3_Cladding_log_x->SetVisAttributes(visAttributes_x);
+          FiberD3_Cladding_log_u->SetVisAttributes(visAttributes_u);
+          FiberD3_Cladding_log_v->SetVisAttributes(visAttributes_v);
+          FiberD3_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          FiberD3_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_MothVol_log_x->SetVisAttributes(visAttributes_x);
+          FiberD3_MothVol_log_u->SetVisAttributes(visAttributes_u);
+          FiberD3_MothVol_log_v->SetVisAttributes(visAttributes_v);
+        }
 
       // -------------------------- Fourth Fiber Detector --------------------------
-      G4VSolid* FiberD4_MothVol_solid = new G4Box("FiberDetector4",15.*cm,20.*cm,3.*cm);
-      G4VSolid* FiberD4_layerX_MothVol_solid  = new G4Box("FiberD4_layerX_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD4_layerU_MothVol_solid  = new G4Box("FiberD4_layerU_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD4_layerV_MothVol_solid  = new G4Box("FiberD4_layerV_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4LogicalVolume* FiberD4_MothVol_log = new G4LogicalVolume(FiberD4_MothVol_solid, Air, "FiberD4_log", 0, 0, 0);
-      G4LogicalVolume* FiberD4_MothVol_log_x  = new G4LogicalVolume(FiberD4_layerX_MothVol_solid, Air, "FiberD4_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD4_MothVol_log_u  = new G4LogicalVolume(FiberD4_layerU_MothVol_solid, Air, "FiberD4_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD4_MothVol_log_v  = new G4LogicalVolume(FiberD4_layerV_MothVol_solid, Air, "FiberD4_log_v", 0, 0, 0);
+      G4VSolid* FiberD4_MothVol_solid        = new G4Box("FiberDetector4", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD4_layerX_MothVol_solid = new G4Box("FiberD4_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD4_layerU_MothVol_solid = new G4Box("FiberD4_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD4_layerV_MothVol_solid = new G4Box("FiberD4_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4LogicalVolume* FiberD4_MothVol_log   = new G4LogicalVolume(FiberD4_MothVol_solid, Air, "FiberD4_log", 0, 0, 0);
+      G4LogicalVolume* FiberD4_MothVol_log_x =
+          new G4LogicalVolume(FiberD4_layerX_MothVol_solid, Air, "FiberD4_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD4_MothVol_log_u =
+          new G4LogicalVolume(FiberD4_layerU_MothVol_solid, Air, "FiberD4_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD4_MothVol_log_v =
+          new G4LogicalVolume(FiberD4_layerV_MothVol_solid, Air, "FiberD4_log_v", 0, 0, 0);
 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_FiberTracker4_posZ + Systematic_shift)-transMFLD_new), FiberD4_MothVol_log, "FiberDetector4", MFLD_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[0])), FiberD4_MothVol_log_x, "FiberD4_x", FiberD4_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[1])), FiberD4_MothVol_log_u, "FiberD4_u", FiberD4_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[2])), FiberD4_MothVol_log_v, "FiberD4_v", FiberD4_MothVol_log,false,0)); 	
+      AllPlacements.emplace_back(new G4PVPlacement(
+          0, Sign * (G4ThreeVector(0., 0., HypHI_FiberTracker4_posZ + Systematic_shift) - transMFLD_new),
+          FiberD4_MothVol_log, "FiberDetector4", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[0])),
+                                                   FiberD4_MothVol_log_x, "FiberD4_x", FiberD4_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[1])),
+                                                   FiberD4_MothVol_log_u, "FiberD4_u", FiberD4_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[2])),
+                                                   FiberD4_MothVol_log_v, "FiberD4_v", FiberD4_MothVol_log, false, 0));
 
-      const std::vector<G4double> FD4_startX1 = {-70.125*mm, -39.325*mm, -4.125*mm,  31.075*mm};
-      const std::vector<G4double> FD4_startX2 = {-69.85*mm,  -30.25*mm,   4.95*mm,   40.15*mm };
+      const std::vector<G4double> FD4_startX1        = {-70.125 * mm, -39.325 * mm, -4.125 * mm, 31.075 * mm};
+      const std::vector<G4double> FD4_startX2        = {-69.85 * mm, -30.25 * mm, 4.95 * mm, 40.15 * mm};
       const std::vector<G4double> numFibersTopLayer4 = {56, 64, 64, 72};
 
-      G4VSolid* FiberD4_Core_solid_x = new G4Tubs("FiberD4_Core_solid_x",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD4_Core_solid_u = new G4Tubs("FiberD4_Core_solid_u",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD4_Core_solid_v = new G4Tubs("FiberD4_Core_solid_v",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD4_Core_log_x = new G4LogicalVolume(FiberD4_Core_solid_x,FiberCoreScinti, "FiberD4_Core_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD4_Core_log_u = new G4LogicalVolume(FiberD4_Core_solid_u,FiberCoreScinti, "FiberD4_Core_log_u", 0, 0, 0);	
-      G4LogicalVolume* FiberD4_Core_log_v = new G4LogicalVolume(FiberD4_Core_solid_v,FiberCoreScinti, "FiberD4_Core_log_v", 0, 0, 0);	
+      G4VSolid* FiberD4_Core_solid_x =
+          new G4Tubs("FiberD4_Core_solid_x", 0, 0.24 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD4_Core_solid_u =
+          new G4Tubs("FiberD4_Core_solid_u", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD4_Core_solid_v =
+          new G4Tubs("FiberD4_Core_solid_v", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD4_Core_log_x =
+          new G4LogicalVolume(FiberD4_Core_solid_x, FiberCoreScinti, "FiberD4_Core_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD4_Core_log_u =
+          new G4LogicalVolume(FiberD4_Core_solid_u, FiberCoreScinti, "FiberD4_Core_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD4_Core_log_v =
+          new G4LogicalVolume(FiberD4_Core_solid_v, FiberCoreScinti, "FiberD4_Core_log_v", 0, 0, 0);
 
-      G4VSolid* FiberD4_Cladding_solid_x = new G4Tubs("FiberD4_Cladding_solid_x",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD4_Cladding_solid_u = new G4Tubs("FiberD4_Cladding_solid_u",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD4_Cladding_solid_v = new G4Tubs("FiberD4_Cladding_solid_v",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD4_Cladding_log_x = new G4LogicalVolume(FiberD4_Cladding_solid_x, Scinti, "FiberD4_Cladding_log_x", 0, 0, 0);	
-      G4LogicalVolume* FiberD4_Cladding_log_u = new G4LogicalVolume(FiberD4_Cladding_solid_u, Scinti, "FiberD4_Cladding_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD4_Cladding_log_v = new G4LogicalVolume(FiberD4_Cladding_solid_v, Scinti, "FiberD4_Cladding_log_v", 0, 0, 0);
+      G4VSolid* FiberD4_Cladding_solid_x =
+          new G4Tubs("FiberD4_Cladding_solid_x", 0.24 * mm, 0.25 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD4_Cladding_solid_u =
+          new G4Tubs("FiberD4_Cladding_solid_u", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD4_Cladding_solid_v =
+          new G4Tubs("FiberD4_Cladding_solid_v", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD4_Cladding_log_x =
+          new G4LogicalVolume(FiberD4_Cladding_solid_x, Scinti, "FiberD4_Cladding_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD4_Cladding_log_u =
+          new G4LogicalVolume(FiberD4_Cladding_solid_u, Scinti, "FiberD4_Cladding_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD4_Cladding_log_v =
+          new G4LogicalVolume(FiberD4_Cladding_solid_v, Scinti, "FiberD4_Cladding_log_v", 0, 0, 0);
 
-      for(G4int IdReadout = 0 ; IdReadout < 4; ++IdReadout)
-        for(G4int IdFib = 0 ; IdFib < 128; ++IdFib)
-        {
-          if(IdFib<numFibersTopLayer4[IdReadout]){
-            posFibX  = G4ThreeVector(FD4_startX1[IdReadout] + IdFib*spacingX ,0. , -startZ1);
-            posFibUV = G4ThreeVector((FD4_startX1[IdReadout] + IdFib*spacingX)/cos(30.*deg) ,0. , -startZ1);
+      for(G4int IdReadout = 0; IdReadout < 4; ++IdReadout)
+        for(G4int IdFib = 0; IdFib < 128; ++IdFib)
+          {
+            if(IdFib < numFibersTopLayer4[IdReadout])
+              {
+                posFibX  = G4ThreeVector(FD4_startX1[IdReadout] + IdFib * spacingX, 0., -startZ1);
+                posFibUV = G4ThreeVector((FD4_startX1[IdReadout] + IdFib * spacingX) / cos(30. * deg), 0., -startZ1);
+              }
+            else
+              {
+                posFibX = G4ThreeVector(FD4_startX2[IdReadout] + (IdFib - numFibersTopLayer4[IdReadout]) * spacingX, 0.,
+                                        -startZ2);
+                posFibUV = G4ThreeVector((FD4_startX2[IdReadout] + (IdFib - numFibersTopLayer4[IdReadout]) * spacingX) /
+                                             cos(30. * deg),
+                                         0., -startZ2);
+              }
+
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD4_Cladding_log_x,
+                                                         "FiberD4_Cladding_x", FiberD4_MothVol_log_x, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD4_Core_log_x, "FiberD4_Core_x",
+                                                         FiberD4_MothVol_log_x, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD4_Cladding_log_u,
+                                                         "FiberD4_Cladding_u", FiberD4_MothVol_log_u, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD4_Core_log_u, "FiberD4_Core_u",
+                                                         FiberD4_MothVol_log_u, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD4_Cladding_log_v,
+                                                         "FiberD4_Cladding_v", FiberD4_MothVol_log_v, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD4_Core_log_v, "FiberD4_Core_v",
+                                                         FiberD4_MothVol_log_v, false, IdReadout * 128 + IdFib));
           }
-          else{
-            posFibX  = G4ThreeVector(FD4_startX2[IdReadout] + (IdFib-numFibersTopLayer4[IdReadout])*spacingX ,0. , -startZ2);
-            posFibUV = G4ThreeVector((FD4_startX2[IdReadout] + (IdFib-numFibersTopLayer4[IdReadout])*spacingX)/cos(30.*deg) ,0. , -startZ2);
-          }
-
-
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD4_Cladding_log_x, "FiberD4_Cladding_x", FiberD4_MothVol_log_x,false,IdReadout*128+IdFib)); 
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD4_Core_log_x, "FiberD4_Core_x", FiberD4_MothVol_log_x,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD4_Cladding_log_u, "FiberD4_Cladding_u", FiberD4_MothVol_log_u,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD4_Core_log_u, "FiberD4_Core_u", FiberD4_MothVol_log_u,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD4_Cladding_log_v, "FiberD4_Cladding_v", FiberD4_MothVol_log_v,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD4_Core_log_v, "FiberD4_Core_v", FiberD4_MothVol_log_v,false,IdReadout*128+IdFib));
-        }
 
       NameDetectorsSD.push_back(FiberD4_Core_log_x->GetName());
       NameDetectorsSD.push_back(FiberD4_Core_log_u->GetName());
       NameDetectorsSD.push_back(FiberD4_Core_log_v->GetName());
 
-      FiberD4_Core_log_x->SetVisAttributes(visAttributes_x);
-      FiberD4_Core_log_u->SetVisAttributes(visAttributes_u);
-      FiberD4_Core_log_v->SetVisAttributes(visAttributes_v);
-      FiberD4_Cladding_log_x->SetVisAttributes(visAttributes_x);
-      FiberD4_Cladding_log_u->SetVisAttributes(visAttributes_u);
-      FiberD4_Cladding_log_v->SetVisAttributes(visAttributes_v);
-      FiberD4_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD4_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD4_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD4_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-
+      if(!MiniVis)
+        {
+          FiberD4_Core_log_x->SetVisAttributes(visAttributes_x);
+          FiberD4_Core_log_u->SetVisAttributes(visAttributes_u);
+          FiberD4_Core_log_v->SetVisAttributes(visAttributes_v);
+          FiberD4_Cladding_log_x->SetVisAttributes(visAttributes_x);
+          FiberD4_Cladding_log_u->SetVisAttributes(visAttributes_u);
+          FiberD4_Cladding_log_v->SetVisAttributes(visAttributes_v);
+          FiberD4_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          FiberD4_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_MothVol_log_x->SetVisAttributes(visAttributes_x);
+          FiberD4_MothVol_log_u->SetVisAttributes(visAttributes_u);
+          FiberD4_MothVol_log_v->SetVisAttributes(visAttributes_v);
+        }
 
       // -------------------------- Fifth Fiber Detector --------------------------
-      G4VSolid* FiberD5_MothVol_solid = new G4Box("FiberDetector5",15.*cm,20.*cm,3.*cm);
-      G4VSolid* FiberD5_layerX_MothVol_solid  = new G4Box("FiberD5_layerX_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD5_layerU_MothVol_solid  = new G4Box("FiberD5_layerU_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4VSolid* FiberD5_layerV_MothVol_solid  = new G4Box("FiberD5_layerV_solid", 15.*cm, 20.*cm, 2.*mm);
-      G4LogicalVolume* FiberD5_MothVol_log = new G4LogicalVolume(FiberD5_MothVol_solid, Air, "FiberD5_log", 0, 0, 0);
-      G4LogicalVolume* FiberD5_MothVol_log_x  = new G4LogicalVolume(FiberD5_layerX_MothVol_solid, Air, "FiberD5_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD5_MothVol_log_u  = new G4LogicalVolume(FiberD5_layerU_MothVol_solid, Air, "FiberD5_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD5_MothVol_log_v  = new G4LogicalVolume(FiberD5_layerV_MothVol_solid, Air, "FiberD5_log_v", 0, 0, 0);
+      G4VSolid* FiberD5_MothVol_solid        = new G4Box("FiberDetector5", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD5_layerX_MothVol_solid = new G4Box("FiberD5_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD5_layerU_MothVol_solid = new G4Box("FiberD5_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4VSolid* FiberD5_layerV_MothVol_solid = new G4Box("FiberD5_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
+      G4LogicalVolume* FiberD5_MothVol_log   = new G4LogicalVolume(FiberD5_MothVol_solid, Air, "FiberD5_log", 0, 0, 0);
+      G4LogicalVolume* FiberD5_MothVol_log_x =
+          new G4LogicalVolume(FiberD5_layerX_MothVol_solid, Air, "FiberD5_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD5_MothVol_log_u =
+          new G4LogicalVolume(FiberD5_layerU_MothVol_solid, Air, "FiberD5_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD5_MothVol_log_v =
+          new G4LogicalVolume(FiberD5_layerV_MothVol_solid, Air, "FiberD5_log_v", 0, 0, 0);
 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_FiberTracker5_posZ + Systematic_shift)-transMFLD_new), FiberD5_MothVol_log, "FiberDetector5", MFLD_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[0])), FiberD5_MothVol_log_x, "FiberD5_x", FiberD5_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[1])), FiberD5_MothVol_log_u, "FiberD5_u", FiberD5_MothVol_log,false,0)); 
-      AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , posZshift[2])), FiberD5_MothVol_log_v, "FiberD5_v", FiberD5_MothVol_log,false,0)); 	
+      AllPlacements.emplace_back(new G4PVPlacement(
+          0, Sign * (G4ThreeVector(0., 0., HypHI_FiberTracker5_posZ + Systematic_shift) - transMFLD_new),
+          FiberD5_MothVol_log, "FiberDetector5", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[0])),
+                                                   FiberD5_MothVol_log_x, "FiberD5_x", FiberD5_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[1])),
+                                                   FiberD5_MothVol_log_u, "FiberD5_u", FiberD5_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., posZshift[2])),
+                                                   FiberD5_MothVol_log_v, "FiberD5_v", FiberD5_MothVol_log, false, 0));
 
-      const std::vector<G4double> FD5_startX1 = {-70.125*mm, -39.325*mm, -4.125*mm,  31.075*mm};
-      const std::vector<G4double> FD5_startX2 = {-69.85*mm,  -30.25*mm,   4.95*mm,   40.15*mm };
+      const std::vector<G4double> FD5_startX1        = {-70.125 * mm, -39.325 * mm, -4.125 * mm, 31.075 * mm};
+      const std::vector<G4double> FD5_startX2        = {-69.85 * mm, -30.25 * mm, 4.95 * mm, 40.15 * mm};
       const std::vector<G4double> numFibersTopLayer5 = {56, 64, 64, 72};
 
-      G4VSolid* FiberD5_Core_solid_x = new G4Tubs("FiberD5_Core_solid_x",0, 0.24*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD5_Core_solid_u = new G4Tubs("FiberD5_Core_solid_u",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD5_Core_solid_v = new G4Tubs("FiberD5_Core_solid_v",0, 0.24*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD5_Core_log_x = new G4LogicalVolume(FiberD5_Core_solid_x,FiberCoreScinti, "FiberD5_Core_log_x", 0, 0, 0);
-      G4LogicalVolume* FiberD5_Core_log_u = new G4LogicalVolume(FiberD5_Core_solid_u,FiberCoreScinti, "FiberD5_Core_log_u", 0, 0, 0);	
-      G4LogicalVolume* FiberD5_Core_log_v = new G4LogicalVolume(FiberD5_Core_solid_v,FiberCoreScinti, "FiberD5_Core_log_v", 0, 0, 0);	
+      G4VSolid* FiberD5_Core_solid_x =
+          new G4Tubs("FiberD5_Core_solid_x", 0, 0.24 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD5_Core_solid_u =
+          new G4Tubs("FiberD5_Core_solid_u", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD5_Core_solid_v =
+          new G4Tubs("FiberD5_Core_solid_v", 0, 0.24 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD5_Core_log_x =
+          new G4LogicalVolume(FiberD5_Core_solid_x, FiberCoreScinti, "FiberD5_Core_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD5_Core_log_u =
+          new G4LogicalVolume(FiberD5_Core_solid_u, FiberCoreScinti, "FiberD5_Core_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD5_Core_log_v =
+          new G4LogicalVolume(FiberD5_Core_solid_v, FiberCoreScinti, "FiberD5_Core_log_v", 0, 0, 0);
 
-      G4VSolid* FiberD5_Cladding_solid_x = new G4Tubs("FiberD5_Cladding_solid_x",0.24*mm, 0.25*mm, 10.5*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD5_Cladding_solid_u = new G4Tubs("FiberD5_Cladding_solid_u",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4VSolid* FiberD5_Cladding_solid_v = new G4Tubs("FiberD5_Cladding_solid_v",0.24*mm, 0.25*mm, (10.5/sqrt(3)*2 )*cm, 0.*deg, 360.*deg);
-      G4LogicalVolume* FiberD5_Cladding_log_x = new G4LogicalVolume(FiberD5_Cladding_solid_x, Scinti, "FiberD5_Cladding_log_x", 0, 0, 0);	
-      G4LogicalVolume* FiberD5_Cladding_log_u = new G4LogicalVolume(FiberD5_Cladding_solid_u, Scinti, "FiberD5_Cladding_log_u", 0, 0, 0);
-      G4LogicalVolume* FiberD5_Cladding_log_v = new G4LogicalVolume(FiberD5_Cladding_solid_v, Scinti, "FiberD5_Cladding_log_v", 0, 0, 0);
+      G4VSolid* FiberD5_Cladding_solid_x =
+          new G4Tubs("FiberD5_Cladding_solid_x", 0.24 * mm, 0.25 * mm, 10.5 * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD5_Cladding_solid_u =
+          new G4Tubs("FiberD5_Cladding_solid_u", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4VSolid* FiberD5_Cladding_solid_v =
+          new G4Tubs("FiberD5_Cladding_solid_v", 0.24 * mm, 0.25 * mm, (10.5 / sqrt(3) * 2) * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* FiberD5_Cladding_log_x =
+          new G4LogicalVolume(FiberD5_Cladding_solid_x, Scinti, "FiberD5_Cladding_log_x", 0, 0, 0);
+      G4LogicalVolume* FiberD5_Cladding_log_u =
+          new G4LogicalVolume(FiberD5_Cladding_solid_u, Scinti, "FiberD5_Cladding_log_u", 0, 0, 0);
+      G4LogicalVolume* FiberD5_Cladding_log_v =
+          new G4LogicalVolume(FiberD5_Cladding_solid_v, Scinti, "FiberD5_Cladding_log_v", 0, 0, 0);
 
-      for(G4int IdReadout = 0 ; IdReadout < 4; ++IdReadout)
-        for(G4int IdFib = 0 ; IdFib < 128; ++IdFib)
-        {
-          if(IdFib<numFibersTopLayer5[IdReadout]){
-            posFibX  = G4ThreeVector(FD5_startX1[IdReadout] + IdFib*spacingX ,0. , -startZ1);
-            posFibUV = G4ThreeVector((FD5_startX1[IdReadout] + IdFib*spacingX)/cos(30.*deg) ,0. , -startZ1);
+      for(G4int IdReadout = 0; IdReadout < 4; ++IdReadout)
+        for(G4int IdFib = 0; IdFib < 128; ++IdFib)
+          {
+            if(IdFib < numFibersTopLayer5[IdReadout])
+              {
+                posFibX  = G4ThreeVector(FD5_startX1[IdReadout] + IdFib * spacingX, 0., -startZ1);
+                posFibUV = G4ThreeVector((FD5_startX1[IdReadout] + IdFib * spacingX) / cos(30. * deg), 0., -startZ1);
+              }
+            else
+              {
+                posFibX = G4ThreeVector(FD5_startX2[IdReadout] + (IdFib - numFibersTopLayer5[IdReadout]) * spacingX, 0.,
+                                        -startZ2);
+                posFibUV = G4ThreeVector((FD5_startX2[IdReadout] + (IdFib - numFibersTopLayer5[IdReadout]) * spacingX) /
+                                             cos(30. * deg),
+                                         0., -startZ2);
+              }
+
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD5_Cladding_log_x,
+                                                         "FiberD5_Cladding_x", FiberD5_MothVol_log_x, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFibX, FiberD5_Core_log_x, "FiberD5_Core_x",
+                                                         FiberD5_MothVol_log_x, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD5_Cladding_log_u,
+                                                         "FiberD5_Cladding_u", FiberD5_MothVol_log_u, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib2, Sign * posFibUV, FiberD5_Core_log_u, "FiberD5_Core_u",
+                                                         FiberD5_MothVol_log_u, false, IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD5_Cladding_log_v,
+                                                         "FiberD5_Cladding_v", FiberD5_MothVol_log_v, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib3, Sign * posFibUV, FiberD5_Core_log_v, "FiberD5_Core_v",
+                                                         FiberD5_MothVol_log_v, false, IdReadout * 128 + IdFib));
           }
-          else{
-            posFibX  = G4ThreeVector(FD5_startX2[IdReadout] + (IdFib-numFibersTopLayer5[IdReadout])*spacingX ,0. , -startZ2);
-            posFibUV = G4ThreeVector((FD5_startX2[IdReadout] + (IdFib-numFibersTopLayer5[IdReadout])*spacingX)/cos(30.*deg) ,0. , -startZ2);
-          }
-
-
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD5_Cladding_log_x, "FiberD5_Cladding_x", FiberD5_MothVol_log_x,false,IdReadout*128+IdFib)); 
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFibX , FiberD5_Core_log_x, "FiberD5_Core_x", FiberD5_MothVol_log_x,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD5_Cladding_log_u, "FiberD5_Cladding_u", FiberD5_MothVol_log_u,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib2,Sign*posFibUV, FiberD5_Core_log_u, "FiberD5_Core_u", FiberD5_MothVol_log_u,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD5_Cladding_log_v, "FiberD5_Cladding_v", FiberD5_MothVol_log_v,false,IdReadout*128+IdFib));
-          AllPlacements.emplace_back(new G4PVPlacement(rotFib3,Sign*posFibUV, FiberD5_Core_log_v, "FiberD5_Core_v", FiberD5_MothVol_log_v,false,IdReadout*128+IdFib));
-        }
 
       NameDetectorsSD.push_back(FiberD5_Core_log_x->GetName());
       NameDetectorsSD.push_back(FiberD5_Core_log_u->GetName());
       NameDetectorsSD.push_back(FiberD5_Core_log_v->GetName());
 
-      FiberD5_Core_log_x->SetVisAttributes(visAttributes_x);
-      FiberD5_Core_log_u->SetVisAttributes(visAttributes_u);
-      FiberD5_Core_log_v->SetVisAttributes(visAttributes_v);
-      FiberD5_Cladding_log_x->SetVisAttributes(visAttributes_x);
-      FiberD5_Cladding_log_u->SetVisAttributes(visAttributes_u);
-      FiberD5_Cladding_log_v->SetVisAttributes(visAttributes_v);
-      FiberD5_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD5_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD5_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-      FiberD5_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-
-
+      if(!MiniVis)
+        {
+          FiberD5_Core_log_x->SetVisAttributes(visAttributes_x);
+          FiberD5_Core_log_u->SetVisAttributes(visAttributes_u);
+          FiberD5_Core_log_v->SetVisAttributes(visAttributes_v);
+          FiberD5_Cladding_log_x->SetVisAttributes(visAttributes_x);
+          FiberD5_Cladding_log_u->SetVisAttributes(visAttributes_u);
+          FiberD5_Cladding_log_v->SetVisAttributes(visAttributes_v);
+          FiberD5_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          FiberD5_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_MothVol_log_x->SetVisAttributes(visAttributes_x);
+          FiberD5_MothVol_log_u->SetVisAttributes(visAttributes_u);
+          FiberD5_MothVol_log_v->SetVisAttributes(visAttributes_v);
+        }
     }
-// ----------------------------- @@ -----------------------------
-// ----------------------------- @@ -----------------------------
+  // ----------------------------- @@ -----------------------------
+  // ----------------------------- @@ -----------------------------
 
-
-// ----------------------------- @@ -----------------------------
-// Mini Fiber Detector
-// ----------------------------- @@ -----------------------------
+  // ----------------------------- @@ -----------------------------
+  // Mini Fiber Detector
+  // ----------------------------- @@ -----------------------------
 
   if(Par.IsAvailable("HypHI_MiniFiberTR_On"))
-  {
+    {
 
-    const double HypHI_MiniFiberTracker1_posZ = Par.Get<double>("HypHI_MiniFiberTracker1_posZ");
+      const double HypHI_MiniFiberTracker1_posZ = Par.Get<double>("HypHI_MiniFiberTracker1_posZ");
 
-    G4RotationMatrix* rotFibM1 = new G4RotationMatrix;
-    rotFibM1->rotateZ(0.*deg);
-    G4RotationMatrix* rotFibM2 = new G4RotationMatrix;
-    rotFibM2->rotateZ(120.*deg);
-    G4RotationMatrix* rotFibM3 = new G4RotationMatrix;
-    rotFibM3->rotateZ(-120.*deg);
+      G4RotationMatrix* rotFibM1 = new G4RotationMatrix;
+      rotFibM1->rotateZ(0. * deg);
+      G4RotationMatrix* rotFibM2 = new G4RotationMatrix;
+      rotFibM2->rotateZ(120. * deg);
+      G4RotationMatrix* rotFibM3 = new G4RotationMatrix;
+      rotFibM3->rotateZ(-120. * deg);
 
-    G4RotationMatrix* rotFib1 = new G4RotationMatrix;
-    rotFib1->rotateX(90.*deg);
-    G4RotationMatrix* rotFib2 = new G4RotationMatrix;
-    rotFib2->rotateX(90.*deg);
-    rotFib2->rotateY(120.*deg);
-    G4RotationMatrix* rotFib3 = new G4RotationMatrix;
-    rotFib3->rotateX(90.*deg);
-    rotFib3->rotateY(-120.*deg);
+      G4RotationMatrix* rotFib1 = new G4RotationMatrix;
+      rotFib1->rotateX(90. * deg);
+      G4RotationMatrix* rotFib2 = new G4RotationMatrix;
+      rotFib2->rotateX(90. * deg);
+      rotFib2->rotateY(120. * deg);
+      G4RotationMatrix* rotFib3 = new G4RotationMatrix;
+      rotFib3->rotateX(90. * deg);
+      rotFib3->rotateY(-120. * deg);
 
-    const G4double spacingX = 0.55 *mm;
-    const G4double startZ1 = 0.*mm;
-    const G4double startZ2 = 0.47631397*mm;
-    const std::vector<G4double> posZshift = {-24.*mm, -20.*mm, -16.*mm, 16.*mm, 20.*mm, 24.*mm};
+      const G4double spacingX               = 0.55 * mm;
+      const G4double startZ1                = 0. * mm;
+      const G4double startZ2                = 0.47631397 * mm;
+      const std::vector<G4double> posZshift = {-24. * mm, -20. * mm, -16. * mm, 16. * mm, 20. * mm, 24. * mm};
 
-    G4ThreeVector posFib;
+      G4ThreeVector posFib;
 
-    G4VisAttributes* visAttributes_x = new G4VisAttributes(color_x);
-    G4VisAttributes* visAttributes_u = new G4VisAttributes(color_u);
-    G4VisAttributes* visAttributes_v = new G4VisAttributes(color_v);
+      G4VisAttributes* visAttributes_x = new G4VisAttributes(color_x);
+      G4VisAttributes* visAttributes_u = new G4VisAttributes(color_u);
+      G4VisAttributes* visAttributes_v = new G4VisAttributes(color_v);
 
-    // -------------------------- First Fiber Detector --------------------------
-    G4VSolid* MiniFiberD1_MothVol_solid = new G4Box("MiniFiberDetector1",30.*cm,30.*cm,3.*cm);
-    G4VSolid* MiniFiberD1_layerX1_MothVol_solid  = new G4Box("MiniFiberD1_layerX1_solid", 20.*cm, 20.*cm, 2.*mm);
-    G4VSolid* MiniFiberD1_layerU1_MothVol_solid  = new G4Box("MiniFiberD1_layerU1_solid", 20.*cm, 20.*cm, 2.*mm);
-    G4VSolid* MiniFiberD1_layerV1_MothVol_solid  = new G4Box("MiniFiberD1_layerV1_solid", 20.*cm, 20.*cm, 2.*mm);
-    G4VSolid* MiniFiberD1_layerX2_MothVol_solid  = new G4Box("MiniFiberD1_layerX2_solid", 20.*cm, 20.*cm, 2.*mm);
-    G4VSolid* MiniFiberD1_layerU2_MothVol_solid  = new G4Box("MiniFiberD1_layerU2_solid", 20.*cm, 20.*cm, 2.*mm);
-    G4VSolid* MiniFiberD1_layerV2_MothVol_solid  = new G4Box("MiniFiberD1_layerV2_solid", 20.*cm, 20.*cm, 2.*mm);
-    G4LogicalVolume* MiniFiberD1_MothVol_log = new G4LogicalVolume(MiniFiberD1_MothVol_solid, Air, "MiniFiberD1_log", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_MothVol_log_x1  = new G4LogicalVolume(MiniFiberD1_layerX1_MothVol_solid, Air, "MiniFiberD1_log_x1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_MothVol_log_u1  = new G4LogicalVolume(MiniFiberD1_layerU1_MothVol_solid, Air, "MiniFiberD1_log_u1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_MothVol_log_v1  = new G4LogicalVolume(MiniFiberD1_layerV1_MothVol_solid, Air, "MiniFiberD1_log_v1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_MothVol_log_x2  = new G4LogicalVolume(MiniFiberD1_layerX2_MothVol_solid, Air, "MiniFiberD1_log_x2", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_MothVol_log_u2  = new G4LogicalVolume(MiniFiberD1_layerU2_MothVol_solid, Air, "MiniFiberD1_log_u2", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_MothVol_log_v2  = new G4LogicalVolume(MiniFiberD1_layerV2_MothVol_solid, Air, "MiniFiberD1_log_v2", 0, 0, 0);
+      // -------------------------- First Fiber Detector --------------------------
+      G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 30. * cm, 30. * cm, 3. * cm);
+      G4VSolid* MiniFiberD1_layerX1_MothVol_solid = new G4Box("MiniFiberD1_layerX1_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4VSolid* MiniFiberD1_layerU1_MothVol_solid = new G4Box("MiniFiberD1_layerU1_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4VSolid* MiniFiberD1_layerV1_MothVol_solid = new G4Box("MiniFiberD1_layerV1_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4VSolid* MiniFiberD1_layerX2_MothVol_solid = new G4Box("MiniFiberD1_layerX2_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4VSolid* MiniFiberD1_layerU2_MothVol_solid = new G4Box("MiniFiberD1_layerU2_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4VSolid* MiniFiberD1_layerV2_MothVol_solid = new G4Box("MiniFiberD1_layerV2_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4LogicalVolume* MiniFiberD1_MothVol_log =
+          new G4LogicalVolume(MiniFiberD1_MothVol_solid, Air, "MiniFiberD1_log", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_MothVol_log_x1 =
+          new G4LogicalVolume(MiniFiberD1_layerX1_MothVol_solid, Air, "MiniFiberD1_log_x1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_MothVol_log_u1 =
+          new G4LogicalVolume(MiniFiberD1_layerU1_MothVol_solid, Air, "MiniFiberD1_log_u1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_MothVol_log_v1 =
+          new G4LogicalVolume(MiniFiberD1_layerV1_MothVol_solid, Air, "MiniFiberD1_log_v1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_MothVol_log_x2 =
+          new G4LogicalVolume(MiniFiberD1_layerX2_MothVol_solid, Air, "MiniFiberD1_log_x2", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_MothVol_log_u2 =
+          new G4LogicalVolume(MiniFiberD1_layerU2_MothVol_solid, Air, "MiniFiberD1_log_u2", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_MothVol_log_v2 =
+          new G4LogicalVolume(MiniFiberD1_layerV2_MothVol_solid, Air, "MiniFiberD1_log_v2", 0, 0, 0);
 
-    AllPlacements.emplace_back(new G4PVPlacement(0,Sign*(G4ThreeVector(0. ,0. , HypHI_MiniFiberTracker1_posZ + Systematic_shift)-transMFLD_new), MiniFiberD1_MothVol_log, "MiniFiberDetector1", MFLD_log,false,0));
-    AllPlacements.emplace_back(new G4PVPlacement(rotFibM1,Sign*(G4ThreeVector(0. ,0. , posZshift[0])), MiniFiberD1_MothVol_log_x1, "MiniFiberD1_x1", MiniFiberD1_MothVol_log,false,0));
-    AllPlacements.emplace_back(new G4PVPlacement(rotFibM2,Sign*(G4ThreeVector(0. ,0. , posZshift[1])), MiniFiberD1_MothVol_log_u1, "MiniFiberD1_u1", MiniFiberD1_MothVol_log,false,0));
-    AllPlacements.emplace_back(new G4PVPlacement(rotFibM3,Sign*(G4ThreeVector(0. ,0. , posZshift[2])), MiniFiberD1_MothVol_log_v1, "MiniFiberD1_v1", MiniFiberD1_MothVol_log,false,0));
-    AllPlacements.emplace_back(new G4PVPlacement(rotFibM1,Sign*(G4ThreeVector(0. ,0. , posZshift[3])), MiniFiberD1_MothVol_log_x2, "MiniFiberD1_x2", MiniFiberD1_MothVol_log,false,0));
-    AllPlacements.emplace_back(new G4PVPlacement(rotFibM2,Sign*(G4ThreeVector(0. ,0. , posZshift[4])), MiniFiberD1_MothVol_log_u2, "MiniFiberD1_u2", MiniFiberD1_MothVol_log,false,0));
-    AllPlacements.emplace_back(new G4PVPlacement(rotFibM3,Sign*(G4ThreeVector(0. ,0. , posZshift[5])), MiniFiberD1_MothVol_log_v2, "MiniFiberD1_v2", MiniFiberD1_MothVol_log,false,0));
+      AllPlacements.emplace_back(new G4PVPlacement(
+          0, Sign * (G4ThreeVector(0., 0., HypHI_MiniFiberTracker1_posZ + Systematic_shift) - transMFLD_new),
+          MiniFiberD1_MothVol_log, "MiniFiberDetector1", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM1, Sign * (G4ThreeVector(0., 0., posZshift[0])),
+                                                   MiniFiberD1_MothVol_log_x1, "MiniFiberD1_x1",
+                                                   MiniFiberD1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM2, Sign * (G4ThreeVector(0., 0., posZshift[1])),
+                                                   MiniFiberD1_MothVol_log_u1, "MiniFiberD1_u1",
+                                                   MiniFiberD1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM3, Sign * (G4ThreeVector(0., 0., posZshift[2])),
+                                                   MiniFiberD1_MothVol_log_v1, "MiniFiberD1_v1",
+                                                   MiniFiberD1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM1, Sign * (G4ThreeVector(0., 0., posZshift[3])),
+                                                   MiniFiberD1_MothVol_log_x2, "MiniFiberD1_x2",
+                                                   MiniFiberD1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM2, Sign * (G4ThreeVector(0., 0., posZshift[4])),
+                                                   MiniFiberD1_MothVol_log_u2, "MiniFiberD1_u2",
+                                                   MiniFiberD1_MothVol_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM3, Sign * (G4ThreeVector(0., 0., posZshift[5])),
+                                                   MiniFiberD1_MothVol_log_v2, "MiniFiberD1_v2",
+                                                   MiniFiberD1_MothVol_log, false, 0));
 
-    const std::vector<G4double> FD1_startX1 = {-82.312*mm, -51.512*mm, 12.688*mm,  43.488*mm};
-    const std::vector<G4double> FD1_startX2 = {-82.037*mm, -42.437*mm, 12.963*mm,  52.563*mm };
-    const std::vector<G4double> numMiniFibersTopLayer1 = {56, 72, 56, 72};
+      const std::vector<G4double> FD1_startX1            = {-82.312 * mm, -51.512 * mm, 12.688 * mm, 43.488 * mm};
+      const std::vector<G4double> FD1_startX2            = {-82.037 * mm, -42.437 * mm, 12.963 * mm, 52.563 * mm};
+      const std::vector<G4double> numMiniFibersTopLayer1 = {56, 72, 56, 72};
 
-    G4VSolid* MiniFiberD1_Core_solid_x1 = new G4Tubs("MiniFiberD1_Core_solid_x1",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_u1 = new G4Tubs("MiniFiberD1_Core_solid_u1",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_v1 = new G4Tubs("MiniFiberD1_Core_solid_v1",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_x2 = new G4Tubs("MiniFiberD1_Core_solid_x2",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_u2 = new G4Tubs("MiniFiberD1_Core_solid_u2",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Core_solid_v2 = new G4Tubs("MiniFiberD1_Core_solid_v2",0, 0.24*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4LogicalVolume* MiniFiberD1_Core_log_x1 = new G4LogicalVolume(MiniFiberD1_Core_solid_x1,FiberCoreScinti, "MiniFiberD1_Core_log_x1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Core_log_u1 = new G4LogicalVolume(MiniFiberD1_Core_solid_u1,FiberCoreScinti, "MiniFiberD1_Core_log_u1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Core_log_v1 = new G4LogicalVolume(MiniFiberD1_Core_solid_v1,FiberCoreScinti, "MiniFiberD1_Core_log_v1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Core_log_x2 = new G4LogicalVolume(MiniFiberD1_Core_solid_x2,FiberCoreScinti, "MiniFiberD1_Core_log_x2", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Core_log_u2 = new G4LogicalVolume(MiniFiberD1_Core_solid_u2,FiberCoreScinti, "MiniFiberD1_Core_log_u2", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Core_log_v2 = new G4LogicalVolume(MiniFiberD1_Core_solid_v2,FiberCoreScinti, "MiniFiberD1_Core_log_v2", 0, 0, 0);
+      G4VSolid* MiniFiberD1_Core_solid_x1 =
+          new G4Tubs("MiniFiberD1_Core_solid_x1", 0, 0.24 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Core_solid_u1 =
+          new G4Tubs("MiniFiberD1_Core_solid_u1", 0, 0.24 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Core_solid_v1 =
+          new G4Tubs("MiniFiberD1_Core_solid_v1", 0, 0.24 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Core_solid_x2 =
+          new G4Tubs("MiniFiberD1_Core_solid_x2", 0, 0.24 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Core_solid_u2 =
+          new G4Tubs("MiniFiberD1_Core_solid_u2", 0, 0.24 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Core_solid_v2 =
+          new G4Tubs("MiniFiberD1_Core_solid_v2", 0, 0.24 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* MiniFiberD1_Core_log_x1 =
+          new G4LogicalVolume(MiniFiberD1_Core_solid_x1, FiberCoreScinti, "MiniFiberD1_Core_log_x1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Core_log_u1 =
+          new G4LogicalVolume(MiniFiberD1_Core_solid_u1, FiberCoreScinti, "MiniFiberD1_Core_log_u1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Core_log_v1 =
+          new G4LogicalVolume(MiniFiberD1_Core_solid_v1, FiberCoreScinti, "MiniFiberD1_Core_log_v1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Core_log_x2 =
+          new G4LogicalVolume(MiniFiberD1_Core_solid_x2, FiberCoreScinti, "MiniFiberD1_Core_log_x2", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Core_log_u2 =
+          new G4LogicalVolume(MiniFiberD1_Core_solid_u2, FiberCoreScinti, "MiniFiberD1_Core_log_u2", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Core_log_v2 =
+          new G4LogicalVolume(MiniFiberD1_Core_solid_v2, FiberCoreScinti, "MiniFiberD1_Core_log_v2", 0, 0, 0);
 
-    G4VSolid* MiniFiberD1_Cladding_solid_x1 = new G4Tubs("MiniFiberD1_Cladding_solid_x1",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_u1 = new G4Tubs("MiniFiberD1_Cladding_solid_u1",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_v1 = new G4Tubs("MiniFiberD1_Cladding_solid_v1",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_x2 = new G4Tubs("MiniFiberD1_Cladding_solid_x2",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_u2 = new G4Tubs("MiniFiberD1_Cladding_solid_u2",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4VSolid* MiniFiberD1_Cladding_solid_v2 = new G4Tubs("MiniFiberD1_Cladding_solid_v2",0.24*mm, 0.25*mm, 10.0*cm, 0.*deg, 360.*deg);
-    G4LogicalVolume* MiniFiberD1_Cladding_log_x1 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_x1, Scinti, "MiniFiberD1_Cladding_log_x1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Cladding_log_u1 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_u1, Scinti, "MiniFiberD1_Cladding_log_u1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Cladding_log_v1 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_v1, Scinti, "MiniFiberD1_Cladding_log_v1", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Cladding_log_x2 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_x2, Scinti, "MiniFiberD1_Cladding_log_x2", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Cladding_log_u2 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_u2, Scinti, "MiniFiberD1_Cladding_log_u2", 0, 0, 0);
-    G4LogicalVolume* MiniFiberD1_Cladding_log_v2 = new G4LogicalVolume(MiniFiberD1_Cladding_solid_v2, Scinti, "MiniFiberD1_Cladding_log_v2", 0, 0, 0);
+      G4VSolid* MiniFiberD1_Cladding_solid_x1 =
+          new G4Tubs("MiniFiberD1_Cladding_solid_x1", 0.24 * mm, 0.25 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Cladding_solid_u1 =
+          new G4Tubs("MiniFiberD1_Cladding_solid_u1", 0.24 * mm, 0.25 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Cladding_solid_v1 =
+          new G4Tubs("MiniFiberD1_Cladding_solid_v1", 0.24 * mm, 0.25 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Cladding_solid_x2 =
+          new G4Tubs("MiniFiberD1_Cladding_solid_x2", 0.24 * mm, 0.25 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Cladding_solid_u2 =
+          new G4Tubs("MiniFiberD1_Cladding_solid_u2", 0.24 * mm, 0.25 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4VSolid* MiniFiberD1_Cladding_solid_v2 =
+          new G4Tubs("MiniFiberD1_Cladding_solid_v2", 0.24 * mm, 0.25 * mm, 10.0 * cm, 0. * deg, 360. * deg);
+      G4LogicalVolume* MiniFiberD1_Cladding_log_x1 =
+          new G4LogicalVolume(MiniFiberD1_Cladding_solid_x1, Scinti, "MiniFiberD1_Cladding_log_x1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Cladding_log_u1 =
+          new G4LogicalVolume(MiniFiberD1_Cladding_solid_u1, Scinti, "MiniFiberD1_Cladding_log_u1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Cladding_log_v1 =
+          new G4LogicalVolume(MiniFiberD1_Cladding_solid_v1, Scinti, "MiniFiberD1_Cladding_log_v1", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Cladding_log_x2 =
+          new G4LogicalVolume(MiniFiberD1_Cladding_solid_x2, Scinti, "MiniFiberD1_Cladding_log_x2", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Cladding_log_u2 =
+          new G4LogicalVolume(MiniFiberD1_Cladding_solid_u2, Scinti, "MiniFiberD1_Cladding_log_u2", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD1_Cladding_log_v2 =
+          new G4LogicalVolume(MiniFiberD1_Cladding_solid_v2, Scinti, "MiniFiberD1_Cladding_log_v2", 0, 0, 0);
 
-    for(G4int IdReadout = 0 ; IdReadout < 4; ++IdReadout)
-      for(G4int IdFib = 0 ; IdFib < 128; ++IdFib)
-      {
-        if(IdFib<numMiniFibersTopLayer1[IdReadout])
-          posFib = G4ThreeVector(FD1_startX1[IdReadout] + IdFib*spacingX ,0. , -startZ1);
-        else
-          posFib = G4ThreeVector(FD1_startX2[IdReadout] + (IdFib-numMiniFibersTopLayer1[IdReadout])*spacingX ,0. , -startZ2);
+      for(G4int IdReadout = 0; IdReadout < 4; ++IdReadout)
+        for(G4int IdFib = 0; IdFib < 128; ++IdFib)
+          {
+            if(IdFib < numMiniFibersTopLayer1[IdReadout])
+              posFib = G4ThreeVector(FD1_startX1[IdReadout] + IdFib * spacingX, 0., -startZ1);
+            else
+              posFib = G4ThreeVector(FD1_startX2[IdReadout] + (IdFib - numMiniFibersTopLayer1[IdReadout]) * spacingX,
+                                     0., -startZ2);
 
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Cladding_log_x1, "MiniFiberD1_Cladding_x1", MiniFiberD1_MothVol_log_x1,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Core_log_x1    , "MiniFiberD1_Core_x1"    , MiniFiberD1_MothVol_log_x1,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Cladding_log_u1, "MiniFiberD1_Cladding_u1", MiniFiberD1_MothVol_log_u1,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Core_log_u1    , "MiniFiberD1_Core_u1"    , MiniFiberD1_MothVol_log_u1,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Cladding_log_v1, "MiniFiberD1_Cladding_v1", MiniFiberD1_MothVol_log_v1,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Core_log_v1    , "MiniFiberD1_Core_v1"    , MiniFiberD1_MothVol_log_v1,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Cladding_log_x2, "MiniFiberD1_Cladding_x2", MiniFiberD1_MothVol_log_x2,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Core_log_x2    , "MiniFiberD1_Core_x2"    , MiniFiberD1_MothVol_log_x2,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Cladding_log_u2, "MiniFiberD1_Cladding_u2", MiniFiberD1_MothVol_log_u2,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Core_log_u2    , "MiniFiberD1_Core_u2"    , MiniFiberD1_MothVol_log_u2,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Cladding_log_v2, "MiniFiberD1_Cladding_v2", MiniFiberD1_MothVol_log_v2,false,IdReadout*128+IdFib));
-        AllPlacements.emplace_back(new G4PVPlacement(rotFib1,Sign*posFib, MiniFiberD1_Core_log_v2    , "MiniFiberD1_Core_v2"    , MiniFiberD1_MothVol_log_v2,false,IdReadout*128+IdFib));
-      }
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Cladding_log_x1,
+                                                         "MiniFiberD1_Cladding_x1", MiniFiberD1_MothVol_log_x1, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Core_log_x1,
+                                                         "MiniFiberD1_Core_x1", MiniFiberD1_MothVol_log_x1, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Cladding_log_u1,
+                                                         "MiniFiberD1_Cladding_u1", MiniFiberD1_MothVol_log_u1, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Core_log_u1,
+                                                         "MiniFiberD1_Core_u1", MiniFiberD1_MothVol_log_u1, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Cladding_log_v1,
+                                                         "MiniFiberD1_Cladding_v1", MiniFiberD1_MothVol_log_v1, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Core_log_v1,
+                                                         "MiniFiberD1_Core_v1", MiniFiberD1_MothVol_log_v1, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Cladding_log_x2,
+                                                         "MiniFiberD1_Cladding_x2", MiniFiberD1_MothVol_log_x2, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Core_log_x2,
+                                                         "MiniFiberD1_Core_x2", MiniFiberD1_MothVol_log_x2, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Cladding_log_u2,
+                                                         "MiniFiberD1_Cladding_u2", MiniFiberD1_MothVol_log_u2, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Core_log_u2,
+                                                         "MiniFiberD1_Core_u2", MiniFiberD1_MothVol_log_u2, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Cladding_log_v2,
+                                                         "MiniFiberD1_Cladding_v2", MiniFiberD1_MothVol_log_v2, false,
+                                                         IdReadout * 128 + IdFib));
+            AllPlacements.emplace_back(new G4PVPlacement(rotFib1, Sign * posFib, MiniFiberD1_Core_log_v2,
+                                                         "MiniFiberD1_Core_v2", MiniFiberD1_MothVol_log_v2, false,
+                                                         IdReadout * 128 + IdFib));
+          }
 
-    NameDetectorsSD.push_back(MiniFiberD1_Core_log_x1->GetName());
-    NameDetectorsSD.push_back(MiniFiberD1_Core_log_u1->GetName());
-    NameDetectorsSD.push_back(MiniFiberD1_Core_log_v1->GetName());
-    NameDetectorsSD.push_back(MiniFiberD1_Core_log_x2->GetName());
-    NameDetectorsSD.push_back(MiniFiberD1_Core_log_u2->GetName());
-    NameDetectorsSD.push_back(MiniFiberD1_Core_log_v2->GetName());
+      NameDetectorsSD.push_back(MiniFiberD1_Core_log_x1->GetName());
+      NameDetectorsSD.push_back(MiniFiberD1_Core_log_u1->GetName());
+      NameDetectorsSD.push_back(MiniFiberD1_Core_log_v1->GetName());
+      NameDetectorsSD.push_back(MiniFiberD1_Core_log_x2->GetName());
+      NameDetectorsSD.push_back(MiniFiberD1_Core_log_u2->GetName());
+      NameDetectorsSD.push_back(MiniFiberD1_Core_log_v2->GetName());
 
-    MiniFiberD1_Core_log_x1->SetVisAttributes(visAttributes_x);
-    MiniFiberD1_Core_log_x1->SetVisAttributes(visAttributes_x);
-    MiniFiberD1_Core_log_u1->SetVisAttributes(visAttributes_u);
-    MiniFiberD1_Core_log_v2->SetVisAttributes(visAttributes_v);
-    MiniFiberD1_Core_log_u2->SetVisAttributes(visAttributes_u);
-    MiniFiberD1_Core_log_v2->SetVisAttributes(visAttributes_v);
-    MiniFiberD1_Cladding_log_x1->SetVisAttributes(visAttributes_x);
-    MiniFiberD1_Cladding_log_u1->SetVisAttributes(visAttributes_u);
-    MiniFiberD1_Cladding_log_v1->SetVisAttributes(visAttributes_v);
-    MiniFiberD1_Cladding_log_x2->SetVisAttributes(visAttributes_x);
-    MiniFiberD1_Cladding_log_u2->SetVisAttributes(visAttributes_u);
-    MiniFiberD1_Cladding_log_v2->SetVisAttributes(visAttributes_v);
-    MiniFiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-    MiniFiberD1_MothVol_log_x1->SetVisAttributes(G4VisAttributes::Invisible);
-    MiniFiberD1_MothVol_log_u1->SetVisAttributes(G4VisAttributes::Invisible);
-    MiniFiberD1_MothVol_log_v1->SetVisAttributes(G4VisAttributes::Invisible);
-    MiniFiberD1_MothVol_log_x2->SetVisAttributes(G4VisAttributes::Invisible);
-    MiniFiberD1_MothVol_log_u2->SetVisAttributes(G4VisAttributes::Invisible);
-    MiniFiberD1_MothVol_log_v2->SetVisAttributes(G4VisAttributes::Invisible);
-  }
+      if(!MiniVis)
+        {
+          MiniFiberD1_Core_log_x1->SetVisAttributes(visAttributes_x);
+          MiniFiberD1_Core_log_u1->SetVisAttributes(visAttributes_u);
+          MiniFiberD1_Core_log_v1->SetVisAttributes(visAttributes_v);
+          MiniFiberD1_Core_log_x2->SetVisAttributes(visAttributes_x);
+          MiniFiberD1_Core_log_u2->SetVisAttributes(visAttributes_u);
+          MiniFiberD1_Core_log_v2->SetVisAttributes(visAttributes_v);
+          MiniFiberD1_Cladding_log_x1->SetVisAttributes(visAttributes_x);
+          MiniFiberD1_Cladding_log_u1->SetVisAttributes(visAttributes_u);
+          MiniFiberD1_Cladding_log_v1->SetVisAttributes(visAttributes_v);
+          MiniFiberD1_Cladding_log_x2->SetVisAttributes(visAttributes_x);
+          MiniFiberD1_Cladding_log_u2->SetVisAttributes(visAttributes_u);
+          MiniFiberD1_Cladding_log_v2->SetVisAttributes(visAttributes_v);
+          MiniFiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log_x1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log_u1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log_v1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log_x2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log_u2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log_v2->SetVisAttributes(G4VisAttributes::Invisible);
+        }
+      else
+        {
+          MiniFiberD1_Core_log_x1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Core_log_u1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Core_log_v1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Core_log_x2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Core_log_u2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Core_log_v2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Cladding_log_x1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Cladding_log_u1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Cladding_log_v1->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Cladding_log_x2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Cladding_log_u2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Cladding_log_v2->SetVisAttributes(G4VisAttributes::Invisible);
+
+          MiniFiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log_x1->SetVisAttributes(visAttributes_x);
+          MiniFiberD1_MothVol_log_u1->SetVisAttributes(visAttributes_u);
+          MiniFiberD1_MothVol_log_v1->SetVisAttributes(visAttributes_v);
+          MiniFiberD1_MothVol_log_x2->SetVisAttributes(visAttributes_x);
+          MiniFiberD1_MothVol_log_u2->SetVisAttributes(visAttributes_u);
+          MiniFiberD1_MothVol_log_v2->SetVisAttributes(visAttributes_v);
+        }
+    }
 
   // ----------------------------- @@ -----------------------------
   // ----------------------------- @@ -----------------------------
-
 
   G4VSolid* EndFMF2_box        = new G4Box("EndFMF2_box", 25. * cm, 25. * cm, 1. * mm);
   G4LogicalVolume* EndFMF2_log = new G4LogicalVolume(EndFMF2_box, Scinti, "FMF2_log", 0, 0, 0);
@@ -1353,9 +1848,6 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   AllPlacements.emplace_back(
       new G4PVPlacement(rotEndCap, Sign * (G4ThreeVector(0., 0., HypHI_EndCap_PosZ + Systematic_shift) - transMFLD_new),
                         HypHI_Endcap_log, "HypHI_Endcap", MFLD_log, false, 0));
-
-  //--- Visualization ---//
-  HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
 
   G4VSolid* HypHI_TrackerFwd =
       new G4Tubs("HypHI_TrackerFwd", BeamHoleSize * 0.5, HypHI_EndCap_rmax, 2 * mm, 0, CLHEP::twopi);
@@ -1397,9 +1889,30 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
                                                    HypHI_Endcap_log, false, idRPC));
     }
 
+  //--- Visualization ---//
+  if(!MiniVis)
+    {
+      HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
+      G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
+      HypHI_RPC_att->SetForceWireframe(false);
+      HypHI_RPC_l_log->SetVisAttributes(HypHI_RPC_att);
+      HypHI_RPC_h_log->SetVisAttributes(HypHI_RPC_att);
+      G4VisAttributes* HypHI_Tracker_att = new G4VisAttributes(LightPurple);
+      HypHI_Tracker_att->SetForceWireframe(false);
+      HypHI_TrackerFwd_log->SetVisAttributes(HypHI_Tracker_att);
+    }
+  else
+    {
+      G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
+      HypHI_Endcap_log->SetVisAttributes(HypHI_RPC_att);
+      HypHI_RPC_l_log->SetVisAttributes(G4VisAttributes::Invisible);
+      HypHI_RPC_h_log->SetVisAttributes(G4VisAttributes::Invisible);
+      HypHI_TrackerFwd_log->SetVisAttributes(G4VisAttributes::Invisible);
+    }
   // Region
 
-  G4Region* aDetectorRegion = G4RegionStore::GetInstance()->FindOrCreateRegion("DetectorRegion"); //new G4Region("DetectorRegion");
+  G4Region* aDetectorRegion =
+      G4RegionStore::GetInstance()->FindOrCreateRegion("DetectorRegion"); // new G4Region("DetectorRegion");
 
   for(auto& CurrentName : NameDetectorsSD)
     {
@@ -1415,22 +1928,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4Region* aTargetRegion = G4RegionStore::GetInstance()->FindOrCreateRegion("TargetRegion");
   HypHI_Target_log->SetRegion(aTargetRegion);
   aTargetRegion->AddRootLogicalVolume(HypHI_Target_log);
-  std::vector<double> cutsTarget (4,Par.Get<double>("TargetRegionCut"));
+  std::vector<double> cutsTarget(4, Par.Get<double>("TargetRegionCut"));
   aTargetRegion->SetProductionCuts(new G4ProductionCuts());
   aTargetRegion->GetProductionCuts()->SetProductionCuts(cutsTarget);
-
-
-
-
-
-  //--- Visualization ---//
-  G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
-  HypHI_RPC_att->SetForceWireframe(false);
-  HypHI_RPC_l_log->SetVisAttributes(HypHI_RPC_att);
-  HypHI_RPC_h_log->SetVisAttributes(HypHI_RPC_att);
-  G4VisAttributes* HypHI_Tracker_att = new G4VisAttributes(LightPurple);
-  HypHI_Tracker_att->SetForceWireframe(false);
-  HypHI_TrackerFwd_log->SetVisAttributes(HypHI_Tracker_att);
 
   experimentalHall_logOutRoot  = world->GetLogicalVolume();
   experimentalHall_physOutRoot = world;
