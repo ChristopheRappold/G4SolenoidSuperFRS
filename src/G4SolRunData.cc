@@ -88,7 +88,13 @@ void G4SolRunData::InitTree(const std::vector<G4String>& nameDet, const G4SolCon
       parameterToFile.insert(std::make_pair("Wasa_ShiftZ", config.Get<double>("Wasa_ShiftZ") / cm));
       parameterToFile.insert(std::make_pair("Wasa_Side", config.Get<int>("Wasa_Side")));
       parameterToFile.insert(std::make_pair("Systematic_Shift", config.Get<double>("Systematic_Shift") / cm));
-      parameterToFile.insert(std::make_pair("Field_CDS_Bz", config.Get<double>("Field_CDS_Bz") / tesla));
+      if(config.IsAvailable("Field_CDS_Bz"))
+	parameterToFile.insert(std::make_pair("Field_CDS_Bz", config.Get<double>("Field_CDS_Bz") / tesla));
+      else if(config.IsAvailable("Field_WASAMapMaxField"))
+	{
+	  parameterToFile.insert(std::make_pair("Field_CDS_Bz", config.Get<double>("Field_WASAMapMaxField") / tesla));
+	  parameterToFile.insert(std::make_pair("Field_CDS_FieldMap", 1.0));
+	}
 
       fileOut->cd();
       fileOut->WriteObjectAny(&nameDet, "std::vector<std::string>", "nameDet");
