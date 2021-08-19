@@ -81,6 +81,7 @@
 #include "G4SDManager.hh"
 #include "G4SolSensitiveD.hh"
 #include "G4SolSimpleMagneticField.hh"
+#include "G4SolWASAMapMagneticField.hh"
 #include "G4TransportationManager.hh"
 #include "G4UserLimits.hh"
 
@@ -88,8 +89,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4ThreadLocal G4SolSimpleMagneticField* WasaDetectorConstruction::fMagneticField = 0;
-G4ThreadLocal G4FieldManager* WasaDetectorConstruction::fFieldMgr                = 0;
+G4ThreadLocal G4MagneticField* WasaDetectorConstruction::fMagneticField = 0;
+G4ThreadLocal G4FieldManager* WasaDetectorConstruction::fFieldMgr       = 0;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -1484,18 +1485,42 @@ void WasaDetectorConstruction::ConstructSDandField()
   for(auto NameD : NameDetectorsSD)
     std::cout << NameD << std::endl;
 
-
   experimentalHall_log->SetUserLimits(new G4UserLimits(DBL_MAX, 2 * m, 10 * s, 0., 0.));
 
-  G4double fCDField = 0. * tesla;
+  bool isFieldMap = Par.IsAvailable("Field_WASAMap");
 
-  if(Par.IsAvailable("Field_CDS_Bz"))
-    fCDField = Par.Get<double>("Field_CDS_Bz");
+  if(isFieldMap)
+    {
+      const std::string field_name = Par.Get<std::string>("Field_WASAMap");
+      double max_valueField =
+          Par.IsAvailable("Field_WASAMapMaxField") ? Par.Get<double>("Field_WASAMapMaxField") : 1. * tesla;
 
-  G4ThreeVector fCDC(0.0, 0.0, fCDField);
+      std::cout << "Field origin MFLD Phys:" << MFLD_phys << " " << MFLD_phys->GetInstanceID() << "\n";
+      transMFLD = MFLD_phys->GetObjectTranslation();
+      rotMFLD   = MFLD_phys->GetObjectRotationValue();
 
-  fMagneticField = new G4SolSimpleMagneticField();
-  fMagneticField->SetField(fCDC);
+      std::cout << "Trans:" << transMFLD << "\n";
+      std::cout << "Rot:" << rotMFLD << "\n";
+
+      double signDir = rotMFLD.xx()< 0 ? 1. : -1. ;
+      double originF[3] = {transMFLD.x(), transMFLD.y(), transMFLD.z()};
+
+      fMagneticField = new G4SolWASAMapMagneticField(field_name);
+      dynamic_cast<G4SolWASAMapMagneticField*>(fMagneticField)->SetOriginField(originF,signDir);
+      dynamic_cast<G4SolWASAMapMagneticField*>(fMagneticField)->SetMaxField(max_valueField);
+      dynamic_cast<G4SolWASAMapMagneticField*>(fMagneticField)->InitField();
+    }
+  else
+    {
+      G4double fCDField = 0. * tesla;
+      if(Par.IsAvailable("Field_CDS_Bz"))
+        fCDField = Par.Get<double>("Field_CDS_Bz");
+
+      G4ThreeVector fCDC(0.0, 0.0, fCDField);
+
+      fMagneticField = new G4SolSimpleMagneticField();
+      dynamic_cast<G4SolSimpleMagneticField*>(fMagneticField)->SetField(fCDC);
+    }
 
   fEquation = new G4Mag_UsualEqRhs(fMagneticField);
   // fStepper = new G4ClassicalRK4( fEquation );
@@ -1509,7 +1534,10 @@ void WasaDetectorConstruction::ConstructSDandField()
   fFieldMgr->SetChordFinder(fChordFinder);
 
   G4bool forceToAllDaughters = true;
-  INNER_log->SetFieldManager(fFieldMgr, forceToAllDaughters);
+  if(isFieldMap)
+    MFLD_log->SetFieldManager(fFieldMgr, forceToAllDaughters);
+  else
+    INNER_log->SetFieldManager(fFieldMgr, forceToAllDaughters);
   // CDS_endcap_log->SetFieldManager(fFieldMgr,forceToAllDaughters);
   // if(DoModHypHI)
   //   HypHI_InTracker_log->SetFieldManager(fFieldMgr,forceToAllDaughters);

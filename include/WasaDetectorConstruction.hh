@@ -53,6 +53,7 @@ class G4VisAttributes;
 class G4GenericMessenger;
 
 class G4SolSimpleMagneticField;
+class G4SolWASAMapMagneticField;
 class G4FieldManager;
 
 /// Detector construction class to define materials and geometry.
@@ -79,7 +80,7 @@ public:
   virtual void ConstructSDandField() override;
 
 private:
-  static G4ThreadLocal G4SolSimpleMagneticField* fMagneticField;
+  static G4ThreadLocal G4MagneticField* fMagneticField;
   static G4ThreadLocal G4FieldManager* fFieldMgr;
 
   G4ChordFinder* fChordFinder;
