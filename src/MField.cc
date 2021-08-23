@@ -87,6 +87,7 @@ MField::MField(const char*)
   else
     rlimcr = false;
   //
+
 }
 
 void MField::SetScale(double scaling) { fMFScaling = scaling / 12.9; }
@@ -158,6 +159,18 @@ void MField::InitializeParameter()
       xyz_cr[xzspcr[1] + iy - 1]                             = entry->GetZ();
       fxyzcr[(ix - mx) + ny * (iy - my) + nz * (iz - mz)][0] = entry->GetFr() * fMFScaling;
       fxyzcr[(ix - mx) + ny * (iy - my) + nz * (iz - mz)][1] = entry->GetFz() * fMFScaling;
+
+      if(entry->GetR() < MinMax_R[0] )
+	MinMax_R[0] = entry->GetR();
+
+      if(entry->GetR() > MinMax_R[1] )
+	MinMax_R[1] = entry->GetR();
+
+      if(entry->GetZ() < MinMax_Z[0] )
+	MinMax_Z[0] = entry->GetZ();
+
+      if(entry->GetZ() > MinMax_Z[1] )
+	MinMax_Z[1] = entry->GetZ();
 
       fNSets++;
     }

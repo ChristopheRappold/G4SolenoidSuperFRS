@@ -55,6 +55,9 @@ public:
   double fint(int narg,double *arg,int *nent,double *ent,double *table);
   Int_t GetNSets(){return fNSets;}
 
+  Double_t MinMax_R[2] = {1000.,-1000.};
+  Double_t MinMax_Z[2] = {1000.,-1000.};
+
 private:
 
   Double_t xyz_cr[litecr];
@@ -74,7 +77,6 @@ private:
   Bool_t rlimcr;
 
   Double_t fMFScaling; //! Factor to scale FieldMap according to user settings
-  
   // parameter collection containing parameter sets is stored in this data member
   Int_t fNSets; 
   TList  *fEntries;  // MFieldSet
