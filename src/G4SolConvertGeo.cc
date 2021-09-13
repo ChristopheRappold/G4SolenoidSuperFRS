@@ -175,6 +175,11 @@ int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeo
   set_color("SD2_Strip_log_u",kPink+2);
   set_color("SD2_Strip_log_v",kPink+2);
 
+  set_color("SD1pad_Strip_log_u",kPink+1);
+  set_color("SD1pad_Strip_log_v",kPink+1);
+  set_color("SD2pad_Strip_log_u",kPink+2);
+  set_color("SD2pad_Strip_log_v",kPink+2);
+
 
   gGeoManager->CloseGeometry();
 

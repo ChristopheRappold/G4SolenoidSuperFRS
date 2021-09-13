@@ -903,6 +903,351 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       }
     }
 
+  if(Par.IsAvailable("HypHI_SDpad1_On"))
+    {
+      G4double HypHI_SD_length = 20480 * um;
+      // G4double HypHI_SD_pcb         = 1650 * um;
+      G4double HypHI_SD_thickness   = 285 * um;
+      G4double HypHI_SD_stripwidth  = 160 * um;
+      G4double HypHI_SD_striplength = 20480 * um; // 20192 * um;
+      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : 0.5 * mm;
+
+      G4int HypHI_SD_Nch = Par.Get<int>("HypHI_SDpad1_Nch");
+      G4int HypHI_SD_stripPerCh =
+          Par.IsAvailable("HypHI_SDpad1_stripPerCh") ? Par.Get<int>("HypHI_SDpad1_stripPerCh") : 1;
+      if(HypHI_SD_Nch * HypHI_SD_stripPerCh != 128)
+        {
+          std::cout << "E> SDpad1 number of channel does not correspond to the design ! " << HypHI_SD_Nch << " "
+                    << HypHI_SD_stripPerCh << "\n";
+          exit(-1);
+        }
+      if(HypHI_SD_stripPerCh != 1)
+        HypHI_SD_stripwidth *= static_cast<double>(HypHI_SD_stripPerCh);
+
+      G4double HypHI_SD1_posZ = Par.Get<double>("HypHI_SD1_posZ");
+
+      G4int HypHI_SD1_padX = Par.Get<int>("HypHI_SD1_padX");
+      G4int HypHI_SD1_padY = Par.Get<int>("HypHI_SD1_padY");
+
+      {
+        G4VSolid* SDu_MothVol_solid =
+            new G4Box("SD1u_solid", (HypHI_SD_length * HypHI_SD1_padX + HypHI_SD_gap) / 2.,
+                      (HypHI_SD_length * HypHI_SD1_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SDu_MothVol_log = new G4LogicalVolume(SDu_MothVol_solid, Air, "SD1u_log", 0, 0, 0);
+
+        G4ThreeVector TransSDu = G4ThreeVector(0., 0., HypHI_SD1_posZ + Systematic_shift) - transMFLD_new;
+
+        AllPlacements.emplace_back(
+            new G4PVPlacement(nullptr, Sign * TransSDu, SDu_MothVol_log, "Silicon1u", MFLD_log, false, 0));
+
+        G4VSolid* SD_Strip_solid_u = new G4Box("SD1_Strip_solid_u", HypHI_SD_striplength / 2., HypHI_SD_stripwidth / 2.,
+                                               HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SD_Strip_log_u = new G4LogicalVolume(SD_Strip_solid_u, Si, "SD1pad_Strip_log_u", 0, 0, 0);
+
+        for(int iX = 0; iX < HypHI_SD1_padX; ++iX)
+          {
+            std::string nameX("pad_X");
+            nameX += std::to_string(iX);
+            for(int iY = 0; iY < HypHI_SD1_padY; ++iY)
+              {
+                std::string nameY("_Y");
+                nameY += std::to_string(iY);
+
+                std::string nameSolid("SD1u_solid_");
+                nameSolid += nameX;
+                nameSolid += nameY;
+                G4VSolid* SDpad_solid =
+                    new G4Box(nameSolid, HypHI_SD_length / 2., HypHI_SD_striplength / 2., HypHI_SD_thickness / 2.);
+
+                std::string nameLogic("SD1u_logic_");
+                nameLogic += nameX;
+                nameLogic += nameY;
+                G4LogicalVolume* SDu_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
+
+                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                G4ThreeVector TransSDu_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD1_padX - 1),
+                                                           iY * minDistY - 0.5 * minDistY * (HypHI_SD1_padY - 1), 0.);
+
+                std::string namePlace("SD1u_pad_");
+                namePlace += nameX;
+                namePlace += nameY;
+                AllPlacements.emplace_back(
+                    new G4PVPlacement(0, Sign * (TransSDu_pad), SDu_pad_log_1, namePlace, SDu_MothVol_log, false, 0));
+
+                for(G4int idStrip = 0; idStrip < HypHI_SD_Nch; ++idStrip)
+                  {
+                    G4double posStrip =
+                        -HypHI_SD_Nch * (HypHI_SD_stripwidth / 2.) + HypHI_SD_stripwidth * (0.5 + idStrip);
+
+                    AllPlacements.emplace_back(new G4PVPlacement(
+                        0, Sign * (G4ThreeVector(0., posStrip, 0.)), SD_Strip_log_u, "SD1_Strip_u", SDu_pad_log_1,
+                        false, idStrip + 2 * (iX + HypHI_SD1_padX * iY) * HypHI_SD_Nch));
+                  }
+              }
+          }
+
+        NameDetectorsSD.push_back(SD_Strip_log_u->GetName());
+        if(!MiniVis)
+          {
+            SD_Strip_log_u->SetVisAttributes(Si_att);
+            SDu_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SDu_MothVol_log->SetVisAttributes(Si_att);
+          }
+      }
+
+      {
+        G4VSolid* SDv_MothVol_solid =
+            new G4Box("SD1u_solid", (HypHI_SD_length * HypHI_SD1_padX + HypHI_SD_gap) / 2.,
+                      (HypHI_SD_length * HypHI_SD1_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SDv_MothVol_log = new G4LogicalVolume(SDv_MothVol_solid, Air, "SD1v_log", 0, 0, 0);
+
+        G4ThreeVector TransSDv = G4ThreeVector(0., 0., HypHI_SD1_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
+
+        AllPlacements.emplace_back(
+            new G4PVPlacement(nullptr, Sign * TransSDv, SDv_MothVol_log, "Silicon1v", MFLD_log, false, 0));
+
+        G4VSolid* SD_Strip_solid_v = new G4Box("SD1_Strip_solid_v", HypHI_SD_stripwidth / 2., HypHI_SD_striplength / 2.,
+                                               HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SD_Strip_log_v = new G4LogicalVolume(SD_Strip_solid_v, Si, "SD1pad_Strip_log_v", 0, 0, 0);
+
+        for(int iX = 0; iX < HypHI_SD1_padX; ++iX)
+          {
+            std::string nameX("pad_X");
+            nameX += std::to_string(iX);
+            for(int iY = 0; iY < HypHI_SD1_padY; ++iY)
+              {
+                std::string nameY("_Y");
+                nameY += std::to_string(iY);
+
+                std::string nameSolid("SD1v_solid_");
+                nameSolid += nameX;
+                nameSolid += nameY;
+                G4VSolid* SDpad_solid =
+                    new G4Box(nameSolid, HypHI_SD_length / 2., HypHI_SD_striplength / 2., HypHI_SD_thickness / 2.);
+
+                std::string nameLogic("SD1v_logic_");
+                nameLogic += nameX;
+                nameLogic += nameY;
+                G4LogicalVolume* SDv_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
+
+                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                G4ThreeVector TransSDv_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD1_padX - 1),
+                                                           iY * minDistY - 0.5 * minDistY * (HypHI_SD1_padY - 1), 0.);
+
+                std::string namePlace("SD1v_pad_");
+                namePlace += nameX;
+                namePlace += nameY;
+                AllPlacements.emplace_back(
+                    new G4PVPlacement(0, Sign * (TransSDv_pad), SDv_pad_log_1, namePlace, SDv_MothVol_log, false, 0));
+
+                for(G4int idStrip = 0; idStrip < HypHI_SD_Nch; ++idStrip)
+                  {
+                    G4double posStrip =
+                        -HypHI_SD_Nch * (HypHI_SD_stripwidth / 2.) + HypHI_SD_stripwidth * (0.5 + idStrip);
+
+                    AllPlacements.emplace_back(new G4PVPlacement(
+                        0, Sign * (G4ThreeVector(posStrip, 0., 0.)), SD_Strip_log_v, "SD1_Strip_v", SDv_pad_log_1,
+                        false, idStrip + 2 * (iX + HypHI_SD1_padX * iY) * HypHI_SD_Nch));
+                  }
+              }
+          }
+
+        NameDetectorsSD.push_back(SD_Strip_log_v->GetName());
+        if(!MiniVis)
+          {
+            SD_Strip_log_v->SetVisAttributes(Si_att);
+            SDv_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SDv_MothVol_log->SetVisAttributes(Si_att);
+          }
+      }
+    }
+
+  if(Par.IsAvailable("HypHI_SDpad2_On"))
+    {
+      G4double HypHI_SD_length = 20480 * um;
+      // G4double HypHI_SD_pcb         = 1650 * um;
+      G4double HypHI_SD_thickness   = 285 * um;
+      G4double HypHI_SD_stripwidth  = 160 * um;
+      G4double HypHI_SD_striplength = 20480 * um; // 20192 * um;
+      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : 0.5 * mm;
+
+      G4int HypHI_SD_Nch = Par.Get<int>("HypHI_SDpad2_Nch");
+      G4int HypHI_SD_stripPerCh =
+          Par.IsAvailable("HypHI_SDpad2_stripPerCh") ? Par.Get<int>("HypHI_SDpad2_stripPerCh") : 1;
+      if(HypHI_SD_Nch * HypHI_SD_stripPerCh != 128)
+        {
+          std::cout << "E> SDpad2 number of channel does not correspond to the design ! " << HypHI_SD_Nch << " "
+                    << HypHI_SD_stripPerCh << "\n";
+          exit(-1);
+        }
+      if(HypHI_SD_stripPerCh != 1)
+        HypHI_SD_stripwidth *= static_cast<double>(HypHI_SD_stripPerCh);
+
+      G4double HypHI_SD2_posZ = Par.Get<double>("HypHI_SD2_posZ");
+
+      G4int HypHI_SD2_padX = Par.Get<int>("HypHI_SD2_padX");
+      G4int HypHI_SD2_padY = Par.Get<int>("HypHI_SD2_padY");
+
+      {
+        G4VSolid* SDu_MothVol_solid =
+            new G4Box("SD2u_solid", (HypHI_SD_length * HypHI_SD2_padX + HypHI_SD_gap) / 2.,
+                      (HypHI_SD_length * HypHI_SD2_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SDu_MothVol_log = new G4LogicalVolume(SDu_MothVol_solid, Air, "SD2u_log", 0, 0, 0);
+
+        G4ThreeVector TransSDu = G4ThreeVector(0., 0., HypHI_SD2_posZ + Systematic_shift) - transMFLD_new;
+
+        AllPlacements.emplace_back(
+            new G4PVPlacement(nullptr, Sign * TransSDu, SDu_MothVol_log, "Silicon2u", MFLD_log, false, 0));
+
+        G4VSolid* SD_Strip_solid_u = new G4Box("SD2_Strip_solid_u", HypHI_SD_striplength / 2., HypHI_SD_stripwidth / 2.,
+                                               HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SD_Strip_log_u = new G4LogicalVolume(SD_Strip_solid_u, Si, "SD2pad_Strip_log_u", 0, 0, 0);
+
+        for(int iX = 0; iX < HypHI_SD2_padX; ++iX)
+          {
+            std::string nameX("pad_X");
+            nameX += std::to_string(iX);
+            for(int iY = 0; iY < HypHI_SD2_padY; ++iY)
+              {
+                std::string nameY("_Y");
+                nameY += std::to_string(iY);
+
+                std::string nameSolid("SD2u_solid_");
+                nameSolid += nameX;
+                nameSolid += nameY;
+                G4VSolid* SDpad_solid =
+                    new G4Box(nameSolid, HypHI_SD_length / 2., HypHI_SD_striplength / 2., HypHI_SD_thickness / 2.);
+
+                std::string nameLogic("SD2u_logic_");
+                nameLogic += nameX;
+                nameLogic += nameY;
+                G4LogicalVolume* SDu_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
+
+                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                G4ThreeVector TransSDu_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD2_padX - 1),
+                                                           iY * minDistY - 0.5 * minDistY * (HypHI_SD2_padY - 1), 0.);
+
+                std::string namePlace("SD2u_pad_");
+                namePlace += nameX;
+                namePlace += nameY;
+                AllPlacements.emplace_back(
+                    new G4PVPlacement(0, Sign * (TransSDu_pad), SDu_pad_log_1, namePlace, SDu_MothVol_log, false, 0));
+
+                for(G4int idStrip = 0; idStrip < HypHI_SD_Nch; ++idStrip)
+                  {
+                    G4double posStrip =
+                        -HypHI_SD_Nch * (HypHI_SD_stripwidth / 2.) + HypHI_SD_stripwidth * (0.5 + idStrip);
+
+                    AllPlacements.emplace_back(new G4PVPlacement(
+                        0, Sign * (G4ThreeVector(0., posStrip, 0.)), SD_Strip_log_u, "SD2_Strip_u", SDu_pad_log_1,
+                        false, idStrip + 2 * (iX + HypHI_SD2_padX * iY) * HypHI_SD_Nch));
+                  }
+              }
+          }
+
+        NameDetectorsSD.push_back(SD_Strip_log_u->GetName());
+        if(!MiniVis)
+          {
+            SD_Strip_log_u->SetVisAttributes(Si_att);
+            SDu_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SDu_MothVol_log->SetVisAttributes(Si_att);
+          }
+      }
+
+      {
+        G4VSolid* SDv_MothVol_solid =
+            new G4Box("SD2v_solid", (HypHI_SD_length * HypHI_SD2_padX + HypHI_SD_gap) / 2.,
+                      (HypHI_SD_length * HypHI_SD2_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SDv_MothVol_log = new G4LogicalVolume(SDv_MothVol_solid, Air, "SD2v_log", 0, 0, 0);
+
+        G4ThreeVector TransSDv = G4ThreeVector(0., 0., HypHI_SD2_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
+
+        AllPlacements.emplace_back(
+            new G4PVPlacement(nullptr, Sign * TransSDv, SDv_MothVol_log, "Silicon2v", MFLD_log, false, 0));
+
+        G4VSolid* SD_Strip_solid_v = new G4Box("SD2_Strip_solid_v", HypHI_SD_stripwidth / 2., HypHI_SD_striplength / 2.,
+                                               HypHI_SD_thickness / 2.);
+
+        G4LogicalVolume* SD_Strip_log_v = new G4LogicalVolume(SD_Strip_solid_v, Si, "SD2pad_Strip_log_v", 0, 0, 0);
+
+        for(int iX = 0; iX < HypHI_SD2_padX; ++iX)
+          {
+            std::string nameX("pad_X");
+            nameX += std::to_string(iX);
+            for(int iY = 0; iY < HypHI_SD2_padY; ++iY)
+              {
+                std::string nameY("_Y");
+                nameY += std::to_string(iY);
+
+                std::string nameSolid("SD2v_solid_");
+                nameSolid += nameX;
+                nameSolid += nameY;
+                G4VSolid* SDpad_solid =
+                    new G4Box(nameSolid, HypHI_SD_length / 2., HypHI_SD_striplength / 2., HypHI_SD_thickness / 2.);
+
+                std::string nameLogic("SD2v_logic_");
+                nameLogic += nameX;
+                nameLogic += nameY;
+                G4LogicalVolume* SDv_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
+
+                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                G4ThreeVector TransSDv_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD2_padX - 1),
+                                                           iY * minDistY - 0.5 * minDistY * (HypHI_SD2_padY - 1), 0.);
+
+                std::string namePlace("SD2v_pad_");
+                namePlace += nameX;
+                namePlace += nameY;
+                AllPlacements.emplace_back(
+                    new G4PVPlacement(0, Sign * (TransSDv_pad), SDv_pad_log_1, namePlace, SDv_MothVol_log, false, 0));
+
+                for(G4int idStrip = 0; idStrip < HypHI_SD_Nch; ++idStrip)
+                  {
+                    G4double posStrip =
+                        -HypHI_SD_Nch * (HypHI_SD_stripwidth / 2.) + HypHI_SD_stripwidth * (0.5 + idStrip);
+
+                    AllPlacements.emplace_back(new G4PVPlacement(
+                        0, Sign * (G4ThreeVector(posStrip, 0., 0.)), SD_Strip_log_v, "SD2_Strip_v", SDv_pad_log_1,
+                        false, idStrip + 2 * (iX + HypHI_SD2_padX * iY) * HypHI_SD_Nch));
+                  }
+              }
+          }
+        NameDetectorsSD.push_back(SD_Strip_log_v->GetName());
+        if(!MiniVis)
+          {
+            SD_Strip_log_v->SetVisAttributes(Si_att);
+            SDv_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          }
+        else
+          {
+            SD_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SDv_MothVol_log->SetVisAttributes(Si_att);
+          }
+      }
+    }
+
   // ----------------------------- @@ -----------------------------
   //         Virtual Detectors
   // ----------------------------- @@ -----------------------------
