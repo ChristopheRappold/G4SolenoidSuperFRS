@@ -382,10 +382,14 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
     std::cout<<name<<"\n";
 
   size_t id_Si3 = 0;
+  size_t id_SD1u = 0;
+  size_t id_SD1v = 0;
+  size_t id_SD2u = 0;
+  size_t id_SD2v = 0;
   size_t id_FMF2 = 0;
   size_t id_TrckFwd = 0; 
   size_t id_PSCE = 0;
-  size_t id_PSFE = 0;
+  size_t id_PSBE = 0;
   std::set<size_t> id_MDCs;
   for(size_t id = 0; id < nameDet.size(); ++id)
     {
@@ -398,7 +402,15 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
       if(nameDet[id] == "PSCE")
 	id_PSCE = id;
       if(nameDet[id] == "PSBE")
-	id_PSFE = id;
+	id_PSBE = id;
+      if(nameDet[id] == "SD1_Strip_log_u")
+	id_SD1u = id;
+      if(nameDet[id] == "SD1_Strip_log_v")
+	id_SD1v = id;
+      if(nameDet[id] == "SD2_Strip_log_u")
+	id_SD2u = id;
+      if(nameDet[id] == "SD2_Strip_log_v")
+	id_SD2v = id;
       if(auto found = nameDet[id].find("MG") ;  found != std::string::npos)
 	id_MDCs.insert(id);
     }
@@ -425,9 +437,14 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 		     TH2F* h_HitPatternY = new TH2F("h_HitPatternY","h_HitPatternY",2000,-20,20,20,0,20);
 		     
 		     TH2F* h_HitPatternX_PSCE = new TH2F("h_HitPatternX_PSCE","h_HitPatternX_PSCE",2000,-20,20,20,0,20);
-		     TH2F* h_HitPatternX_PSFE = new TH2F("h_HitPatternX_PSFE","h_HitPatternX_PSFE",2000,-20,20,20,0,20);
+		     TH2F* h_HitPatternX_PSBE = new TH2F("h_HitPatternX_PSBE","h_HitPatternX_PSBE",2000,-20,20,20,0,20);
 		     TH2F* h_HitPatternY_PSCE = new TH2F("h_HitPatternY_PSCE","h_HitPatternY_PSCE",2000,-20,20,20,0,20);
-		     TH2F* h_HitPatternY_PSFE = new TH2F("h_HitPatternY_PSFE","h_HitPatternY_PSFE",2000,-20,20,20,0,20);
+		     TH2F* h_HitPatternY_PSBE = new TH2F("h_HitPatternY_PSBE","h_HitPatternY_PSBE",2000,-20,20,20,0,20);
+
+		     TH2F* h_HitPatternX_SD1 = new TH2F("h_HitPatternX_SD1","h_HitPatternX_SD1",2000,-20,20,20,0,20);
+		     TH2F* h_HitPatternX_SD2 = new TH2F("h_HitPatternX_SD2","h_HitPatternX_SD2",2000,-20,20,20,0,20);
+		     TH2F* h_HitPatternY_SD1 = new TH2F("h_HitPatternY_SD1","h_HitPatternY_SD1",2000,-20,20,20,0,20);
+		     TH2F* h_HitPatternY_SD2 = new TH2F("h_HitPatternY_SD2","h_HitPatternY_SD2",2000,-20,20,20,0,20);
 
 		     TH2F* h_ParticlePhi = new TH2F("h_Phi","h_Phi",360*5,-180,180,30,0,30);
 
@@ -504,7 +521,7 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 			       }
 			   }
 
-			 std::unordered_map<int, std::tuple<double,double,double> > trackOnPSCE, trackOnPSFE;
+			 std::unordered_map<int, std::tuple<double,double,double> > trackOnPSCE, trackOnPSBE, trackOnSD1u, trackOnSD2u, trackOnSD1v, trackOnSD2v;
 			 for(auto hit : *AllHits[id_PSCE])
 			   {
 			     auto it_find = validTrack.find(hit.TrackID);
@@ -514,15 +531,51 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 			       }
 			   }
 
-			 for(auto hit : *AllHits[id_PSFE])
+			 for(auto hit : *AllHits[id_PSBE])
 			   {
 			     auto it_find = validTrack.find(hit.TrackID);
 			     if(it_find != validTrack.end())
 			       {
-				 trackOnPSFE.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
+				 trackOnPSBE.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
 			       }
 			   }
 			 
+			 for(auto hit : *AllHits[id_SD1u])
+			   {
+			     auto it_find = validTrack.find(hit.TrackID);
+			     if(it_find != validTrack.end())
+			       {
+				 trackOnSD1u.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
+			       }
+			   }
+
+			 for(auto hit : *AllHits[id_SD2u])
+			   {
+			     auto it_find = validTrack.find(hit.TrackID);
+			     if(it_find != validTrack.end())
+			       {
+				 trackOnSD2u.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
+			       }
+			   }
+
+			 for(auto hit : *AllHits[id_SD1v])
+			   {
+			     auto it_find = validTrack.find(hit.TrackID);
+			     if(it_find != validTrack.end())
+			       {
+				 trackOnSD1v.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
+			       }
+			   }
+
+			 for(auto hit : *AllHits[id_SD2v])
+			   {
+			     auto it_find = validTrack.find(hit.TrackID);
+			     if(it_find != validTrack.end())
+			       {
+				 trackOnSD2v.insert(std::make_pair(hit.TrackID,std::make_tuple(hit.HitPosX,hit.HitPosY,hit.HitPosZ)));
+			       }
+			   }
+
 			 std::unordered_map<int, std::vector<std::tuple<int,double,double,double> > > TracksInMDC;
 			 
 			 for(size_t it_br = 0 ;it_br < AllHits.size(); ++it_br)
@@ -583,10 +636,20 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 					 h_HitPatternX_PSCE->Fill(hit.HitPosX,nameBranch,1.);
 					 h_HitPatternY_PSCE->Fill(hit.HitPosY,nameBranch,1.);
 				       }
-				     if(auto it_findPSFE = trackOnPSFE.find(hit.TrackID) ; it_findPSFE != trackOnPSFE.end())
+				     if(auto it_findPSBE = trackOnPSBE.find(hit.TrackID) ; it_findPSBE != trackOnPSBE.end())
 				       {
-					 h_HitPatternX_PSFE->Fill(hit.HitPosX,nameBranch,1.);
-					 h_HitPatternY_PSFE->Fill(hit.HitPosY,nameBranch,1.);
+					 h_HitPatternX_PSBE->Fill(hit.HitPosX,nameBranch,1.);
+					 h_HitPatternY_PSBE->Fill(hit.HitPosY,nameBranch,1.);
+				       }
+				     if(auto it_findSD1 = trackOnSD1u.find(hit.TrackID) ; it_findSD1 != trackOnSD1u.end())
+				       {
+					 h_HitPatternX_SD1->Fill(hit.HitPosX,nameBranch,1.);
+					 h_HitPatternY_SD1->Fill(hit.HitPosY,nameBranch,1.);
+				       }
+				     if(auto it_findSD2 = trackOnSD2u.find(hit.TrackID) ; it_findSD2 != trackOnSD2u.end())
+				       {
+					 h_HitPatternX_SD2->Fill(hit.HitPosX,nameBranch,1.);
+					 h_HitPatternY_SD2->Fill(hit.HitPosY,nameBranch,1.);
 				       }
 				   }
 			       }
@@ -609,10 +672,10 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 				     h_Y_Z_MDC->Fill(LayerZ/100.,LayerY/100.);
 				   }
 			       }
-			     if(auto it_TOF = trackOnPSFE.find(idTrack) ; it_TOF!=trackOnPSFE.end())
+			     if(auto it_TOF = trackOnPSBE.find(idTrack) ; it_TOF!=trackOnPSBE.end())
 			       {
 				 std::string tempName2 (tempName);
-				 tempName2 += "_onPSFE";
+				 tempName2 += "_onPSBE";
 				 h_CoincidenceMDC_TOF->Fill( InMDC.size(),tempName2.c_str(), 1.);
 			       }
 			     if(auto it_TOF = trackOnPSCE.find(idTrack) ; it_TOF!=trackOnPSCE.end())
@@ -690,7 +753,7 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 		     //obj_ret->Add(h_ParticlePhi);
 		     
 		     //return h_HitPatternX;//obj_ret;
-		     return std::make_tuple(h_particleStatus,h_HitPatternX,h_HitPatternY,h_ParticlePhi,h_HitPatternX_PSCE,h_HitPatternY_PSCE,h_HitPatternX_PSFE,h_HitPatternY_PSFE,h_CoincidenceMDC_TOF,h_R_Z_MDC,h_X_Z_MDC,h_Y_Z_MDC);
+		     return std::make_tuple(h_particleStatus,h_HitPatternX,h_HitPatternY,h_ParticlePhi,h_HitPatternX_PSCE,h_HitPatternY_PSCE,h_HitPatternX_PSBE,h_HitPatternY_PSBE,h_HitPatternX_SD1,h_HitPatternY_SD1,h_HitPatternX_SD2,h_HitPatternY_SD2,h_CoincidenceMDC_TOF,h_R_Z_MDC,h_X_Z_MDC,h_Y_Z_MDC);
 		   };
 					    
 
@@ -707,14 +770,18 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
   TH2F* h_ParticlePhiM = nullptr;
   TH2F* h_HitPatternX_PSCEM = nullptr;
   TH2F* h_HitPatternY_PSCEM = nullptr;
-  TH2F* h_HitPatternX_PSFEM = nullptr;
-  TH2F* h_HitPatternY_PSFEM = nullptr;
+  TH2F* h_HitPatternX_PSBEM = nullptr;
+  TH2F* h_HitPatternY_PSBEM = nullptr;
+  TH2F* h_HitPatternX_SD1M = nullptr;
+  TH2F* h_HitPatternY_SD1M = nullptr;
+  TH2F* h_HitPatternX_SD2M = nullptr;
+  TH2F* h_HitPatternY_SD2M = nullptr;
   TH2F* h_CoincidenceMDC_TOFM = nullptr;
   TH2F* h_R_Z_TOFM = nullptr;
   TH2F* h_X_Z_TOFM = nullptr;
   TH2F* h_Y_Z_TOFM = nullptr;
 
-  std::tie(h_particleStatusM,h_HitPatternXM,h_HitPatternYM,h_ParticlePhiM,h_HitPatternX_PSCEM,h_HitPatternY_PSCEM,h_HitPatternX_PSFEM,h_HitPatternY_PSFEM,h_CoincidenceMDC_TOFM,h_R_Z_TOFM,h_X_Z_TOFM,h_Y_Z_TOFM) = f_Process(reader);
+  std::tie(h_particleStatusM,h_HitPatternXM,h_HitPatternYM,h_ParticlePhiM,h_HitPatternX_PSCEM,h_HitPatternY_PSCEM,h_HitPatternX_PSBEM,h_HitPatternY_PSBEM,h_HitPatternX_SD1M,h_HitPatternY_SD1M,h_HitPatternX_SD2M,h_HitPatternY_SD2M,h_CoincidenceMDC_TOFM,h_R_Z_TOFM,h_X_Z_TOFM,h_Y_Z_TOFM) = f_Process(reader);
 
 
   //TH2F* h_HitPatternXM = static_cast<TH2F*>(ObjArray);
@@ -766,8 +833,12 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
       plotHist(h_ParticlePhiM);
       plotHist(h_HitPatternX_PSCEM);
       plotHist(h_HitPatternY_PSCEM);
-      plotHist(h_HitPatternX_PSFEM);
-      plotHist(h_HitPatternY_PSFEM);
+      plotHist(h_HitPatternX_PSBEM);
+      plotHist(h_HitPatternY_PSBEM);
+      plotHist(h_HitPatternX_SD1M);
+      plotHist(h_HitPatternY_SD1M);
+      plotHist(h_HitPatternX_SD2M);
+      plotHist(h_HitPatternY_SD2M);
       plotHist(h_CoincidenceMDC_TOFM);
       plotHist(h_R_Z_TOFM);
       plotHist(h_X_Z_TOFM);
@@ -786,8 +857,12 @@ void runDataCoincidence(const std::string& nameList, const std::set<std::string>
 
       h_HitPatternX_PSCEM->Write();
       h_HitPatternY_PSCEM->Write();
-      h_HitPatternX_PSFEM->Write();
-      h_HitPatternY_PSFEM->Write();
+      h_HitPatternX_PSBEM->Write();
+      h_HitPatternY_PSBEM->Write();
+      h_HitPatternX_SD1M->Write();
+      h_HitPatternY_SD1M->Write();
+      h_HitPatternX_SD2M->Write();
+      h_HitPatternY_SD2M->Write();
       h_CoincidenceMDC_TOFM->Write();
 
       h_R_Z_TOFM->Write();
