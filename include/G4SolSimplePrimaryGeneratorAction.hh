@@ -111,7 +111,9 @@ private:
   G4int    SpotElliptical = 0;
   G4double fSpotSizeSigmaX = -1;
   G4double fSpotSizeSigmaY = -1;
-  G4double fTargetSize;
+  G4double fTargetSizeX = 1.;
+  G4double fTargetSizeY = 1.;
+  G4double fTargetSizeZ = 1.;
 
   G4double fDirTheta_1;
   G4double fDirTheta_2;

@@ -350,12 +350,25 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   G4VisAttributes* Si_att = new G4VisAttributes(Pink);
 
-  G4double TargetLength = Par.Get<double>("Target_Size"); // 1.0*cm;
+  G4double TargetLengthX = 0., TargetLengthY = 0., TargetLengthZ = 0.;
+  if(Par.IsAvailable("Target_Size"))
+    {
+      TargetLengthX = Par.Get<double>("Target_Size"); // 1.0*cm;
+      TargetLengthY = Par.Get<double>("Target_Size"); // 1.0*cm;
+      TargetLengthZ = Par.Get<double>("Target_Size"); // 1.0*cm;
+    }
+  if(Par.IsAvailable("Target_SizeX"))
+    TargetLengthX = Par.Get<double>("Target_SizeX"); // 1.0*cm;
+  if(Par.IsAvailable("Target_SizeY"))
+    TargetLengthY = Par.Get<double>("Target_SizeY"); // 1.0*cm;
+  if(Par.IsAvailable("Target_SizeZ"))
+    TargetLengthZ = Par.Get<double>("Target_SizeZ"); // 1.0*cm;
+
   G4double BeamHoleSize = 0. * cm;
   if(Par.IsAvailable("HypHI_BeamHole"))
     BeamHoleSize = Par.Get<double>("HypHI_BeamHole");
 
-  G4VSolid* HypHI_Target = new G4Box("HypHI_Target", TargetLength, TargetLength, TargetLength);
+  G4VSolid* HypHI_Target = new G4Box("HypHI_Target", 0.5*TargetLengthX, 0.5*TargetLengthY, 0.5*TargetLengthZ);
   // G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
   G4Material* MatTarget             = Par.IsAvailable("Target_Carbon") ? Carbon : Vacuum;
   G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, MatTarget, "HypHI_Target_log", 0, 0, 0);
@@ -385,7 +398,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           double DistInTracker = Par.Get<double>("HypHI_InnerTracker_Spacing");
           posZ.resize(NbInTracker);
           for(size_t idL = 0; idL < posZ.size(); ++idL)
-            posZ[idL] = TargetLength + TargetPosZ + PosZInTracker + static_cast<double>(idL) * DistInTracker;
+            posZ[idL] = TargetLengthZ + TargetPosZ + PosZInTracker + static_cast<double>(idL) * DistInTracker;
         }
 
       for(size_t idLayer = 0; idLayer < posZ.size(); ++idLayer)

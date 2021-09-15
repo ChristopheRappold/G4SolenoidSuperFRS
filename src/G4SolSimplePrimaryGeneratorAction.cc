@@ -103,7 +103,18 @@ G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4Sol
       SpotElliptical = 1;
       fSpotSizeSigmaY = Par.Get<double>("Beam_SpotSizeSigmaY");
     }
-  fTargetSize    = Par.Get<double>("Target_Size");
+  if(Par.IsAvailable("Target_Size"))
+    {
+      fTargetSizeX    = Par.Get<double>("Target_Size");
+      fTargetSizeY    = Par.Get<double>("Target_Size");
+      fTargetSizeZ    = Par.Get<double>("Target_Size");
+    }
+  if(Par.IsAvailable("Target_SizeX"))
+    fTargetSizeX    = Par.Get<double>("Target_SizeX");
+  if(Par.IsAvailable("Target_SizeY"))
+    fTargetSizeY    = Par.Get<double>("Target_SizeY");
+  if(Par.IsAvailable("Target_SizeZ"))
+    fTargetSizeZ    = Par.Get<double>("Target_SizeZ");
 
   ConstParticle = GetParticle("geantino"); // nullptr;//GetParticle(nameParticle);
 
@@ -221,16 +232,16 @@ void G4SolSimplePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	      G4double phi = 2.0 * CLHEP::pi * G4UniformRand();
 	      ofpos_x      = r0 * cos(phi);
 	      ofpos_y      = r0 * sin(phi);
-	      ofpos_z      = fTargetSize * (0.5 - G4UniformRand());
+	      ofpos_z      = fTargetSizeZ * (0.5 - G4UniformRand());
 	    }
 	  else
 	    {
 	      ofpos_x = fSpotSizeSigmaX * RandTable[1](0,1);
 	      ofpos_y = fSpotSizeSigmaY * RandTable[1](0,1);
-	      ofpos_z = fTargetSize * (0.5 - G4UniformRand());
+	      ofpos_z = fTargetSizeZ * (0.5 - G4UniformRand());
 	    }
-          if(std::abs(ofpos_x) <= fTargetSize && std::abs(ofpos_y) <= fTargetSize &&
-             std::abs(ofpos_z) <= fTargetSize) // Par.Get_Geometry_TargetLength()/2.0 &&
+          if(std::abs(ofpos_x) <= fTargetSizeX && std::abs(ofpos_y) <= fTargetSizeY &&
+             std::abs(ofpos_z) <= fTargetSizeZ) // Par.Get_Geometry_TargetLength()/2.0 &&
                                                // std::abs(ofpos_y)<=Par.Get_Geometry_TargetHeight()/2.0)
             not_acc_position = false;
 
