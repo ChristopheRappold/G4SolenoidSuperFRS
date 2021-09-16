@@ -199,7 +199,7 @@ void G4SolRunData::FillPerEvent(const G4Event* event)
           if(tempDaugther.name_daughters.size() != 0)
             {
               fEvent->WasDecay      = 1;
-              fEvent->MotherTrackID = MotherID;
+              fEvent->MotherTrackID = fEvent->BeamTrackID[MotherID];
               fEvent->MotherName    = fEvent->BeamNames[MotherID];
               fEvent->MotherMass    = fEvent->BeamMasses[MotherID];
               fEvent->DecayTime     = tempDaugther.decaytime / ns;
