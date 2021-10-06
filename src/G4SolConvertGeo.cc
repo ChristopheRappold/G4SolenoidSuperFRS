@@ -170,6 +170,11 @@ int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeo
       set_color(nameTemp, kPink + 1);
     }
 
+  set_color("Si1_Strip_log_x",kPink+1);
+  set_color("Si1_Strip_log_y",kPink+1);
+  set_color("Si2_Strip_log_x",kPink+2);
+  set_color("Si2_Strip_log_y",kPink+2);
+
   set_color("SD1_Strip_log_u",kPink+1);
   set_color("SD1_Strip_log_v",kPink+1);
   set_color("SD2_Strip_log_u",kPink+2);

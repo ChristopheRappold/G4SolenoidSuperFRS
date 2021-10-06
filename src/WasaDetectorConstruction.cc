@@ -437,13 +437,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_Si1_thickness  = Par.Get<double>("HypHI_Si1_thickness");
       G4double HypHI_Si1_stripwidth = Par.Get<double>("HypHI_Si1_stripwidth");
       G4double HypHI_Si1_posZ       = Par.Get<double>("HypHI_Si1_posZ");
+      int HypHI_Si1_SingleSided     = Par.IsAvailable("HypHI_Si1_SingleSided") ? Par.Get<int>("HypHI_Si1_SingleSided") : 0;
+
+      double scaling_thickness = HypHI_Si1_SingleSided == 1 ? 2 : 1 ;
 
       G4VSolid* Si1_MothVol_solid =
-          new G4Box("Si1_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 2.);
+	new G4Box("Si1_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., (scaling_thickness * HypHI_Si1_thickness + (0.25*mm)*HypHI_Si1_SingleSided)/ 2.);
       G4VSolid* Si1_layerX_MothVol_solid =
-          new G4Box("Si1_layerX_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 4.);
+	new G4Box("Si1_layerX_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., scaling_thickness * HypHI_Si1_thickness / 4.);
       G4VSolid* Si1_layerY_MothVol_solid =
-          new G4Box("Si1_layerY_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 4.);
+          new G4Box("Si1_layerY_solid", HypHI_Si1_length / 2., HypHI_Si1_length / 2., scaling_thickness * HypHI_Si1_thickness / 4.);
       G4LogicalVolume* Si1_MothVol_log   = new G4LogicalVolume(Si1_MothVol_solid, Air, "Si1_log", 0, 0, 0);
       G4LogicalVolume* Si1_MothVol_log_x = new G4LogicalVolume(Si1_layerX_MothVol_solid, Air, "Si1_log_x", 0, 0, 0);
       G4LogicalVolume* Si1_MothVol_log_y = new G4LogicalVolume(Si1_layerY_MothVol_solid, Air, "Si1_log_y", 0, 0, 0);
@@ -451,15 +454,15 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       AllPlacements.emplace_back(
           new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., HypHI_Si1_posZ + Systematic_shift) - transMFLD_new),
                             Si1_MothVol_log, "Silicon1", MFLD_log, false, 0));
-      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., -HypHI_Si1_thickness / 4.)),
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., -scaling_thickness * HypHI_Si1_thickness/ 4. - (0.125*mm)*HypHI_Si1_SingleSided)),
                                                    Si1_MothVol_log_x, "Si1_x", Si1_MothVol_log, false, 0));
-      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., +HypHI_Si1_thickness / 4.)),
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., +scaling_thickness * HypHI_Si1_thickness / 4. + (0.125*mm)*HypHI_Si1_SingleSided)),
                                                    Si1_MothVol_log_y, "Si1_y", Si1_MothVol_log, false, 0));
 
       G4VSolid* Si1_Strip_solid_x =
-          new G4Box("Si1_Strip_solid_x", HypHI_Si1_stripwidth / 2., HypHI_Si1_length / 2., HypHI_Si1_thickness / 4.);
+          new G4Box("Si1_Strip_solid_x", HypHI_Si1_stripwidth / 2., HypHI_Si1_length / 2., scaling_thickness * HypHI_Si1_thickness / 4.);
       G4VSolid* Si1_Strip_solid_y =
-          new G4Box("Si1_Strip_solid_y", HypHI_Si1_length / 2., HypHI_Si1_stripwidth / 2., HypHI_Si1_thickness / 4.);
+          new G4Box("Si1_Strip_solid_y", HypHI_Si1_length / 2., HypHI_Si1_stripwidth / 2., scaling_thickness * HypHI_Si1_thickness / 4.);
       G4LogicalVolume* Si1_Strip_log_x = new G4LogicalVolume(Si1_Strip_solid_x, Si, "Si1_Strip_log_x", 0, 0, 0);
       G4LogicalVolume* Si1_Strip_log_y = new G4LogicalVolume(Si1_Strip_solid_y, Si, "Si1_Strip_log_y", 0, 0, 0);
 
@@ -502,13 +505,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_Si2_thickness  = Par.Get<double>("HypHI_Si2_thickness");
       G4double HypHI_Si2_stripwidth = Par.Get<double>("HypHI_Si2_stripwidth");
       G4double HypHI_Si2_posZ       = Par.Get<double>("HypHI_Si2_posZ");
+      int HypHI_Si2_SingleSided     = Par.IsAvailable("HypHI_Si2_SingleSided") ? Par.Get<int>("HypHI_Si2_SingleSided") : 0;
+
+      double scaling_thickness = HypHI_Si2_SingleSided == 1 ? 2 : 1 ;
 
       G4VSolid* Si2_MothVol_solid =
-          new G4Box("Si2_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 2.);
+	new G4Box("Si2_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., (scaling_thickness * HypHI_Si2_thickness + (0.25*mm)*HypHI_Si2_SingleSided)/ 2. );
       G4VSolid* Si2_layerX_MothVol_solid =
-          new G4Box("Si2_layerX_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 4.);
+          new G4Box("Si2_layerX_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., scaling_thickness * HypHI_Si2_thickness / 4.);
       G4VSolid* Si2_layerY_MothVol_solid =
-          new G4Box("Si2_layerY_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 4.);
+          new G4Box("Si2_layerY_solid", HypHI_Si2_length / 2., HypHI_Si2_length / 2., scaling_thickness * HypHI_Si2_thickness / 4.);
       G4LogicalVolume* Si2_MothVol_log   = new G4LogicalVolume(Si2_MothVol_solid, Air, "Si2_log", 0, 0, 0);
       G4LogicalVolume* Si2_MothVol_log_x = new G4LogicalVolume(Si2_layerX_MothVol_solid, Air, "Si2_log_x", 0, 0, 0);
       G4LogicalVolume* Si2_MothVol_log_y = new G4LogicalVolume(Si2_layerY_MothVol_solid, Air, "Si2_log_y", 0, 0, 0);
@@ -516,15 +522,15 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       AllPlacements.emplace_back(
           new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., HypHI_Si2_posZ + Systematic_shift) - transMFLD_new),
                             Si2_MothVol_log, "Silicon1", MFLD_log, false, 0));
-      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., -HypHI_Si2_thickness / 4.)),
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., -scaling_thickness * HypHI_Si2_thickness / 4. - (0.125*mm)*HypHI_Si2_SingleSided)),
                                                    Si2_MothVol_log_x, "Si2_x", Si2_MothVol_log, false, 0));
-      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., +HypHI_Si2_thickness / 4.)),
+      AllPlacements.emplace_back(new G4PVPlacement(0, Sign * (G4ThreeVector(0., 0., +scaling_thickness * HypHI_Si2_thickness / 4. + (0.125*mm)*HypHI_Si2_SingleSided)),
                                                    Si2_MothVol_log_y, "Si2_y", Si2_MothVol_log, false, 0));
 
       G4VSolid* Si2_Strip_solid_x =
-          new G4Box("Si2_Strip_solid_x", HypHI_Si2_stripwidth / 2., HypHI_Si2_length / 2., HypHI_Si2_thickness / 4.);
+          new G4Box("Si2_Strip_solid_x", HypHI_Si2_stripwidth / 2., HypHI_Si2_length / 2., scaling_thickness * HypHI_Si2_thickness / 4.);
       G4VSolid* Si2_Strip_solid_y =
-          new G4Box("Si2_Strip_solid_y", HypHI_Si2_length / 2., HypHI_Si2_stripwidth / 2., HypHI_Si2_thickness / 4.);
+          new G4Box("Si2_Strip_solid_y", HypHI_Si2_length / 2., HypHI_Si2_stripwidth / 2., scaling_thickness * HypHI_Si2_thickness / 4.);
       G4LogicalVolume* Si2_Strip_log_x = new G4LogicalVolume(Si2_Strip_solid_x, Si, "Si2_Strip_log_x", 0, 0, 0);
       G4LogicalVolume* Si2_Strip_log_y = new G4LogicalVolume(Si2_Strip_solid_y, Si, "Si2_Strip_log_y", 0, 0, 0);
 
@@ -921,14 +927,14 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD_length = 20480 * um;
       // G4double HypHI_SD_pcb         = 1650 * um;
       G4double HypHI_SD_thickness   = 285 * um;
-      G4double HypHI_SD_stripwidth  = 160 * um;
+      G4double HypHI_SD_stripwidth  = 80 * um;
       G4double HypHI_SD_striplength = 20480 * um; // 20192 * um;
-      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : 0.5 * mm;
+      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : Par.IsAvailable("HypHI_SDpad1_gapSize") ? Par.Get<double>("HypHI_SDpad1_gapSize") : 0.5 * mm;
 
       G4int HypHI_SD_Nch = Par.Get<int>("HypHI_SDpad1_Nch");
       G4int HypHI_SD_stripPerCh =
           Par.IsAvailable("HypHI_SDpad1_stripPerCh") ? Par.Get<int>("HypHI_SDpad1_stripPerCh") : 1;
-      if(HypHI_SD_Nch * HypHI_SD_stripPerCh != 128)
+      if(HypHI_SD_Nch * HypHI_SD_stripPerCh != 256)
         {
           std::cout << "E> SDpad1 number of channel does not correspond to the design ! " << HypHI_SD_Nch << " "
                     << HypHI_SD_stripPerCh << "\n";
@@ -949,10 +955,19 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
         G4LogicalVolume* SDu_MothVol_log = new G4LogicalVolume(SDu_MothVol_solid, Air, "SD1u_log", 0, 0, 0);
 
+        G4RotationMatrix* rotSD1_u = nullptr;
+        if(Par.IsAvailable("HypHI_SDpad1_rotate"))
+          {
+            G4double HypHI_SD1_rotate = Par.Get<double>("HypHI_SDpad1_rotate");
+            rotSD1_u                 = new G4RotationMatrix;
+	    double signRot = WasaSide == 1 ? -1 : 1;
+            rotSD1_u->rotateZ(signRot*HypHI_SD1_rotate);
+          }
+
         G4ThreeVector TransSDu = G4ThreeVector(0., 0., HypHI_SD1_posZ + Systematic_shift) - transMFLD_new;
 
         AllPlacements.emplace_back(
-            new G4PVPlacement(nullptr, Sign * TransSDu, SDu_MothVol_log, "Silicon1u", MFLD_log, false, 0));
+            new G4PVPlacement(rotSD1_u, Sign * TransSDu, SDu_MothVol_log, "Silicon1u", MFLD_log, false, 0));
 
         G4VSolid* SD_Strip_solid_u = new G4Box("SD1_Strip_solid_u", HypHI_SD_striplength / 2., HypHI_SD_stripwidth / 2.,
                                                HypHI_SD_thickness / 2.);
@@ -1017,15 +1032,24 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       {
         G4VSolid* SDv_MothVol_solid =
-            new G4Box("SD1u_solid", (HypHI_SD_length * HypHI_SD1_padX + HypHI_SD_gap) / 2.,
+            new G4Box("SD1v_solid", (HypHI_SD_length * HypHI_SD1_padX + HypHI_SD_gap) / 2.,
                       (HypHI_SD_length * HypHI_SD1_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
 
         G4LogicalVolume* SDv_MothVol_log = new G4LogicalVolume(SDv_MothVol_solid, Air, "SD1v_log", 0, 0, 0);
 
+        G4RotationMatrix* rotSD1_v = nullptr;
+        if(Par.IsAvailable("HypHI_SDpad1_rotate"))
+          {
+            G4double HypHI_SD1_rotate = Par.Get<double>("HypHI_SDpad1_rotate");
+            rotSD1_v                 = new G4RotationMatrix;
+	    double signRot = WasaSide == 1 ? -1 : 1;
+            rotSD1_v->rotateZ(signRot*HypHI_SD1_rotate);
+          }
+
         G4ThreeVector TransSDv = G4ThreeVector(0., 0., HypHI_SD1_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
 
         AllPlacements.emplace_back(
-            new G4PVPlacement(nullptr, Sign * TransSDv, SDv_MothVol_log, "Silicon1v", MFLD_log, false, 0));
+            new G4PVPlacement(rotSD1_v, Sign * TransSDv, SDv_MothVol_log, "Silicon1v", MFLD_log, false, 0));
 
         G4VSolid* SD_Strip_solid_v = new G4Box("SD1_Strip_solid_v", HypHI_SD_stripwidth / 2., HypHI_SD_striplength / 2.,
                                                HypHI_SD_thickness / 2.);
@@ -1094,14 +1118,14 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD_length = 20480 * um;
       // G4double HypHI_SD_pcb         = 1650 * um;
       G4double HypHI_SD_thickness   = 285 * um;
-      G4double HypHI_SD_stripwidth  = 160 * um;
+      G4double HypHI_SD_stripwidth  = 80 * um;
       G4double HypHI_SD_striplength = 20480 * um; // 20192 * um;
-      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : 0.5 * mm;
+      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : Par.IsAvailable("HypHI_SDpad2_gapSize") ?  Par.Get<double>("HypHI_SDpad2_gapSize") : 0.5 * mm;
 
       G4int HypHI_SD_Nch = Par.Get<int>("HypHI_SDpad2_Nch");
       G4int HypHI_SD_stripPerCh =
           Par.IsAvailable("HypHI_SDpad2_stripPerCh") ? Par.Get<int>("HypHI_SDpad2_stripPerCh") : 1;
-      if(HypHI_SD_Nch * HypHI_SD_stripPerCh != 128)
+      if(HypHI_SD_Nch * HypHI_SD_stripPerCh != 256)
         {
           std::cout << "E> SDpad2 number of channel does not correspond to the design ! " << HypHI_SD_Nch << " "
                     << HypHI_SD_stripPerCh << "\n";
@@ -1122,10 +1146,19 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
         G4LogicalVolume* SDu_MothVol_log = new G4LogicalVolume(SDu_MothVol_solid, Air, "SD2u_log", 0, 0, 0);
 
+        G4RotationMatrix* rotSD2_u = nullptr;
+        if(Par.IsAvailable("HypHI_SDpad2_rotate"))
+          {
+            G4double HypHI_SD2_rotate = Par.Get<double>("HypHI_SDpad2_rotate");
+            rotSD2_u                 = new G4RotationMatrix;
+	    double signRot = WasaSide == 1 ? -1 : 1;
+            rotSD2_u->rotateZ(signRot*HypHI_SD2_rotate);
+          }
+
         G4ThreeVector TransSDu = G4ThreeVector(0., 0., HypHI_SD2_posZ + Systematic_shift) - transMFLD_new;
 
         AllPlacements.emplace_back(
-            new G4PVPlacement(nullptr, Sign * TransSDu, SDu_MothVol_log, "Silicon2u", MFLD_log, false, 0));
+            new G4PVPlacement(rotSD2_u, Sign * TransSDu, SDu_MothVol_log, "Silicon2u", MFLD_log, false, 0));
 
         G4VSolid* SD_Strip_solid_u = new G4Box("SD2_Strip_solid_u", HypHI_SD_striplength / 2., HypHI_SD_stripwidth / 2.,
                                                HypHI_SD_thickness / 2.);
@@ -1195,10 +1228,19 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
         G4LogicalVolume* SDv_MothVol_log = new G4LogicalVolume(SDv_MothVol_solid, Air, "SD2v_log", 0, 0, 0);
 
+        G4RotationMatrix* rotSD2_v = nullptr;
+        if(Par.IsAvailable("HypHI_SDpad2_rotate"))
+          {
+            G4double HypHI_SD2_rotate = Par.Get<double>("HypHI_SDpad2_rotate");
+            rotSD2_v                 = new G4RotationMatrix;
+	    double signRot = WasaSide == 1 ? -1 : 1;
+	    rotSD2_v->rotateZ(signRot*HypHI_SD2_rotate);
+          }
+
         G4ThreeVector TransSDv = G4ThreeVector(0., 0., HypHI_SD2_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
 
         AllPlacements.emplace_back(
-            new G4PVPlacement(nullptr, Sign * TransSDv, SDv_MothVol_log, "Silicon2v", MFLD_log, false, 0));
+            new G4PVPlacement(rotSD2_v, Sign * TransSDv, SDv_MothVol_log, "Silicon2v", MFLD_log, false, 0));
 
         G4VSolid* SD_Strip_solid_v = new G4Box("SD2_Strip_solid_v", HypHI_SD_stripwidth / 2., HypHI_SD_striplength / 2.,
                                                HypHI_SD_thickness / 2.);
