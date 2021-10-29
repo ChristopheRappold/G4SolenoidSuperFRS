@@ -929,7 +929,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD_thickness   = 285 * um;
       G4double HypHI_SD_stripwidth  = 80 * um;
       G4double HypHI_SD_striplength = 20480 * um; // 20192 * um;
-      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : Par.IsAvailable("HypHI_SDpad1_gapSize") ? Par.Get<double>("HypHI_SDpad1_gapSize") : 0.5 * mm;
+      G4double HypHI_SD_gap =
+          Par.IsAvailable("HypHI_SDpad_NoGap")
+              ? 0.0 * mm
+              : Par.IsAvailable("HypHI_SDpad1_gapSize") ? Par.Get<double>("HypHI_SDpad1_gapSize") : 0.5 * mm;
 
       G4int HypHI_SD_Nch = Par.Get<int>("HypHI_SDpad1_Nch");
       G4int HypHI_SD_stripPerCh =
@@ -950,8 +953,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       {
         G4VSolid* SDu_MothVol_solid =
-            new G4Box("SD1u_solid", (HypHI_SD_length * HypHI_SD1_padX + HypHI_SD_gap) / 2.,
-                      (HypHI_SD_length * HypHI_SD1_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+            new G4Box("SD1u_solid", ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD1_padX) / 2.,
+                      ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD1_padY) / 2., HypHI_SD_thickness / 2.);
 
         G4LogicalVolume* SDu_MothVol_log = new G4LogicalVolume(SDu_MothVol_solid, Air, "SD1u_log", 0, 0, 0);
 
@@ -959,9 +962,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(Par.IsAvailable("HypHI_SDpad1_rotate"))
           {
             G4double HypHI_SD1_rotate = Par.Get<double>("HypHI_SDpad1_rotate");
-            rotSD1_u                 = new G4RotationMatrix;
-	    double signRot = WasaSide == 1 ? -1 : 1;
-            rotSD1_u->rotateZ(signRot*HypHI_SD1_rotate);
+            rotSD1_u                  = new G4RotationMatrix;
+            double signRot            = WasaSide == 1 ? -1 : 1;
+            rotSD1_u->rotateZ(signRot * HypHI_SD1_rotate);
           }
 
         G4ThreeVector TransSDu = G4ThreeVector(0., 0., HypHI_SD1_posZ + Systematic_shift) - transMFLD_new;
@@ -994,8 +997,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
                 nameLogic += nameY;
                 G4LogicalVolume* SDu_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
 
-                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
-                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistX            = HypHI_SD_length + 2 * HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + 2 * HypHI_SD_gap;
                 G4ThreeVector TransSDu_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD1_padX - 1),
                                                            iY * minDistY - 0.5 * minDistY * (HypHI_SD1_padY - 1), 0.);
 
@@ -1032,8 +1035,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       {
         G4VSolid* SDv_MothVol_solid =
-            new G4Box("SD1v_solid", (HypHI_SD_length * HypHI_SD1_padX + HypHI_SD_gap) / 2.,
-                      (HypHI_SD_length * HypHI_SD1_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+            new G4Box("SD1v_solid", ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD1_padX) / 2.,
+                      ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD1_padY) / 2., HypHI_SD_thickness / 2.);
 
         G4LogicalVolume* SDv_MothVol_log = new G4LogicalVolume(SDv_MothVol_solid, Air, "SD1v_log", 0, 0, 0);
 
@@ -1041,9 +1044,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(Par.IsAvailable("HypHI_SDpad1_rotate"))
           {
             G4double HypHI_SD1_rotate = Par.Get<double>("HypHI_SDpad1_rotate");
-            rotSD1_v                 = new G4RotationMatrix;
-	    double signRot = WasaSide == 1 ? -1 : 1;
-            rotSD1_v->rotateZ(signRot*HypHI_SD1_rotate);
+            rotSD1_v                  = new G4RotationMatrix;
+            double signRot            = WasaSide == 1 ? -1 : 1;
+            rotSD1_v->rotateZ(signRot * HypHI_SD1_rotate);
           }
 
         G4ThreeVector TransSDv = G4ThreeVector(0., 0., HypHI_SD1_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
@@ -1076,8 +1079,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
                 nameLogic += nameY;
                 G4LogicalVolume* SDv_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
 
-                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
-                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistX            = HypHI_SD_length + 2 * HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + 2 * HypHI_SD_gap;
                 G4ThreeVector TransSDv_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD1_padX - 1),
                                                            iY * minDistY - 0.5 * minDistY * (HypHI_SD1_padY - 1), 0.);
 
@@ -1120,7 +1123,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4double HypHI_SD_thickness   = 285 * um;
       G4double HypHI_SD_stripwidth  = 80 * um;
       G4double HypHI_SD_striplength = 20480 * um; // 20192 * um;
-      G4double HypHI_SD_gap         = Par.IsAvailable("HypHI_SDpad_NoGap") ? 0.0 * mm : Par.IsAvailable("HypHI_SDpad2_gapSize") ?  Par.Get<double>("HypHI_SDpad2_gapSize") : 0.5 * mm;
+      G4double HypHI_SD_gap =
+          Par.IsAvailable("HypHI_SDpad_NoGap")
+              ? 0.0 * mm
+              : Par.IsAvailable("HypHI_SDpad2_gapSize") ? Par.Get<double>("HypHI_SDpad2_gapSize") : 0.5 * mm;
 
       G4int HypHI_SD_Nch = Par.Get<int>("HypHI_SDpad2_Nch");
       G4int HypHI_SD_stripPerCh =
@@ -1141,8 +1147,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       {
         G4VSolid* SDu_MothVol_solid =
-            new G4Box("SD2u_solid", (HypHI_SD_length * HypHI_SD2_padX + HypHI_SD_gap) / 2.,
-                      (HypHI_SD_length * HypHI_SD2_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+            new G4Box("SD2u_solid", ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD2_padX) / 2.,
+                      ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD2_padY) / 2., HypHI_SD_thickness / 2.);
 
         G4LogicalVolume* SDu_MothVol_log = new G4LogicalVolume(SDu_MothVol_solid, Air, "SD2u_log", 0, 0, 0);
 
@@ -1150,9 +1156,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(Par.IsAvailable("HypHI_SDpad2_rotate"))
           {
             G4double HypHI_SD2_rotate = Par.Get<double>("HypHI_SDpad2_rotate");
-            rotSD2_u                 = new G4RotationMatrix;
-	    double signRot = WasaSide == 1 ? -1 : 1;
-            rotSD2_u->rotateZ(signRot*HypHI_SD2_rotate);
+            rotSD2_u                  = new G4RotationMatrix;
+            double signRot            = WasaSide == 1 ? -1 : 1;
+            rotSD2_u->rotateZ(signRot * HypHI_SD2_rotate);
           }
 
         G4ThreeVector TransSDu = G4ThreeVector(0., 0., HypHI_SD2_posZ + Systematic_shift) - transMFLD_new;
@@ -1185,8 +1191,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
                 nameLogic += nameY;
                 G4LogicalVolume* SDu_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
 
-                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
-                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistX            = HypHI_SD_length + 2 * HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + 2 * HypHI_SD_gap;
                 G4ThreeVector TransSDu_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD2_padX - 1),
                                                            iY * minDistY - 0.5 * minDistY * (HypHI_SD2_padY - 1), 0.);
 
@@ -1223,8 +1229,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       {
         G4VSolid* SDv_MothVol_solid =
-            new G4Box("SD2v_solid", (HypHI_SD_length * HypHI_SD2_padX + HypHI_SD_gap) / 2.,
-                      (HypHI_SD_length * HypHI_SD2_padY + HypHI_SD_gap) / 2., HypHI_SD_thickness / 2.);
+            new G4Box("SD2v_solid", ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD2_padX) / 2.,
+                      ((HypHI_SD_length + HypHI_SD_gap) * HypHI_SD2_padY) / 2., HypHI_SD_thickness / 2.);
 
         G4LogicalVolume* SDv_MothVol_log = new G4LogicalVolume(SDv_MothVol_solid, Air, "SD2v_log", 0, 0, 0);
 
@@ -1232,9 +1238,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(Par.IsAvailable("HypHI_SDpad2_rotate"))
           {
             G4double HypHI_SD2_rotate = Par.Get<double>("HypHI_SDpad2_rotate");
-            rotSD2_v                 = new G4RotationMatrix;
-	    double signRot = WasaSide == 1 ? -1 : 1;
-	    rotSD2_v->rotateZ(signRot*HypHI_SD2_rotate);
+            rotSD2_v                  = new G4RotationMatrix;
+            double signRot            = WasaSide == 1 ? -1 : 1;
+            rotSD2_v->rotateZ(signRot * HypHI_SD2_rotate);
           }
 
         G4ThreeVector TransSDv = G4ThreeVector(0., 0., HypHI_SD2_posZ + 0.5 * mm + Systematic_shift) - transMFLD_new;
@@ -1267,8 +1273,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
                 nameLogic += nameY;
                 G4LogicalVolume* SDv_pad_log_1 = new G4LogicalVolume(SDpad_solid, Air, nameLogic, 0, 0, 0);
 
-                double minDistX            = HypHI_SD_length + HypHI_SD_gap;
-                double minDistY            = HypHI_SD_length + HypHI_SD_gap;
+                double minDistX            = HypHI_SD_length + 2 * HypHI_SD_gap;
+                double minDistY            = HypHI_SD_length + 2 * HypHI_SD_gap;
                 G4ThreeVector TransSDv_pad = G4ThreeVector(iX * minDistX - 0.5 * minDistX * (HypHI_SD2_padX - 1),
                                                            iY * minDistY - 0.5 * minDistY * (HypHI_SD2_padY - 1), 0.);
 
