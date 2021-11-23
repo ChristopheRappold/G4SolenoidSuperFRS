@@ -1385,7 +1385,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4VisAttributes* visAttributes_v = new G4VisAttributes(color_v);
 
       // -------------------------- First Fiber Detector --------------------------
-      G4VSolid* FiberD1_MothVol_solid        = new G4Box("FiberDetector1", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD1_MothVol_solid        = new G4Box("FiberDetector1", 15. * cm, 20. * cm, 6. * mm);
       G4VSolid* FiberD1_layerX_MothVol_solid = new G4Box("FiberD1_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD1_layerU_MothVol_solid = new G4Box("FiberD1_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD1_layerV_MothVol_solid = new G4Box("FiberD1_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
@@ -1501,7 +1501,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           FiberD1_MothVol_log_v->SetVisAttributes(visAttributes_v);
         }
       // -------------------------- Second Fiber Detector --------------------------
-      G4VSolid* FiberD2_MothVol_solid        = new G4Box("FiberDetector2", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD2_MothVol_solid        = new G4Box("FiberDetector2", 15. * cm, 20. * cm, 6. * mm);
       G4VSolid* FiberD2_layerX_MothVol_solid = new G4Box("FiberD2_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD2_layerU_MothVol_solid = new G4Box("FiberD2_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD2_layerV_MothVol_solid = new G4Box("FiberD2_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
@@ -1619,7 +1619,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         }
 
       // -------------------------- Third Fiber Detector --------------------------
-      G4VSolid* FiberD3_MothVol_solid        = new G4Box("FiberDetector3", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD3_MothVol_solid        = new G4Box("FiberDetector3", 15. * cm, 20. * cm, 6. * mm);
       G4VSolid* FiberD3_layerX_MothVol_solid = new G4Box("FiberD3_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD3_layerU_MothVol_solid = new G4Box("FiberD3_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD3_layerV_MothVol_solid = new G4Box("FiberD3_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
@@ -1739,7 +1739,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         }
 
       // -------------------------- Fourth Fiber Detector --------------------------
-      G4VSolid* FiberD4_MothVol_solid        = new G4Box("FiberDetector4", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD4_MothVol_solid        = new G4Box("FiberDetector4", 15. * cm, 20. * cm, 6. * mm);
       G4VSolid* FiberD4_layerX_MothVol_solid = new G4Box("FiberD4_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD4_layerU_MothVol_solid = new G4Box("FiberD4_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD4_layerV_MothVol_solid = new G4Box("FiberD4_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
@@ -1857,7 +1857,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         }
 
       // -------------------------- Fifth Fiber Detector --------------------------
-      G4VSolid* FiberD5_MothVol_solid        = new G4Box("FiberDetector5", 15. * cm, 20. * cm, 3. * cm);
+      G4VSolid* FiberD5_MothVol_solid        = new G4Box("FiberDetector5", 15. * cm, 20. * cm, 6. * mm);
       G4VSolid* FiberD5_layerX_MothVol_solid = new G4Box("FiberD5_layerX_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD5_layerU_MothVol_solid = new G4Box("FiberD5_layerU_solid", 15. * cm, 20. * cm, 2. * mm);
       G4VSolid* FiberD5_layerV_MothVol_solid = new G4Box("FiberD5_layerV_solid", 15. * cm, 20. * cm, 2. * mm);
