@@ -210,8 +210,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
       UTracker->SetVisAttributes(G4VisAttributes::Invisible);
     }
-
-  for(int iColorT = 0; auto& CurrentName : NameCDC2_Invisible)
+  int iColorT = 0;
+  for( auto& CurrentName : NameCDC2_Invisible)
     {
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
       if(MiniVis)
