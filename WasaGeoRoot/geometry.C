@@ -219,7 +219,7 @@ void geometry(bool Central_FW=false, bool Central_Pipe=false, bool EMC_Front=fal
   list_med.push_back(med72);
   list_med.push_back(med73);
 
-  TGeoVolume* WASA = gGeoManager->MakeTube("WASA", med1, 0, 150, 300);
+  TGeoVolume* WASA = gGeoManager->MakeTube("WASA", med1, 0, 150, 500);
 
   // TGeoVolumeMulti *ESC_ = gGeoManager->MakeVolumeMulti("ESC", med11);
   // ESC_->AddVolume(gGeoManager->MakeTube("ESC",med11,0,150,0.5000000E-01));

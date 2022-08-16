@@ -175,7 +175,7 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
 
   // Central Barrel
   // TGeoVolume* MFLD = gGeoManager->MakeTube("MFLD", med2, 0, 76, 122.3);
-  TGeoVolume* MFLD = gGeoManager->MakeTube("MFLD", med2, 0, 76, 222.3);
+  TGeoVolume* MFLD = gGeoManager->MakeTube("MFLD", med3, 0, 76, 200.); // air
   //#ifdef WASAVACUUMPIPE
 
   TGeoVolume* PCB_ = nullptr;
@@ -373,7 +373,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
       //#endif
   
   // Solenoid
-  TGeoVolume* INNER_ = gGeoManager->MakeTube("INNER", med1, 0., 31.5, 27.75);
+  //TGeoVolume* INNER_ = gGeoManager->MakeTube("INNER", med1, 0., 31.5, 27.75);
+  TGeoVolume* INNER_ = gGeoManager->MakeTube("INNER", med3, 0., 24.5, 27.75); // air
   
   TGeoVolume* SOL_ = gGeoManager->MakeTube("SOL", med2, 24.5, 31.5, 27.75);
   TGeoVolume* SOC0 = gGeoManager->MakeTube("SOC0", med34, 3.9, 4.1, 2.5);
@@ -401,74 +402,74 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   ((TGeoPcon*)IRC_->GetShape())->DefineSection(13, 70.5, 23, 47);
   IRC_->SetLineColor(kBlue);
 
-  // MDC
-  TGeoVolume* MD_1 = gGeoManager->MakeTube("MD01", med2, 3.897, 4.303, 16.48);
+  // MDC in air
+  TGeoVolume* MD_1 = gGeoManager->MakeTube("MD01", med3, 3.897, 4.303, 16.48);
   TGeoVolume* ME_1 = gGeoManager->MakeTube("ME01", med9, 0, 0.2025, 16.48);
   TGeoVolume* MG_1 = gGeoManager->MakeTube("MG01", med69, 0, 0.2, 16.48);
   ME_1->SetLineColor(kOrange-8);
-  TGeoVolume* MD_2 = gGeoManager->MakeTube("MD02", med2, 4.302974, 5.4475, 17.435);
+  TGeoVolume* MD_2 = gGeoManager->MakeTube("MD02", med3, 4.302974, 5.4475, 17.435);
   TGeoVolume* ME_2 = gGeoManager->MakeTube("ME02", med9, 0, 0.2025, 17.435);
   TGeoVolume* MG_2 = gGeoManager->MakeTube("MG02", med69, 0, 0.2, 17.435);
   ME_2->SetLineColor(kOrange-7);
-  TGeoVolume* MD_3 = gGeoManager->MakeTube("MD03", med2, 5.497, 5.903, 18.67);
+  TGeoVolume* MD_3 = gGeoManager->MakeTube("MD03", med3, 5.497, 5.903, 18.67);
   TGeoVolume* ME_3 = gGeoManager->MakeTube("ME03", med9, 0, 0.2025, 18.67);
   TGeoVolume* MG_3 = gGeoManager->MakeTube("MG03", med69, 0, 0.2, 18.67);
   ME_3->SetLineColor(kOrange-6);
-  TGeoVolume* MD_4 = gGeoManager->MakeTube("MD04", med2, 5.900502, 7.0475, 19.9);
+  TGeoVolume* MD_4 = gGeoManager->MakeTube("MD04", med3, 5.900502, 7.0475, 19.9);
   TGeoVolume* ME_4 = gGeoManager->MakeTube("ME04", med9, 0, 0.2025, 19.9);
   TGeoVolume* MG_4 = gGeoManager->MakeTube("MG04", med69, 0, 0.2, 19.9);
   ME_4->SetLineColor(kOrange-5);
   //TGeoVolume* MD_5 = gGeoManager->MakeTube("MD05", med2, 7.097, 7.503, 21.13); 
-  TGeoVolume* MD_5 = gGeoManager->MakeTube("MD05", med2, 7.097, 7.50, 21.13); //overlap
+  TGeoVolume* MD_5 = gGeoManager->MakeTube("MD05", med3, 7.097, 7.50, 21.13); //overlap
   TGeoVolume* ME_5 = gGeoManager->MakeTube("ME05", med9, 0, 0.2025, 21.13);
   TGeoVolume* MG_5 = gGeoManager->MakeTube("MG05", med69, 0, 0.2, 21.13);
   ME_5->SetLineColor(kOrange-4);
   //TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med2, 7.491163, 8.8475, 22.36);
-  TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med2, 7.50, 8.8475, 22.36); // overlap
+  TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med3, 7.50, 8.8475, 22.36); // overlap
   TGeoVolume* ME_6 = gGeoManager->MakeTube("ME06", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_6 = gGeoManager->MakeTube("MG06", med69, 0, 0.3, 22.36);
   ME_6->SetLineColor(kOrange-3);
-  TGeoVolume* MD_7 = gGeoManager->MakeTube("MD07", med2, 8.897, 9.502999, 22.36);
+  TGeoVolume* MD_7 = gGeoManager->MakeTube("MD07", med3, 8.897, 9.502999, 22.36);
   TGeoVolume* ME_7 = gGeoManager->MakeTube("ME07", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_7 = gGeoManager->MakeTube("MG07", med69, 0, 0.3, 22.36);
   ME_7->SetLineColor(kOrange-2);
-  TGeoVolume* MD_8 = gGeoManager->MakeTube("MD08", med2, 9.497369, 10.8475, 22.36);
+  TGeoVolume* MD_8 = gGeoManager->MakeTube("MD08", med3, 9.497369, 10.8475, 22.36);
   TGeoVolume* ME_8 = gGeoManager->MakeTube("ME08", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_8 = gGeoManager->MakeTube("MG08", med69, 0, 0.3, 22.36);
   ME_8->SetLineColor(kOrange-1);
-  TGeoVolume* MD_9 = gGeoManager->MakeTube("MD09", med2, 10.897, 11.503, 22.36);
+  TGeoVolume* MD_9 = gGeoManager->MakeTube("MD09", med3, 10.897, 11.503, 22.36);
   TGeoVolume* ME_9 = gGeoManager->MakeTube("ME09", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_9 = gGeoManager->MakeTube("MG09", med69, 0, 0.3, 22.36);
   ME_9->SetLineColor(kOrange);
-  TGeoVolume* MD10 = gGeoManager->MakeTube("MD10", med2, 11.5039, 12.8475, 22.36);
+  TGeoVolume* MD10 = gGeoManager->MakeTube("MD10", med3, 11.5039, 12.8475, 22.36);
   TGeoVolume* ME10 = gGeoManager->MakeTube("ME10", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG10 = gGeoManager->MakeTube("MG10", med69, 0, 0.3, 22.36);
   ME10->SetLineColor(kOrange+1);
-  TGeoVolume* MD11 = gGeoManager->MakeTube("MD11", med2, 12.897, 13.503, 22.36);
+  TGeoVolume* MD11 = gGeoManager->MakeTube("MD11", med3, 12.897, 13.503, 22.36);
   TGeoVolume* ME11 = gGeoManager->MakeTube("ME11", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG11 = gGeoManager->MakeTube("MG11", med69, 0, 0.3, 22.36);
   ME11->SetLineColor(kOrange+2);
-  TGeoVolume* MD12 = gGeoManager->MakeTube("MD12", med2, 13.49739, 15.0475, 22.36);
+  TGeoVolume* MD12 = gGeoManager->MakeTube("MD12", med3, 13.49739, 15.0475, 22.36);
   TGeoVolume* ME12 = gGeoManager->MakeTube("ME12", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG12 = gGeoManager->MakeTube("MG12", med69, 0, 0.4, 22.36);
   ME12->SetLineColor(kOrange+3);
-  TGeoVolume* MD13 = gGeoManager->MakeTube("MD13", med2, 15.097, 15.903, 22.36);
+  TGeoVolume* MD13 = gGeoManager->MakeTube("MD13", med3, 15.097, 15.903, 22.36);
   TGeoVolume* ME13 = gGeoManager->MakeTube("ME13", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG13 = gGeoManager->MakeTube("MG13", med69, 0, 0.4, 22.36);
   ME13->SetLineColor(kOrange+4);
-  TGeoVolume* MD14 = gGeoManager->MakeTube("MD14", med2, 15.89664, 17.4475, 22.36);
+  TGeoVolume* MD14 = gGeoManager->MakeTube("MD14", med3, 15.89664, 17.4475, 22.36);
   TGeoVolume* ME14 = gGeoManager->MakeTube("ME14", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG14 = gGeoManager->MakeTube("MG14", med69, 0, 0.4, 22.36);
   ME14->SetLineColor(kOrange+5);
-  TGeoVolume* MD15 = gGeoManager->MakeTube("MD15", med2, 17.497, 18.303, 22.36);
+  TGeoVolume* MD15 = gGeoManager->MakeTube("MD15", med3, 17.497, 18.303, 22.36);
   TGeoVolume* ME15 = gGeoManager->MakeTube("ME15", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG15 = gGeoManager->MakeTube("MG15", med69, 0, 0.4, 22.36);
   ME15->SetLineColor(kOrange+6);
-  TGeoVolume* MD16 = gGeoManager->MakeTube("MD16", med2, 18.30906, 19.8475, 22.36);
+  TGeoVolume* MD16 = gGeoManager->MakeTube("MD16", med3, 18.30906, 19.8475, 22.36);
   TGeoVolume* ME16 = gGeoManager->MakeTube("ME16", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG16 = gGeoManager->MakeTube("MG16", med69, 0, 0.4, 22.36);
   ME16->SetLineColor(kOrange+7);
-  TGeoVolume* MD17 = gGeoManager->MakeTube("MD17", med2, 19.897, 20.703, 22.36);
+  TGeoVolume* MD17 = gGeoManager->MakeTube("MD17", med3, 19.897, 20.703, 22.36);
   TGeoVolume* ME17 = gGeoManager->MakeTube("ME17", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG17 = gGeoManager->MakeTube("MG17", med69, 0, 0.4, 22.36);
   ME17->SetLineColor(kOrange+8);
@@ -496,6 +497,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   PSL1->SetLineColor(kYellow+1);
   
   // Solenoid Coil
+
+
   TGeoVolumeMulti* SOAL = gGeoManager->MakeVolumeMulti("SOAL", med7);
   SOAL->AddVolume(gGeoManager->MakeTube("SOAL", med7, 24.5, 24.6, 27.75));
   SOAL->AddVolume(gGeoManager->MakeTube("SOAL", med7, 27.85, 28.35, 27.75));
@@ -832,9 +835,11 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoRotation* rot254 = new TGeoRotation("rot254", 30.71555, 90, 90, 180, 59.28446, 270);
 
   MFLD->AddNode(INNER_, 1, new TGeoCombiTrans(0, 0, 0.25, rot252));
+  MFLD->AddNode(SOL_, 1, new TGeoCombiTrans(0, 0, 0.25, rot252));
   
   //MFLD->AddNode(SOL_, 1, new TGeoCombiTrans(0, 0, 0.25, rot252));
-  INNER_->AddNode(SOL_, 1,  rot252);
+  //INNER_->AddNode(SOL_, 1,  rot252);
+
   SOL_->AddNode(SOAL->GetVolume(0), 1, rot252);
   SOL_->AddNode(COIL->GetVolume(0), 1, rot252);
   SOL_->AddNode(SOAL->GetVolume(1), 2, rot252);
