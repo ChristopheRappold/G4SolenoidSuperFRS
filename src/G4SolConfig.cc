@@ -97,6 +97,7 @@ void G4SolConfig::ParseConfig(const std::string& namefile)
         }
     }
 }
+
 G4SolConfig::~G4SolConfig() {}
 
 int G4SolConfig::ParseCmd(int argc, char** argv)
@@ -169,6 +170,9 @@ int G4SolConfig::ParseCmd(int argc, char** argv)
     }
 
   ParseConfig(nameC);
+
+  if(this->IsAvailable("WasaFrs_ExperimentParams"))
+    ParseConfig(this->Get<std::string>("WasaFrs_ExperimentParams"));
 
   return 0;
 }
