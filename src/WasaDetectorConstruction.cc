@@ -347,6 +347,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       materialMgr->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"); // G4_POLYETHYLENE");//"Plastic");
   G4Material* FiberCoreScinti = materialMgr->FindOrBuildMaterial("G4_POLYSTYRENE");
   G4Material* Carbon          = materialMgr->FindOrBuildMaterial("G4_C"); //"Plastic");
+  materialMgr->BuildMaterialWithNewDensity("G4_Diamond","G4_C",3.*g/cm3);
+
+  G4Material* Diamond         = materialMgr->FindOrBuildMaterial("G4_Diamond"); //"Plastic");
 
   G4VisAttributes* Si_att = new G4VisAttributes(Pink);
 
@@ -370,7 +373,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   G4VSolid* HypHI_Target = new G4Box("HypHI_Target", 0.5*TargetLengthX, 0.5*TargetLengthY, 0.5*TargetLengthZ);
   // G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
-  G4Material* MatTarget             = Par.IsAvailable("Target_Carbon") ? Carbon : Vacuum;
+  G4Material* MatTarget             = Par.IsAvailable("Target_Diamond") ? Diamond : Par.IsAvailable("Target_Carbon") ? Carbon : Vacuum;
   G4LogicalVolume* HypHI_Target_log = new G4LogicalVolume(HypHI_Target, MatTarget, "HypHI_Target_log", 0, 0, 0);
   // G4PVPlacement*   HypHI_Target_phys =
   G4ThreeVector TargetTrans   = G4ThreeVector(TargetPosX, TargetPosY, TargetPosZ) - transMFLD_new;
@@ -1984,7 +1987,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   if(Par.IsAvailable("HypHI_MiniFiberTR_On"))
     {
 
-      const double HypHI_MiniFiberTracker1_posZ = Par.Get<double>("HypHI_MiniFiberTracker1_posZ");
+      const double HypHI_MiniFiberTracker2_posZ = Par.IsAvailable("HypHI_MiniFiberTracker2_posZ") ? Par.Get<double>("HypHI_MiniFiberTracker2_posZ") :
+	Par.Get<double>("HypHI_MiniFiberTracker1_posZ") + 0.5*1.5*cm ;
+
+      const double HypHI_MiniFiberTracker1_posZ = Par.IsAvailable("HypHI_MiniFiberTracker2_posZ") ? Par.Get<double>("HypHI_MiniFiberTracker1_posZ") :
+	Par.Get<double>("HypHI_MiniFiberTracker1_posZ") - 0.5*1.5*cm ;
 
       G4RotationMatrix* rotFibM1 = new G4RotationMatrix;
       rotFibM1->rotateZ(0. * deg);
@@ -2014,7 +2021,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4VisAttributes* visAttributes_v = new G4VisAttributes(color_v);
 
       // -------------------------- First Fiber Detector --------------------------
-      G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 30. * cm, 30. * cm, 3. * cm);
+      G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 30. * cm, 30. * cm, 1.5 * cm);
+      G4VSolid* MiniFiberD2_MothVol_solid         = new G4Box("MiniFiberDetector2", 30. * cm, 30. * cm, 1.5 * cm);
       G4VSolid* MiniFiberD1_layerX1_MothVol_solid = new G4Box("MiniFiberD1_layerX1_solid", 20. * cm, 20. * cm, 2. * mm);
       G4VSolid* MiniFiberD1_layerU1_MothVol_solid = new G4Box("MiniFiberD1_layerU1_solid", 20. * cm, 20. * cm, 2. * mm);
       G4VSolid* MiniFiberD1_layerV1_MothVol_solid = new G4Box("MiniFiberD1_layerV1_solid", 20. * cm, 20. * cm, 2. * mm);
@@ -2023,6 +2031,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4VSolid* MiniFiberD1_layerV2_MothVol_solid = new G4Box("MiniFiberD1_layerV2_solid", 20. * cm, 20. * cm, 2. * mm);
       G4LogicalVolume* MiniFiberD1_MothVol_log =
           new G4LogicalVolume(MiniFiberD1_MothVol_solid, Air, "MiniFiberD1_log", 0, 0, 0);
+      G4LogicalVolume* MiniFiberD2_MothVol_log =
+          new G4LogicalVolume(MiniFiberD2_MothVol_solid, Air, "MiniFiberD2_log", 0, 0, 0);
       G4LogicalVolume* MiniFiberD1_MothVol_log_x1 =
           new G4LogicalVolume(MiniFiberD1_layerX1_MothVol_solid, Air, "MiniFiberD1_log_x1", 0, 0, 0);
       G4LogicalVolume* MiniFiberD1_MothVol_log_u1 =
@@ -2039,6 +2049,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       AllPlacements.emplace_back(new G4PVPlacement(
           0, Sign * (G4ThreeVector(0., 0., HypHI_MiniFiberTracker1_posZ + Systematic_shift) - transMFLD_new),
           MiniFiberD1_MothVol_log, "MiniFiberDetector1", MFLD_log, false, 0));
+      AllPlacements.emplace_back(new G4PVPlacement(
+						   0, Sign * (G4ThreeVector(0., 0., HypHI_MiniFiberTracker2_posZ + Systematic_shift) - transMFLD_new),
+						   MiniFiberD2_MothVol_log, "MiniFiberDetector2", MFLD_log, false, 0));
+
       AllPlacements.emplace_back(new G4PVPlacement(rotFibM1, Sign * (G4ThreeVector(0., 0., posZshift[0])),
                                                    MiniFiberD1_MothVol_log_x1, "MiniFiberD1_x1",
                                                    MiniFiberD1_MothVol_log, false, 0));
@@ -2050,13 +2064,13 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
                                                    MiniFiberD1_MothVol_log, false, 0));
       AllPlacements.emplace_back(new G4PVPlacement(rotFibM1, Sign * (G4ThreeVector(0., 0., posZshift[3])),
                                                    MiniFiberD1_MothVol_log_x2, "MiniFiberD1_x2",
-                                                   MiniFiberD1_MothVol_log, false, 0));
+                                                   MiniFiberD2_MothVol_log, false, 0));
       AllPlacements.emplace_back(new G4PVPlacement(rotFibM2, Sign * (G4ThreeVector(0., 0., posZshift[4])),
                                                    MiniFiberD1_MothVol_log_u2, "MiniFiberD1_u2",
-                                                   MiniFiberD1_MothVol_log, false, 0));
+                                                   MiniFiberD2_MothVol_log, false, 0));
       AllPlacements.emplace_back(new G4PVPlacement(rotFibM3, Sign * (G4ThreeVector(0., 0., posZshift[5])),
                                                    MiniFiberD1_MothVol_log_v2, "MiniFiberD1_v2",
-                                                   MiniFiberD1_MothVol_log, false, 0));
+                                                   MiniFiberD2_MothVol_log, false, 0));
 
       const std::vector<G4double> FD1_startX1            = {-82.312 * mm, -51.512 * mm, 12.688 * mm, 43.488 * mm};
       const std::vector<G4double> FD1_startX2            = {-82.037 * mm, -42.437 * mm, 12.963 * mm, 52.563 * mm};
@@ -2215,105 +2229,110 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   // ----------------------------- @@ -----------------------------
   // ----------------------------- @@ -----------------------------
-
-  G4VSolid* EndFMF2_box        = new G4Box("EndFMF2_box", 25. * cm, 25. * cm, 1. * mm);
-  G4LogicalVolume* EndFMF2_log = new G4LogicalVolume(EndFMF2_box, Scinti, "FMF2_log", 0, 0, 0);
-
-  NameDetectorsSD.push_back(EndFMF2_log->GetName());
-
-  G4RotationMatrix* rotFMF2 = new G4RotationMatrix;
-  // if(WasaSide==1)
-  //   rotFMF2->rotateY(-180*degree);
-  double FMF2_posZ = Par.Get<double>("FRS_FMF2_posZ");
-
-  AllPlacements.emplace_back(
-      new G4PVPlacement(rotFMF2, Sign * (G4ThreeVector(0., 0., FMF2_posZ + Systematic_shift) - transMFLD_new),
-                        EndFMF2_log, "FMF2_phys", MFLD_log, false, 0));
-  AllPlacements.emplace_back(
-      new G4PVPlacement(rotFMF2, Sign * (G4ThreeVector(0., 0., FMF2_posZ + Systematic_shift + 1. * cm) - transMFLD_new),
-                        EndFMF2_log, "FMF2_phys1", MFLD_log, false, 1));
-  AllPlacements.emplace_back(
-      new G4PVPlacement(rotFMF2, Sign * (G4ThreeVector(0., 0., FMF2_posZ + Systematic_shift + 2. * cm) - transMFLD_new),
-                        EndFMF2_log, "FMF2_phys2", MFLD_log, false, 2));
-
-  G4VisAttributes* FMF2_att = new G4VisAttributes(Red);
-  FMF2_att->SetForceWireframe(false);
-  EndFMF2_log->SetVisAttributes(FMF2_att);
-
-  double HypHI_EndCap_rmax = Par.Get<double>("HypHI_EndCap_maxR");
-  double HypHI_EndCap_PosZ = Par.Get<double>("HypHI_EndCap_posZ");
-
-  G4VSolid* HypHI_Endcap = new G4Tubs("HypHI_Endcap", 0, HypHI_EndCap_rmax, 2 * cm, 0, CLHEP::twopi);
-  G4LogicalVolume* HypHI_Endcap_log =
-      new G4LogicalVolume(HypHI_Endcap, Air, "HypHI_Endcap_log", 0, 0, 0); // CDCFieldMgr,0,0);
-
-  G4RotationMatrix* rotEndCap = new G4RotationMatrix;
-  // if(WasaSide==1)
-  //   rotEndCap->rotateY(90*degree);
-
-  AllPlacements.emplace_back(
-      new G4PVPlacement(rotEndCap, Sign * (G4ThreeVector(0., 0., HypHI_EndCap_PosZ + Systematic_shift) - transMFLD_new),
-                        HypHI_Endcap_log, "HypHI_Endcap", MFLD_log, false, 0));
-
-  G4VSolid* HypHI_TrackerFwd =
-      new G4Tubs("HypHI_TrackerFwd", BeamHoleSize * 0.5, HypHI_EndCap_rmax, 2 * mm, 0, CLHEP::twopi);
-  G4LogicalVolume* HypHI_TrackerFwd_log = new G4LogicalVolume(HypHI_TrackerFwd, Air, "HypHI_TrackFwd_log", 0, 0, 0);
-
-  NameDetectorsSD.push_back(HypHI_TrackerFwd_log->GetName());
-
-  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0, 0, -1.5 * cm), HypHI_TrackerFwd_log,
-                                               "HypHI_TrackerFwd0", HypHI_Endcap_log, false, 0));
-
-  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0, 0, -1. * cm), HypHI_TrackerFwd_log,
-                                               "HypHI_TrackerFwd1", HypHI_Endcap_log, false, 1));
-
-  AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0, 0, -0.5 * cm), HypHI_TrackerFwd_log,
-                                               "HypHI_TrackerFwd2", HypHI_Endcap_log, false, 2));
-
-  G4VSolid* HypHI_RPC_l = new G4Tubs("HypHI_RPC_segment_L", BeamHoleSize * 0.5, HypHI_EndCap_rmax / 2., 0.5 * cm,
-                                     -CLHEP::twopi / 16., 2. * CLHEP::twopi / 16.);
-  G4LogicalVolume* HypHI_RPC_l_log = new G4LogicalVolume(HypHI_RPC_l, Air, "HypHI_RPC_l_log", 0, 0, 0);
-  NameDetectorsSD.push_back(HypHI_RPC_l_log->GetName());
-  G4VSolid* HypHI_RPC_h = new G4Tubs("HypHI_RPC_segment_H", HypHI_EndCap_rmax / 2., HypHI_EndCap_rmax, 0.5 * cm,
-                                     -CLHEP::twopi / 16., 2. * CLHEP::twopi / 16.);
-  G4LogicalVolume* HypHI_RPC_h_log = new G4LogicalVolume(HypHI_RPC_h, Air, "HypHI_RPC_h_log", 0, 0, 0);
-  NameDetectorsSD.push_back(HypHI_RPC_h_log->GetName());
-
-  for(int idRPC = 0; idRPC < 8; ++idRPC)
+  if(Par.IsAvailable("FMF2_On"))
     {
-      G4RotationMatrix* rotRPC = new G4RotationMatrix;
-      double rotAngle          = CLHEP::twopi / 8. * static_cast<double>(idRPC);
-      rotRPC->rotateZ(rotAngle);
-      std::string nameRPC("HypHI_RPC_l");
-      nameRPC += std::to_string(idRPC);
-      AllPlacements.emplace_back(new G4PVPlacement(rotRPC, G4ThreeVector(0, 0, 0.5 * cm), HypHI_RPC_l_log, nameRPC,
-                                                   HypHI_Endcap_log, false, idRPC));
+      G4VSolid* EndFMF2_box        = new G4Box("EndFMF2_box", 25. * cm, 25. * cm, 1. * mm);
+      G4LogicalVolume* EndFMF2_log = new G4LogicalVolume(EndFMF2_box, Scinti, "FMF2_log", 0, 0, 0);
 
-      std::string nameRPC2("HypHI_RPC_h");
-      nameRPC2 += std::to_string(idRPC);
-      AllPlacements.emplace_back(new G4PVPlacement(rotRPC, G4ThreeVector(0, 0, 0.5 * cm), HypHI_RPC_h_log, nameRPC2,
-                                                   HypHI_Endcap_log, false, idRPC));
+      NameDetectorsSD.push_back(EndFMF2_log->GetName());
+
+      G4RotationMatrix* rotFMF2 = new G4RotationMatrix;
+      // if(WasaSide==1)
+      //   rotFMF2->rotateY(-180*degree);
+      double FMF2_posZ = Par.Get<double>("FRS_FMF2_posZ");
+
+      AllPlacements.emplace_back(
+				 new G4PVPlacement(rotFMF2, Sign * (G4ThreeVector(0., 0., FMF2_posZ + Systematic_shift) - transMFLD_new),
+						   EndFMF2_log, "FMF2_phys", MFLD_log, false, 0));
+      AllPlacements.emplace_back(
+				 new G4PVPlacement(rotFMF2, Sign * (G4ThreeVector(0., 0., FMF2_posZ + Systematic_shift + 1. * cm) - transMFLD_new),
+						   EndFMF2_log, "FMF2_phys1", MFLD_log, false, 1));
+      AllPlacements.emplace_back(
+				 new G4PVPlacement(rotFMF2, Sign * (G4ThreeVector(0., 0., FMF2_posZ + Systematic_shift + 2. * cm) - transMFLD_new),
+						   EndFMF2_log, "FMF2_phys2", MFLD_log, false, 2));
+
+      G4VisAttributes* FMF2_att = new G4VisAttributes(Red);
+      FMF2_att->SetForceWireframe(false);
+      EndFMF2_log->SetVisAttributes(FMF2_att);
     }
 
-  //--- Visualization ---//
-  if(!MiniVis)
+  if(Par.IsAvailable("HypHI_EndCap"))
     {
-      HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
-      G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
-      HypHI_RPC_att->SetForceWireframe(false);
-      HypHI_RPC_l_log->SetVisAttributes(HypHI_RPC_att);
-      HypHI_RPC_h_log->SetVisAttributes(HypHI_RPC_att);
-      G4VisAttributes* HypHI_Tracker_att = new G4VisAttributes(LightPurple);
-      HypHI_Tracker_att->SetForceWireframe(false);
-      HypHI_TrackerFwd_log->SetVisAttributes(HypHI_Tracker_att);
-    }
-  else
-    {
-      G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
-      HypHI_Endcap_log->SetVisAttributes(HypHI_RPC_att);
-      HypHI_RPC_l_log->SetVisAttributes(G4VisAttributes::Invisible);
-      HypHI_RPC_h_log->SetVisAttributes(G4VisAttributes::Invisible);
-      HypHI_TrackerFwd_log->SetVisAttributes(G4VisAttributes::Invisible);
+      double HypHI_EndCap_rmax = Par.Get<double>("HypHI_EndCap_maxR");
+      double HypHI_EndCap_PosZ = Par.Get<double>("HypHI_EndCap_posZ");
+
+      G4VSolid* HypHI_Endcap = new G4Tubs("HypHI_Endcap", 0, HypHI_EndCap_rmax, 2 * cm, 0, CLHEP::twopi);
+      G4LogicalVolume* HypHI_Endcap_log =
+	new G4LogicalVolume(HypHI_Endcap, Air, "HypHI_Endcap_log", 0, 0, 0); // CDCFieldMgr,0,0);
+
+      G4RotationMatrix* rotEndCap = new G4RotationMatrix;
+      // if(WasaSide==1)
+      //   rotEndCap->rotateY(90*degree);
+
+      AllPlacements.emplace_back(
+				 new G4PVPlacement(rotEndCap, Sign * (G4ThreeVector(0., 0., HypHI_EndCap_PosZ + Systematic_shift) - transMFLD_new),
+						   HypHI_Endcap_log, "HypHI_Endcap", MFLD_log, false, 0));
+
+      G4VSolid* HypHI_TrackerFwd =
+	new G4Tubs("HypHI_TrackerFwd", BeamHoleSize * 0.5, HypHI_EndCap_rmax, 2 * mm, 0, CLHEP::twopi);
+      G4LogicalVolume* HypHI_TrackerFwd_log = new G4LogicalVolume(HypHI_TrackerFwd, Air, "HypHI_TrackFwd_log", 0, 0, 0);
+
+      NameDetectorsSD.push_back(HypHI_TrackerFwd_log->GetName());
+
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0, 0, -1.5 * cm), HypHI_TrackerFwd_log,
+						   "HypHI_TrackerFwd0", HypHI_Endcap_log, false, 0));
+
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0, 0, -1. * cm), HypHI_TrackerFwd_log,
+						   "HypHI_TrackerFwd1", HypHI_Endcap_log, false, 1));
+
+      AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0, 0, -0.5 * cm), HypHI_TrackerFwd_log,
+						   "HypHI_TrackerFwd2", HypHI_Endcap_log, false, 2));
+
+      G4VSolid* HypHI_RPC_l = new G4Tubs("HypHI_RPC_segment_L", BeamHoleSize * 0.5, HypHI_EndCap_rmax / 2., 0.5 * cm,
+					 -CLHEP::twopi / 16., 2. * CLHEP::twopi / 16.);
+      G4LogicalVolume* HypHI_RPC_l_log = new G4LogicalVolume(HypHI_RPC_l, Air, "HypHI_RPC_l_log", 0, 0, 0);
+      NameDetectorsSD.push_back(HypHI_RPC_l_log->GetName());
+      G4VSolid* HypHI_RPC_h = new G4Tubs("HypHI_RPC_segment_H", HypHI_EndCap_rmax / 2., HypHI_EndCap_rmax, 0.5 * cm,
+					 -CLHEP::twopi / 16., 2. * CLHEP::twopi / 16.);
+      G4LogicalVolume* HypHI_RPC_h_log = new G4LogicalVolume(HypHI_RPC_h, Air, "HypHI_RPC_h_log", 0, 0, 0);
+      NameDetectorsSD.push_back(HypHI_RPC_h_log->GetName());
+
+      for(int idRPC = 0; idRPC < 8; ++idRPC)
+	{
+	  G4RotationMatrix* rotRPC = new G4RotationMatrix;
+	  double rotAngle          = CLHEP::twopi / 8. * static_cast<double>(idRPC);
+	  rotRPC->rotateZ(rotAngle);
+	  std::string nameRPC("HypHI_RPC_l");
+	  nameRPC += std::to_string(idRPC);
+	  AllPlacements.emplace_back(new G4PVPlacement(rotRPC, G4ThreeVector(0, 0, 0.5 * cm), HypHI_RPC_l_log, nameRPC,
+						       HypHI_Endcap_log, false, idRPC));
+
+	  std::string nameRPC2("HypHI_RPC_h");
+	  nameRPC2 += std::to_string(idRPC);
+	  AllPlacements.emplace_back(new G4PVPlacement(rotRPC, G4ThreeVector(0, 0, 0.5 * cm), HypHI_RPC_h_log, nameRPC2,
+						       HypHI_Endcap_log, false, idRPC));
+	}
+
+      //--- Visualization ---//
+      if(!MiniVis)
+	{
+	  HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
+	  G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
+	  HypHI_RPC_att->SetForceWireframe(false);
+	  HypHI_RPC_l_log->SetVisAttributes(HypHI_RPC_att);
+	  HypHI_RPC_h_log->SetVisAttributes(HypHI_RPC_att);
+	  G4VisAttributes* HypHI_Tracker_att = new G4VisAttributes(LightPurple);
+	  HypHI_Tracker_att->SetForceWireframe(false);
+	  HypHI_TrackerFwd_log->SetVisAttributes(HypHI_Tracker_att);
+	}
+      else
+	{
+	  G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
+	  HypHI_Endcap_log->SetVisAttributes(HypHI_RPC_att);
+	  HypHI_RPC_l_log->SetVisAttributes(G4VisAttributes::Invisible);
+	  HypHI_RPC_h_log->SetVisAttributes(G4VisAttributes::Invisible);
+	  HypHI_TrackerFwd_log->SetVisAttributes(G4VisAttributes::Invisible);
+	}
     }
   // Region
 
