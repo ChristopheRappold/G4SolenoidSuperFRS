@@ -1,0 +1,21 @@
+Target_SizeX   3 cm
+Target_SizeY   3 cm
+Target_SizeZ   3 cm
+Target_PosZ  1961.2 mm
+Target_Diamond 1
+Wasa_Side 1
+Wasa_ShiftZ 2760 mm
+Field_WASAMapMaxField 1.0 tesla
+Field_WASAMap ../MagField_default.dat
+Geo Wasa
+Geometry_Namefile ../WasaGeoRoot/WasaGeometry8_AsExp.root
+SimpleGeo 0
+HypHI_FiberTR_On 1
+HypHI_FiberTracker1_posZ 1547.7 mm
+HypHI_FiberTracker2_posZ 1711.7 mm
+HypHI_FiberTracker3_posZ 1996.7 mm
+HypHI_FiberTracker4_posZ 3960.0 mm
+HypHI_FiberTracker5_posZ 4056.3 mm
+HypHI_MiniFiberTR_On 1
+HypHI_MiniFiberTracker1_posZ 2269.3 mm
+HypHI_MiniFiberTracker2_posZ 2309.3 mm
