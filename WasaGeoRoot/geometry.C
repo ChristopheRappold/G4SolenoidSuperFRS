@@ -143,6 +143,18 @@ void geometry(bool Central_FW=false, bool Central_Pipe=false, bool EMC_Front=fal
   list_mat.push_back(mat39);
   //-----------List of Tracking Media--------------
 
+  TGeoMixture* mat40 = new TGeoMixture("ETHANE",2,0.00125324);
+  mat40->SetUniqueID(40);
+  mat40->DefineElement(0,12.,6.,0.25);
+  mat40->DefineElement(1,1.,1,0.75);
+  list_mat.push_back(mat40);
+
+  TGeoMixture* mat41 = new TGeoMixture("Ar80ETHANE20",2,.0015802);
+  mat41->SetUniqueID(41);
+  mat41->AddElement(mat40,0.2);
+  mat41->AddElement(39.948,18,0.8);
+  list_mat.push_back(mat41);
+
   std::vector<TGeoMedium*> list_med;
 
   TGeoMedium*	med1  = new TGeoMedium("VAC"         , 1 , 1 , 0, 0, 0       , 5, 0.1000000E+11, 0.2499637, 0.5000000E-02, 30.65114);
@@ -181,6 +193,8 @@ void geometry(bool Central_FW=false, bool Central_Pipe=false, bool EMC_Front=fal
   TGeoMedium*	med71 = new TGeoMedium("FD.SCINT"    , 71, 23, 1, 0, 0       , 5, 0.1000000E+11, 0.3081252E-01, 0.5000000E-02, 0.1028338E-01);
   TGeoMedium*	med72 = new TGeoMedium("CD.SCINT"    , 72, 23, 1, 1, 11.69974, 5, 0.1000000E+11, 0.3081252E-01, 0.5000000E-02, 0.1028338E-01);
   TGeoMedium*	med73 = new TGeoMedium("SEC"         , 73, 26, 1, 1, 11.69974, 5, 0.1000000E+11, 0.1466471, 0.5000000E-02, 0.9235660E-01);
+  TGeoMedium*   med74 = new TGeoMedium("ArEthan"     , 74, mat41);
+
 
   list_med.push_back(med1);
   list_med.push_back(med2);
@@ -218,6 +232,7 @@ void geometry(bool Central_FW=false, bool Central_Pipe=false, bool EMC_Front=fal
   list_med.push_back(med71);
   list_med.push_back(med72);
   list_med.push_back(med73);
+  list_med.push_back(med74);
 
   TGeoVolume* WASA = gGeoManager->MakeTube("WASA", med1, 0, 150, 500);
 
