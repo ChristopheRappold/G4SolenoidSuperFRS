@@ -176,7 +176,7 @@ G4VPhysicalVolume* WasaSimpleDetectorConstruction::Construct()
     experimentalHall_physOutRoot =
         new G4PVPlacement(0, G4ThreeVector(), experimentalHall_logOutRoot, "expHallR", 0, false, 0);
 
-  experimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
+  experimentalHall_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // ==============================================================
   // CDS
@@ -302,13 +302,13 @@ void WasaSimpleDetectorConstruction::ConstructCD(G4double cd_rmax, G4double cd_z
   CD_phys =
       new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CD_log, "CD", experimentalHall_log, false, 0);
   //--- Visualization ---//
-  CD_log->SetVisAttributes(G4VisAttributes::Invisible);
+  CD_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   if(DoForRoot)
     {
       CD_logOutRoot  = new G4LogicalVolume(CD_tube, Air, "CD_logR", 0, 0, 0); // CDCFieldMgr,0,0);
       CD_physOutRoot = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CD_logOutRoot, "CDR",
                                          experimentalHall_logOutRoot, false, 0);
-      CD_logOutRoot->SetVisAttributes(G4VisAttributes::Invisible);
+      CD_logOutRoot->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     //****************//
@@ -378,7 +378,7 @@ void WasaSimpleDetectorConstruction::ConstructCD(G4double cd_rmax, G4double cd_z
                                                      false, 0));
 
       //--- Visualization ---//
-      HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
+      HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 
       G4VSolid* HypHI_TrackerFwd = new G4Tubs("HypHI_TrackerFwd", cds_endcap_rmin, HypHI_rmax, 1 * cm, 0, CLHEP::twopi);
       HypHI_TrackerFwd_log       = new G4LogicalVolume(HypHI_TrackerFwd, Air, "HypHI_TrackFwd_log", 0, 0, 0);
@@ -506,7 +506,7 @@ void WasaSimpleDetectorConstruction::ConstructCD(G4double cd_rmax, G4double cd_z
 
       MDC_Set[i]    = new G4Tubs(nameSet, rmin - 0.95 * mm, rmax + 0.95 * mm, mdc_z, 0, CLHEP::twopi);
       MDC_Setlog[i] = new G4LogicalVolume(MDC_Set[i], ChamberGas, nameSetLog, 0, 0, 0);
-      // MDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      // MDC_Setlog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
       AllPlacements.emplace_back(
           new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), MDC_Setlog[i], nameSetPhys, MDC_body_log, false, i));
 
@@ -545,7 +545,7 @@ void WasaSimpleDetectorConstruction::ConstructCD(G4double cd_rmax, G4double cd_z
           nameSetLog += std::to_string(i);
           nameSetPhys += std::to_string(i);
           MDC_SetlogOutRoot[i] = new G4LogicalVolume(MDC_Set[i], ChamberGas, nameSetLog, 0, 0, 0);
-          // MDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+          // MDC_Setlog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
           AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), MDC_SetlogOutRoot[i], nameSetPhys,
                                                        MDC_body_logOutRoot, false, i));
         }
@@ -559,13 +559,13 @@ void WasaSimpleDetectorConstruction::ConstructCD(G4double cd_rmax, G4double cd_z
 
   for(G4int i = 0; i < MDC_NbLayer; i++)
     {
-      MDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      MDC_Setlog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
 
       G4VisAttributes* MDC_att = new G4VisAttributes(ColorCDC[i]);
       MDC_att->SetForceWireframe(false);
       // MDC_log[i]->SetSensitiveDetector(chamberSD);
       // MDC_log[i]-> SetUserLimits( new G4UserLimits(1.0*mm) );
-      // MDC_log[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      // MDC_log[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
       MDC_log[i]->SetVisAttributes(MDC_att);
     }
 }
@@ -602,7 +602,7 @@ void WasaSimpleDetectorConstruction::ConstructDownTracker(G4double cd_z, G4doubl
 
   //--- Visualization ---//
   if(!Par.IsAvailable("HypHI_InnerTrackerBox_Visible"))
-    HypHI_InTracker_log->SetVisAttributes(G4VisAttributes::Invisible);
+    HypHI_InTracker_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   HypHI_Target      = new G4Box("HypHI_Target", TargetLength, TargetLength, TargetLength);
   HypHI_Target_log  = new G4LogicalVolume(HypHI_Target, Carbon, "HypHI_Target_log", 0, 0, 0);
@@ -730,7 +730,7 @@ void WasaSimpleDetectorConstruction::ConstructPSB()
     AllPlacements.emplace_back(
         new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), PSB_Setlog, "PSB_SetPhysR", CD_logOutRoot, false, 0));
 
-  PSB_Setlog->SetVisAttributes(G4VisAttributes::Invisible);
+  PSB_Setlog->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   G4Tubs* PSB_tube         = new G4Tubs("PSB_tube", psb_rmin, psb_rmax, psb_z, 0, CLHEP::twopi / N_bars);
   G4LogicalVolume* PSB_log = new G4LogicalVolume(PSB_tube, Scinti, "PSB_log", 0, 0, 0);

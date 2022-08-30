@@ -175,7 +175,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   G4LogicalVolume* WasaLV  = FindVolume("WASA");
   G4LogicalVolume* InnerLV = FindVolume("INNER");
   if(!Par.IsAvailable("HypHI_InnerTrackerBox_Visible"))
-    InnerLV->SetVisAttributes(G4VisAttributes::Invisible);
+    InnerLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   INNER_log  = FindVolume("INNER");
   INNER_phys = FindVolPhys("INNER");
@@ -208,7 +208,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   for(auto& CurrentName : NameCDC1_Invisible)
     {
       G4LogicalVolume* UTracker = FindVolume(CurrentName);
-      UTracker->SetVisAttributes(G4VisAttributes::Invisible);
+      UTracker->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   int iColorT = 0;
   for( auto& CurrentName : NameCDC2_Invisible)
@@ -221,10 +221,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           ++iColorT;
         }
       else
-        UTracker->SetVisAttributes(G4VisAttributes::Invisible);
+        UTracker->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
-  FindVolume("SOL")->SetVisAttributes(G4VisAttributes::Invisible);
+  FindVolume("SOL")->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // int iColorT = 0;
 
@@ -295,7 +295,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           UTracker->SetVisAttributes(MG_Color);
         }
       else
-        UTracker->SetVisAttributes(G4VisAttributes::Invisible);
+        UTracker->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
   // SetupLV->SetUserLimits( new G4UserLimits(DBL_MAX,Par.Get_CutLength_Track(),10*s,0.,0.) );
@@ -312,25 +312,25 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   //
 
   // G4LogicalVolume* worldLV = world->GetLogicalVolume();
-  // worldLV->SetVisAttributes (G4VisAttributes::Invisible);
+  // worldLV->SetVisAttributes (G4VisAttributes::GetInvisible());
 
   // worldLV->SetUserLimits( new G4UserLimits(DBL_MAX,2*m,10*s,0.,0.) );
 
   if(WasaLV)
-    WasaLV->SetVisAttributes(G4VisAttributes::Invisible);
+    WasaLV->SetVisAttributes(G4VisAttributes::GetInvisible());
   if(MFLD_log)
     if(!Par.IsAvailable("HypHI_InnerTrackerBox_Visible"))
-      MFLD_log->SetVisAttributes(G4VisAttributes::Invisible);
+      MFLD_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   // if(VolGapLV)
-  //   VolGapLV->SetVisAttributes(G4VisAttributes::Invisible);
+  //   VolGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
   // if(SecondMagFieldLV)
-  //   SecondMagFieldLV->SetVisAttributes(G4VisAttributes::Invisible);
+  //   SecondMagFieldLV->SetVisAttributes(G4VisAttributes::GetInvisible());
   // if(SecondMagLV)
-  //   SecondMagLV->SetVisAttributes(G4VisAttributes::Invisible);
+  //   SecondMagLV->SetVisAttributes(G4VisAttributes::GetInvisible());
   // if(SetupLV)
-  //   SetupLV->SetVisAttributes(G4VisAttributes::Invisible);
+  //   SetupLV->SetVisAttributes(G4VisAttributes::GetInvisible());
   // if(IronQuadLV)
-  //   IronQuadLV->SetVisAttributes(G4VisAttributes::Invisible);
+  //   IronQuadLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // G4VisAttributes* simpleBoxVisAtt= new G4VisAttributes(G4Colour(1.0,1.0,1.0));
   // simpleBoxVisAtt->SetVisibility(true);
@@ -488,17 +488,17 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         {
           Si1_Strip_log_x->SetVisAttributes(Si_att);
           Si1_Strip_log_y->SetVisAttributes(Si_att);
-          Si1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          Si1_Strip_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          Si1_Strip_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_Strip_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si1_Strip_log_y->SetVisAttributes(G4VisAttributes::GetInvisible());
           Si1_MothVol_log->SetVisAttributes(Si_att);
-          Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si1_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si1_MothVol_log_y->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
     }
 
@@ -555,17 +555,17 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         {
           Si2_Strip_log_x->SetVisAttributes(Si_att);
           Si2_Strip_log_y->SetVisAttributes(Si_att);
-          Si2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          Si2_Strip_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          Si2_Strip_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_Strip_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si2_Strip_log_y->SetVisAttributes(G4VisAttributes::GetInvisible());
           Si2_MothVol_log->SetVisAttributes(Si_att);
-          Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::Invisible);
+          Si2_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          Si2_MothVol_log_y->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
     }
 
@@ -655,16 +655,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD1_Strip_log_u->SetVisAttributes(Si_att);
-            SD1u_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-            SD1u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD1u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1u_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD1u_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD1u_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD1_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1_Strip_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
             SD1u_MothVol_log->SetVisAttributes(Si_att);
-            SD1u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD1u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1u_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD1u_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
       }
       {
@@ -732,16 +732,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD1_Strip_log_v->SetVisAttributes(Si_att);
-            SD1v_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-            SD1v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD1v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1v_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD1v_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD1v_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD1_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1_Strip_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
             SD1v_MothVol_log->SetVisAttributes(Si_att);
-            SD1v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD1v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD1v_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD1v_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
       }
     }
@@ -833,16 +833,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD2_Strip_log_u->SetVisAttributes(Si_att);
-            SD2u_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-            SD2u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD2u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2u_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD2u_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD2u_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD2_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2_Strip_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
             SD2u_MothVol_log->SetVisAttributes(Si_att);
-            SD2u_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD2u_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2u_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD2u_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
       }
       {
@@ -911,16 +911,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD2_Strip_log_v->SetVisAttributes(Si_att);
-            SD2v_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-            SD2v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD2v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2v_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD2v_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD2v_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD2_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2_Strip_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
             SD2v_MothVol_log->SetVisAttributes(Si_att);
-            SD2v_MothVol_log_1->SetVisAttributes(G4VisAttributes::Invisible);
-            SD2v_MothVol_log_2->SetVisAttributes(G4VisAttributes::Invisible);
+            SD2v_MothVol_log_1->SetVisAttributes(G4VisAttributes::GetInvisible());
+            SD2v_MothVol_log_2->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
       }
     }
@@ -1027,11 +1027,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD_Strip_log_u->SetVisAttributes(Si_att);
-            SDu_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SDu_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SD_Strip_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
             SDu_MothVol_log->SetVisAttributes(Si_att);
           }
       }
@@ -1109,11 +1109,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD_Strip_log_v->SetVisAttributes(Si_att);
-            SDv_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SDv_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SD_Strip_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
             SDv_MothVol_log->SetVisAttributes(Si_att);
           }
       }
@@ -1221,11 +1221,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD_Strip_log_u->SetVisAttributes(Si_att);
-            SDu_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SDu_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD_Strip_log_u->SetVisAttributes(G4VisAttributes::Invisible);
+            SD_Strip_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
             SDu_MothVol_log->SetVisAttributes(Si_att);
           }
       }
@@ -1302,11 +1302,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         if(!MiniVis)
           {
             SD_Strip_log_v->SetVisAttributes(Si_att);
-            SDv_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+            SDv_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           }
         else
           {
-            SD_Strip_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+            SD_Strip_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
             SDv_MothVol_log->SetVisAttributes(Si_att);
           }
       }
@@ -1485,20 +1485,20 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           FiberD1_Cladding_log_x->SetVisAttributes(visAttributes_x);
           FiberD1_Cladding_log_u->SetVisAttributes(visAttributes_u);
           FiberD1_Cladding_log_v->SetVisAttributes(visAttributes_v);
-          FiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_MothVol_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_MothVol_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          FiberD1_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD1_Core_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_Core_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_Core_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_Cladding_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_Cladding_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_Cladding_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           FiberD1_MothVol_log_x->SetVisAttributes(visAttributes_x);
           FiberD1_MothVol_log_u->SetVisAttributes(visAttributes_u);
           FiberD1_MothVol_log_v->SetVisAttributes(visAttributes_v);
@@ -1602,20 +1602,20 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           FiberD2_Cladding_log_x->SetVisAttributes(visAttributes_x);
           FiberD2_Cladding_log_u->SetVisAttributes(visAttributes_u);
           FiberD2_Cladding_log_v->SetVisAttributes(visAttributes_v);
-          FiberD2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_MothVol_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_MothVol_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          FiberD2_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD2_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD2_Core_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_Core_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_Core_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_Cladding_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_Cladding_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_Cladding_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD2_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           FiberD2_MothVol_log_x->SetVisAttributes(visAttributes_x);
           FiberD2_MothVol_log_u->SetVisAttributes(visAttributes_u);
           FiberD2_MothVol_log_v->SetVisAttributes(visAttributes_v);
@@ -1722,20 +1722,20 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           FiberD3_Cladding_log_x->SetVisAttributes(visAttributes_x);
           FiberD3_Cladding_log_u->SetVisAttributes(visAttributes_u);
           FiberD3_Cladding_log_v->SetVisAttributes(visAttributes_v);
-          FiberD3_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_MothVol_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_MothVol_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          FiberD3_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD3_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD3_Core_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_Core_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_Core_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_Cladding_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_Cladding_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_Cladding_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD3_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           FiberD3_MothVol_log_x->SetVisAttributes(visAttributes_x);
           FiberD3_MothVol_log_u->SetVisAttributes(visAttributes_u);
           FiberD3_MothVol_log_v->SetVisAttributes(visAttributes_v);
@@ -1840,20 +1840,20 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           FiberD4_Cladding_log_x->SetVisAttributes(visAttributes_x);
           FiberD4_Cladding_log_u->SetVisAttributes(visAttributes_u);
           FiberD4_Cladding_log_v->SetVisAttributes(visAttributes_v);
-          FiberD4_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_MothVol_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_MothVol_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          FiberD4_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD4_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD4_Core_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_Core_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_Core_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_Cladding_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_Cladding_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_Cladding_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD4_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           FiberD4_MothVol_log_x->SetVisAttributes(visAttributes_x);
           FiberD4_MothVol_log_u->SetVisAttributes(visAttributes_u);
           FiberD4_MothVol_log_v->SetVisAttributes(visAttributes_v);
@@ -1958,20 +1958,20 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           FiberD5_Cladding_log_x->SetVisAttributes(visAttributes_x);
           FiberD5_Cladding_log_u->SetVisAttributes(visAttributes_u);
           FiberD5_Cladding_log_v->SetVisAttributes(visAttributes_v);
-          FiberD5_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_MothVol_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_MothVol_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_MothVol_log_v->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_MothVol_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_MothVol_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_MothVol_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          FiberD5_Core_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_Core_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_Core_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_Cladding_log_x->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_Cladding_log_u->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_Cladding_log_v->SetVisAttributes(G4VisAttributes::Invisible);
-          FiberD5_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          FiberD5_Core_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_Core_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_Core_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_Cladding_log_x->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_Cladding_log_u->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_Cladding_log_v->SetVisAttributes(G4VisAttributes::GetInvisible());
+          FiberD5_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           FiberD5_MothVol_log_x->SetVisAttributes(visAttributes_x);
           FiberD5_MothVol_log_u->SetVisAttributes(visAttributes_u);
           FiberD5_MothVol_log_v->SetVisAttributes(visAttributes_v);
@@ -2012,7 +2012,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       const G4double spacingX               = 0.55 * mm;
       const G4double startZ1                = 0. * mm;
       const G4double startZ2                = 0.47631397 * mm;
-      const std::vector<G4double> posZshift = {-24. * mm, -20. * mm, -16. * mm, 16. * mm, 20. * mm, 24. * mm};
+      const std::vector<G4double> posZshift = {-4. * mm, 0. * mm, 4. * mm};
 
       G4ThreeVector posFib;
 
@@ -2062,13 +2062,13 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       AllPlacements.emplace_back(new G4PVPlacement(rotFibM3, Sign * (G4ThreeVector(0., 0., posZshift[2])),
                                                    MiniFiberD1_MothVol_log_v1, "MiniFiberD1_v1",
                                                    MiniFiberD1_MothVol_log, false, 0));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFibM1, Sign * (G4ThreeVector(0., 0., posZshift[3])),
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM1, Sign * (G4ThreeVector(0., 0., posZshift[0])),
                                                    MiniFiberD1_MothVol_log_x2, "MiniFiberD1_x2",
                                                    MiniFiberD2_MothVol_log, false, 0));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFibM2, Sign * (G4ThreeVector(0., 0., posZshift[4])),
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM2, Sign * (G4ThreeVector(0., 0., posZshift[1])),
                                                    MiniFiberD1_MothVol_log_u2, "MiniFiberD1_u2",
                                                    MiniFiberD2_MothVol_log, false, 0));
-      AllPlacements.emplace_back(new G4PVPlacement(rotFibM3, Sign * (G4ThreeVector(0., 0., posZshift[5])),
+      AllPlacements.emplace_back(new G4PVPlacement(rotFibM3, Sign * (G4ThreeVector(0., 0., posZshift[2])),
                                                    MiniFiberD1_MothVol_log_v2, "MiniFiberD1_v2",
                                                    MiniFiberD2_MothVol_log, false, 0));
 
@@ -2194,30 +2194,30 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           MiniFiberD1_Cladding_log_x2->SetVisAttributes(visAttributes_x);
           MiniFiberD1_Cladding_log_u2->SetVisAttributes(visAttributes_u);
           MiniFiberD1_Cladding_log_v2->SetVisAttributes(visAttributes_v);
-          MiniFiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_MothVol_log_x1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_MothVol_log_u1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_MothVol_log_v1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_MothVol_log_x2->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_MothVol_log_u2->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_MothVol_log_v2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_MothVol_log_x1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_MothVol_log_u1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_MothVol_log_v1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_MothVol_log_x2->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_MothVol_log_u2->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_MothVol_log_v2->SetVisAttributes(G4VisAttributes::GetInvisible());
         }
       else
         {
-          MiniFiberD1_Core_log_x1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Core_log_u1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Core_log_v1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Core_log_x2->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Core_log_u2->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Core_log_v2->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Cladding_log_x1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Cladding_log_u1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Cladding_log_v1->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Cladding_log_x2->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Cladding_log_u2->SetVisAttributes(G4VisAttributes::Invisible);
-          MiniFiberD1_Cladding_log_v2->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_Core_log_x1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Core_log_u1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Core_log_v1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Core_log_x2->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Core_log_u2->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Core_log_v2->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Cladding_log_x1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Cladding_log_u1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Cladding_log_v1->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Cladding_log_x2->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Cladding_log_u2->SetVisAttributes(G4VisAttributes::GetInvisible());
+          MiniFiberD1_Cladding_log_v2->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-          MiniFiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::Invisible);
+          MiniFiberD1_MothVol_log->SetVisAttributes(G4VisAttributes::GetInvisible());
           MiniFiberD1_MothVol_log_x1->SetVisAttributes(visAttributes_x);
           MiniFiberD1_MothVol_log_u1->SetVisAttributes(visAttributes_u);
           MiniFiberD1_MothVol_log_v1->SetVisAttributes(visAttributes_v);
@@ -2316,7 +2316,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       //--- Visualization ---//
       if(!MiniVis)
 	{
-	  HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
+	  HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 	  G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
 	  HypHI_RPC_att->SetForceWireframe(false);
 	  HypHI_RPC_l_log->SetVisAttributes(HypHI_RPC_att);
@@ -2329,9 +2329,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 	{
 	  G4VisAttributes* HypHI_RPC_att = new G4VisAttributes(Orange);
 	  HypHI_Endcap_log->SetVisAttributes(HypHI_RPC_att);
-	  HypHI_RPC_l_log->SetVisAttributes(G4VisAttributes::Invisible);
-	  HypHI_RPC_h_log->SetVisAttributes(G4VisAttributes::Invisible);
-	  HypHI_TrackerFwd_log->SetVisAttributes(G4VisAttributes::Invisible);
+	  HypHI_RPC_l_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+	  HypHI_RPC_h_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+	  HypHI_TrackerFwd_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 	}
     }
   // Region
