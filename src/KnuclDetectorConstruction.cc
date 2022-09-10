@@ -212,7 +212,7 @@ G4VPhysicalVolume* KnuclDetectorConstruction::Construct()
   if(DoForRoot)
     experimentalHall_physOutRoot = new G4PVPlacement(0,G4ThreeVector(),experimentalHall_logOutRoot,"expHallR",0,false,0);
     
-  experimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
+  experimentalHall_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 #ifdef NOYET  
   G4Region* defaultRegion = (*(G4RegionStore::GetInstance()))[0];
@@ -528,8 +528,8 @@ void KnuclDetectorConstruction::ConstructKurama()
   AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(-55.0*cm,0.0,0.0),KuramaYoke_log[3],"KuramaYoke3",Kurama_log,false,0));
       
   //--- Visualization ---//
-  Kurama_log->SetVisAttributes(G4VisAttributes::Invisible);
-  KuramaAperture_log->SetVisAttributes(G4VisAttributes::Invisible);
+  Kurama_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+  KuramaAperture_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   G4VisAttributes* KuramaYoke_att = new G4VisAttributes(Gray);
   KuramaYoke_att->SetForceWireframe(false);
   for (auto& KuramaLogV : KuramaYoke_log)
@@ -614,7 +614,7 @@ void KnuclDetectorConstruction::ConstructKurama()
   for (G4int i=0; i<2; i++)
     {
       //BLC_log[i-1]->SetVisAttributes(BLC_att);
-      SDC1_log[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      SDC1_log[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   G4VisAttributes *sSDC1_att = new G4VisAttributes(Yellow);
   sSDC1_att->SetForceWireframe(false);
@@ -689,7 +689,7 @@ void KnuclDetectorConstruction::ConstructKurama()
   for (G4int i=0; i<1; i++)
     {
       //BLC_log[i]->SetVisAttributes(BLC_att);
-      SDC2_log[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      SDC2_log[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   G4VisAttributes *sSDC2_att = new G4VisAttributes(Yellow);
   sSDC2_att->SetForceWireframe(false);
@@ -812,7 +812,7 @@ void KnuclDetectorConstruction::ConstructTOFn()
   //sTOF_log->SetSensitiveDetector(counterSD);
 
   //--- Visualization ---//
-  TOF_log->SetVisAttributes(G4VisAttributes::Invisible);
+  TOF_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   G4VisAttributes *sTOF_att = new G4VisAttributes(Red);
   sTOF_att->SetForceWireframe(false);
   sTOF_log->SetVisAttributes(sTOF_att);
@@ -940,7 +940,7 @@ void KnuclDetectorConstruction::ConstructTOFp()
   //spTOF_log->SetSensitiveDetector(counterSD);
   
   //--- Visualization ---//
-  pTOF_log->SetVisAttributes(G4VisAttributes::Invisible);
+  pTOF_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   G4VisAttributes *spTOF_att = new G4VisAttributes(Red);
   spTOF_att->SetForceWireframe(false);
   spTOF_log->SetVisAttributes(spTOF_att);
@@ -984,12 +984,12 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   CDS_log  = new G4LogicalVolume(CDS_tube, Air, "CDS_log",0,0,0);// CDCFieldMgr,0,0);
   CDS_phys = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CDS_log, "CDS", experimentalHall_log, false,0);
   //--- Visualization ---//
-  CDS_log->SetVisAttributes(G4VisAttributes::Invisible);
+  CDS_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   if(DoForRoot)
     {
       CDS_logOutRoot  = new G4LogicalVolume(CDS_tube, Air, "CDS_logR",0,0,0);// CDCFieldMgr,0,0);
       CDS_physOutRoot = new G4PVPlacement(0, G4ThreeVector(cdsPos_x, cdsPos_y, cdsPos_z), CDS_logOutRoot, "CDSR", experimentalHall_logOutRoot, false,0);
-      CDS_logOutRoot->SetVisAttributes(G4VisAttributes::Invisible);
+      CDS_logOutRoot->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   
   //****************//
@@ -1050,7 +1050,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 						     experimentalHall_logOutRoot, false,0));
 	
       //--- Visualization ---//
-      HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::Invisible);
+      HypHI_Endcap_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   
       G4VSolid* HypHI_TrackerFwd = new G4Tubs("HypHI_TrackerFwd",cds_endcap_rmin, HypHI_rmax, 1*cm, 0,CLHEP::twopi);
       HypHI_TrackerFwd_log = new G4LogicalVolume(HypHI_TrackerFwd,Air,"HypHI_TrackFwd_log",0,0,0);
@@ -1179,7 +1179,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDC_Set[i] = new G4Tubs(nameSet, rmin-0.95*mm, rmax+0.95*mm, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i] = new G4LogicalVolume(CDC_Set[i],ChamberGas,nameSetLog,0,0,0);
-      //CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CDC_Setlog[i],nameSetPhys,CDC_body_log,false,i));
       
       CDC_tube[i] = new G4Tubs(name_sol, rmin, rmax, cdc_z, -0.5*CLHEP::twopi/(double)N_CDC_CELL[i], CLHEP::twopi/(double)N_CDC_CELL[i]);
@@ -1227,7 +1227,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       //CDC_Set[i+3] = new G4TwistedTubs(nameSet, cdc_cell_twist[i+3], rmin, rmax, cdc_z, CLHEP::twopi);
       CDC_Set[i+3] = new G4Tubs(nameSet, rmin-0.95*mm, rmax+0.95*mm, cdc_z,0 , CLHEP::twopi);
       CDC_Setlog[i+3] = new G4LogicalVolume(CDC_Set[i+3],ChamberGas,nameSetLog,0,0,0);
-      //CDC_Setlog[i+3]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+3]->SetVisAttributes(G4VisAttributes::GetInvisible());
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CDC_Setlog[i+3],nameSetPhys,CDC_body_log,false,i+3));
       
       CDC_twist_tube[i+3] = new G4TwistedTubs(name_sol, cdc_cell_twist[i+3], rmin, rmax,cdc_z, CLHEP::twopi/(double)N_CDC_CELL[i+3]);
@@ -1273,7 +1273,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDC_Set[i+5] = new G4Tubs(nameSet, rmin-0.95*mm, rmax+0.95*mm, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+5] = new G4LogicalVolume(CDC_Set[i+5],ChamberGas,nameSetLog,0,0,0);
-      //CDC_Setlog[i+5]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+5]->SetVisAttributes(G4VisAttributes::GetInvisible());
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CDC_Setlog[i+5],nameSetPhys,CDC_body_log,false,i+5));
 
       CDC_twist_tube[i+5] = new G4TwistedTubs(name_sol, cdc_cell_twist[i+5], rmin, rmax, cdc_z, CLHEP::twopi/(double)N_CDC_CELL[i+5]);
@@ -1319,7 +1319,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDC_Set[i+7] = new G4Tubs(nameSet, rmin-0.95*mm, rmax+0.95*mm, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+7] = new G4LogicalVolume(CDC_Set[i+7],ChamberGas,nameSetLog,0,0,0);
-      //CDC_Setlog[i+7]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+7]->SetVisAttributes(G4VisAttributes::GetInvisible());
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CDC_Setlog[i+7],nameSetPhys,CDC_body_log,false,i+7));
 
       
@@ -1366,7 +1366,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDC_Set[i+9] = new G4Tubs(nameSet, rmin-0.95*mm, rmax+0.95*mm, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+9] = new G4LogicalVolume(CDC_Set[i+9],ChamberGas,nameSetLog,0,0,0);
-      //CDC_Setlog[i+9]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+9]->SetVisAttributes(G4VisAttributes::GetInvisible());
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CDC_Setlog[i+9],nameSetPhys,CDC_body_log,false,i+9));
 
       CDC_twist_tube[i+9] = new G4TwistedTubs(name_sol, cdc_cell_twist[i+9], rmin, rmax, cdc_z, CLHEP::twopi/(double)N_CDC_CELL[i+9]);
@@ -1412,7 +1412,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       
       CDC_Set[i+11] = new G4Tubs(nameSet, rmin-0.95*mm, rmax+0.95*mm, cdc_z, 0, CLHEP::twopi);
       CDC_Setlog[i+11] = new G4LogicalVolume(CDC_Set[i+11],ChamberGas,nameSetLog,0,0,0);
-      //CDC_Setlog[i+11]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_Setlog[i+11]->SetVisAttributes(G4VisAttributes::GetInvisible());
       AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CDC_Setlog[i+11],nameSetPhys,CDC_body_log,false,i+11));
 
       CDC_twist_tube[i+11] = new G4TwistedTubs(name_sol, cdc_cell_twist[i+11], rmin, rmax,cdc_z, CLHEP::twopi/(double)N_CDC_CELL[i+11]);
@@ -1495,7 +1495,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	  nameSetLog+= std::to_string(i);
 	  nameSetPhys+= std::to_string(i);
 	  CDC_SetlogOutRoot[i] = new G4LogicalVolume(CDC_Set[i],ChamberGas,nameSetLog,0,0,0);
-	  //CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+	  //CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
 	  AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),CDC_SetlogOutRoot[i],nameSetPhys,CDC_body_logOutRoot,false,i));
 	}
     }
@@ -1509,13 +1509,13 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
   for (G4int i=0; i<15; i++)
     {
 
-      CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      CDC_Setlog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
 
       G4VisAttributes *CDC_att = new G4VisAttributes(ColorCDC[i]);
       CDC_att->SetForceWireframe(false);
       //CDC_log[i]->SetSensitiveDetector(chamberSD);
       //CDC_log[i]-> SetUserLimits( new G4UserLimits(1.0*mm) );
-      //CDC_log[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDC_log[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
       CDC_log[i]->SetVisAttributes(CDC_att);
     }
 
@@ -1743,7 +1743,7 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
 	  name_FieldS_log+=std::to_string(i);
 	  CDCFieldStructurelog[i] =  new G4LogicalVolume(CDC_field_Structure[i], ChamberGas, name_FieldS_log, 0,0,0);
 	  
-	  CDCFieldStructurelog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+	  CDCFieldStructurelog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
 	  
 	  std::string namePhysFieldStruct("FieldWireGuard");
 	  namePhysFieldStruct+=std::to_string(i);
@@ -1847,8 +1847,8 @@ void KnuclDetectorConstruction::ConstructCDS(G4double cds_rmax,G4double cds_z, G
       if(CDCFieldWirelog[i]!=nullptr)
 	CDCFieldWirelog[i]->SetVisAttributes(CDCFieldWire_att);
 
-      //CDCSenseWirelog[i]->SetVisAttributes(G4VisAttributes::Invisible);
-      //CDCFieldWirelog[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      //CDCSenseWirelog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
+      //CDCFieldWirelog[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   //#endif
 
@@ -1879,7 +1879,7 @@ void KnuclDetectorConstruction::ConstructInnerTracker(G4double cds_z, G4double R
 						 HypHI_InTracker_log, "HypHI_InTracker_PhysR", experimentalHall_logOutRoot, false,0));
 
   //--- Visualization ---//
-  HypHI_InTracker_log->SetVisAttributes(G4VisAttributes::Invisible);
+  HypHI_InTracker_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   HypHI_Target = new G4Box("HypHI_Target", TargetLength, TargetLength, TargetLength);
   HypHI_Target_log = new G4LogicalVolume(HypHI_Target, Carbon,"HypHI_Target_log", 0,0,0);
@@ -1980,7 +1980,7 @@ void KnuclDetectorConstruction::ConstructCDH()
     AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), CDH_Setlog, "CDH_SetPhysR", CDS_logOutRoot, false, 0));
 
     
-  CDH_Setlog->SetVisAttributes(G4VisAttributes::Invisible);
+  CDH_Setlog->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   G4Tubs* CDH_tube= new G4Tubs("CDH_tube", cdh_rmin, cdh_rmax, cdh_z, 0, CLHEP::twopi/(double)Ncdh);
   G4LogicalVolume* CDH_log = new G4LogicalVolume(CDH_tube, Scinti,"CDH_log", 0,0,0);
@@ -2180,7 +2180,7 @@ void KnuclDetectorConstruction::ConstructTargetChamber(G4double cdsPos_x, G4doub
       //TarChmEndCapD_log->SetSensitiveDetector(chamberSD);
 
       //--- Visualization ---//
-      TarCham_log->SetVisAttributes(G4VisAttributes::Invisible);
+      TarCham_log->SetVisAttributes(G4VisAttributes::GetInvisible());
       G4VisAttributes *Target_att = new G4VisAttributes(Green);
       Target_att->SetForceWireframe(false);
       Target_att->SetForceSolid(true);
@@ -2419,15 +2419,15 @@ void KnuclDetectorConstruction::ConstructTargetChamber(G4double cdsPos_x, G4doub
 	  //ZVC_body_att->SetForceSolid(true);
 	  ZVC_body_log[0]->SetVisAttributes(ZVC_body_att);
 	  for (G4int i=0; i<7; i++)
-	    ZVC_log [0][i]->SetVisAttributes(G4VisAttributes::Invisible);
+	    ZVC_log [0][i]->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 	  G4VisAttributes *ZVC_cell_att = new G4VisAttributes(Blue);
 	  ZVC_cell_att->SetForceWireframe(false);
 	  //ZVC_cell_att->SetForceSolid(true);
 	  //ZVC_cell_log[0]->SetVisAttributes(ZVC_cell_att);
 	  //ZVC_cell_log[1]->SetVisAttributes(ZVC_cell_att);
-	  ZVC_cell_log[0]->SetVisAttributes(G4VisAttributes::Invisible);
-	  ZVC_cell_log[1]->SetVisAttributes(G4VisAttributes::Invisible);
+	  ZVC_cell_log[0]->SetVisAttributes(G4VisAttributes::GetInvisible());
+	  ZVC_cell_log[1]->SetVisAttributes(G4VisAttributes::GetInvisible());
 	}
     
       else
@@ -2572,13 +2572,13 @@ void KnuclDetectorConstruction::ConstructTargetChamber(G4double cdsPos_x, G4doub
 	  ZVC_body_log[0]->SetVisAttributes(ZVC_body_att);
 	  for (G4int i=0; i<11; i++)
 	    {
-	      ZVC_log [0][i]->SetVisAttributes(G4VisAttributes::Invisible);
+	      ZVC_log [0][i]->SetVisAttributes(G4VisAttributes::GetInvisible());
 	    }
 	  G4VisAttributes *ZVC_cell_att = new G4VisAttributes(Blue);
 	  ZVC_cell_att->SetForceWireframe(false);
 	  //ZVC_cell_att->SetForceSolid(true);
 	  //ZVC_cell_log[0]->SetVisAttributes(ZVC_cell_att);
-	  ZVC_cell_log[0]->SetVisAttributes(G4VisAttributes::Invisible);
+	  ZVC_cell_log[0]->SetVisAttributes(G4VisAttributes::GetInvisible());
 	      
        
 	  //#define ZVC2
@@ -2705,10 +2705,10 @@ void KnuclDetectorConstruction::ConstructTargetChamber(G4double cdsPos_x, G4doub
 	      ZVC_body_log[1]->SetVisAttributes(ZVC_body_att);
 	      for (G4int i=0; i<11; i++)
 		{
-		  ZVC_log [1][i]->SetVisAttributes(G4VisAttributes::Invisible);
+		  ZVC_log [1][i]->SetVisAttributes(G4VisAttributes::GetInvisible());
 		}
 	      //ZVC_cell_log[1]->SetVisAttributes(ZVC_cell_att);
-	      ZVC_cell_log[1]->SetVisAttributes(G4VisAttributes::Invisible);
+	      ZVC_cell_log[1]->SetVisAttributes(G4VisAttributes::GetInvisible());
 	      //#endif
 	    }
 	}
@@ -2833,7 +2833,7 @@ void KnuclDetectorConstruction::ConstructAC(G4double cds_z, G4double CDS_AC_spac
   AllPlacements.emplace_back(new G4PVPlacement(0,G4ThreeVector(0,0,0), sAC_log, "sAC_phys", AC_log, false, 0));
 
   //--- Visualization ---//
-  AC_log->SetVisAttributes(G4VisAttributes::Invisible);
+  AC_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   G4VisAttributes *sAC_att = new G4VisAttributes(Pink);
   sAC_att->SetForceWireframe(false);
   sAC_log->SetVisAttributes(sAC_att);
@@ -2869,7 +2869,7 @@ void KnuclDetectorConstruction::ConstructAC(G4double cds_z, G4double CDS_AC_spac
   AllPlacements.emplace_back(new G4PVPlacement(0, G4ThreeVector(0,0,0),sSTC_log, "sSTC_phys", STC_log, false, 0));
 	
   //--- Visualization ---//
-  STC_log->SetVisAttributes(G4VisAttributes::Invisible);
+  STC_log->SetVisAttributes(G4VisAttributes::GetInvisible());
   G4VisAttributes *sSTC_att = new G4VisAttributes(Red);
   sSTC_att->SetForceWireframe(false);
   sSTC_log->SetVisAttributes(sSTC_att);
@@ -2952,7 +2952,7 @@ void KnuclDetectorConstruction::ConstructAC(G4double cds_z, G4double CDS_AC_spac
   for (G4int i=0; i<4; i++)
     {
       //BLC_log[i-1]->SetVisAttributes(BLC_att);
-      BLC_log[i]->SetVisAttributes(G4VisAttributes::Invisible);
+      BLC_log[i]->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   G4VisAttributes *sBLC_att = new G4VisAttributes(Yellow);
   sBLC_att->SetForceWireframe(false);

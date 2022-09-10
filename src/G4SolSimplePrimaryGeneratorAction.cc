@@ -116,7 +116,8 @@ G4SolSimplePrimaryGeneratorAction::G4SolSimplePrimaryGeneratorAction(const G4Sol
   if(Par.IsAvailable("Target_SizeZ"))
     fTargetSizeZ    = Par.Get<double>("Target_SizeZ");
 
-  ConstParticle = GetParticle("geantino"); // nullptr;//GetParticle(nameParticle);
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  ConstParticle = pTable->FindParticle("geantino");
 
   fParticleGun->SetParticlePosition(G4ThreeVector(fPosX, fPosY, fPosZ));
   fParticleGun->SetParticleDefinition(ConstParticle);
