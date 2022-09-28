@@ -88,6 +88,8 @@ HypHIPrimaryGeneratorAction::HypHIPrimaryGeneratorAction(const G4SolConfig& conf
       if(Par.IsAvailable("Target_SizeZ"))
 	fTargetSizeZ    = Par.Get<double>("Target_SizeZ");
 
+      if(Par.IsAvailable("No_Target"))
+	fRandomizePrimary[0] = 0;
 
       ConstParticle = GetParticle("pi-");
 
