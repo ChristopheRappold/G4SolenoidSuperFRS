@@ -5,6 +5,7 @@
 #include "G4VUserParallelWorld.hh"
 #include "KnuclDetectorConstruction.hh"
 #include "WasaDetectorConstruction.hh"
+#include "WasaFullRootConstruction.hh"
 #include "WasaSimpleDetectorConstruction.hh"
 #include "HIAFSimpleDetectorConstruction.hh"
 
@@ -49,6 +50,11 @@ int G4SolGeometryController::SetGeometry(G4String nameGeo)
   else if(nameGeo == "Wasa")
     {
       detectorBuilder = new WasaDetectorConstruction(Par);
+      registerGeometry(detectorBuilder);
+    }
+  else if(nameGeo == "WasaFullRoot")
+    {
+      detectorBuilder = new WasaFullRootConstruction(Par);
       registerGeometry(detectorBuilder);
     }
   else if(nameGeo == "HIAFSimple")
