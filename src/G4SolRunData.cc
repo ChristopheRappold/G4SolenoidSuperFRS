@@ -189,7 +189,10 @@ void G4SolRunData::FillPerEvent(const G4Event* event)
     {
       if(prim_id.size() != 1)
         {
-          G4cout << " G4RunData : too much mother decaying ! " << G4endl;
+          G4cout << " G4RunData : too much mother decaying ! S:"<< prim_id.size();
+	  for(int prims : prim_id)
+	    G4cout<<prims<<" -> "<<fEvent->BeamNames[prims]<<" ";
+	  G4cout<< G4endl;
         }
       else
         {
