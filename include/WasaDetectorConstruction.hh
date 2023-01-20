@@ -73,7 +73,7 @@ class G4FieldManager;
 class WasaDetectorConstruction : public G4SolVDetectorConstruction
 {
 public:
-  explicit WasaDetectorConstruction(const G4SolConfig& conf);
+  explicit WasaDetectorConstruction(G4SolConfig& conf);
   virtual ~WasaDetectorConstruction();
 
   virtual G4VPhysicalVolume* Construct() override;

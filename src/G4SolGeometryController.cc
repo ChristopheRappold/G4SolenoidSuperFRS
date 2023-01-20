@@ -9,7 +9,7 @@
 #include "WasaSimpleDetectorConstruction.hh"
 #include "HIAFSimpleDetectorConstruction.hh"
 
-G4SolGeometryController::G4SolGeometryController(const G4SolConfig& _par) : Par(_par) {}
+G4SolGeometryController::G4SolGeometryController(G4SolConfig& _par) : Par(_par) {}
 
 G4SolGeometryController::~G4SolGeometryController() {}
 

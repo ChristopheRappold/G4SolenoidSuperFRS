@@ -17,7 +17,7 @@
 class G4SolGeometryController
 {
 public:
-  explicit G4SolGeometryController(const G4SolConfig& _par);
+  explicit G4SolGeometryController(G4SolConfig& _par);
   ~G4SolGeometryController();
 
   /**
@@ -30,7 +30,7 @@ public:
 private:
   void registerGeometry(G4VUserDetectorConstruction* det);
 
-  const G4SolConfig& Par;
+  G4SolConfig& Par;
   G4String nameGeometry;
   G4SolVDetectorConstruction* detectorBuilder;
 };

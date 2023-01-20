@@ -38,7 +38,7 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4SolidStore.hh"
 
-G4SolVDetectorConstruction::G4SolVDetectorConstruction(const G4SolConfig& conf)
+G4SolVDetectorConstruction::G4SolVDetectorConstruction(G4SolConfig& conf)
     : G4VUserDetectorConstruction(), Par(conf)
 {
 }

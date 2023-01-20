@@ -30,7 +30,7 @@ class G4VPhysicalVolume;
 class G4SolVDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-  explicit G4SolVDetectorConstruction(const G4SolConfig& _par);
+  explicit G4SolVDetectorConstruction(G4SolConfig& _par);
   virtual ~G4SolVDetectorConstruction();
 
 public:
@@ -44,7 +44,7 @@ public:
 
 protected:
   G4LogicalVolume* FindVolume(const G4String& name);
-  const G4SolConfig& Par;
+  G4SolConfig& Par;
   std::vector<G4String> NameDetectorsSD;
 };
 

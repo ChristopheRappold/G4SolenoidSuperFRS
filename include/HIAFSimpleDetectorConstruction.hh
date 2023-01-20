@@ -83,7 +83,7 @@ private:
   
 public:
 
-  explicit HIAFSimpleDetectorConstruction(const G4SolConfig& conf);
+  explicit HIAFSimpleDetectorConstruction(G4SolConfig& conf);
   ~HIAFSimpleDetectorConstruction();
 
   void ConstructMaterials();

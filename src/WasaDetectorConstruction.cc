@@ -94,7 +94,7 @@ G4ThreadLocal G4FieldManager* WasaDetectorConstruction::fFieldMgr       = 0;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-WasaDetectorConstruction::WasaDetectorConstruction(const G4SolConfig& _par)
+WasaDetectorConstruction::WasaDetectorConstruction(G4SolConfig& _par)
     : G4SolVDetectorConstruction(_par), experimentalHall_log(nullptr), experimentalHall_phys(nullptr),
       MFLD_log(nullptr), MFLD_phys(nullptr), fCheckOverlaps(true)
 {
@@ -2250,6 +2250,24 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       EndFMF2_log->SetVisAttributes(FMF2_att);
     }
 
+  if(Par.IsAvailable("WASA2_FrontCap"))
+    {
+      double WASA2_FrontCap_rmin = Par.Get<double>("WASA2_FrontCap_minR");
+      double WASA2_FrontCap_rmax = Par.Get<double>("WASA2_FrontCap_maxR");
+      double WASA2_FrontCap_PosZ = Par.Get<double>("WASA2_FrontCap_posZ");
+      double WASA2_FrontCap_Thickness = 0.3*mm;
+
+      G4VSolid* WASA2_FrontCap = new G4Tubs("WASA2_FrontCap", WASA2_FrontCap_rmin, WASA2_FrontCap_rmax, WASA2_FrontCap_Thickness, 0, CLHEP::twopi);
+      G4LogicalVolume* WASA2_FrontCap_log = new G4LogicalVolume(WASA2_FrontCap, Air, "WASA2_FrontCap_log", 0, 0, 0); // CDCFieldMgr,0,0);
+
+      G4RotationMatrix* rotEndCap = new G4RotationMatrix;
+      AllPlacements.emplace_back(
+                                 new G4PVPlacement(rotEndCap, Sign * (G4ThreeVector(0., 0., WASA2_FrontCap_PosZ + Systematic_shift) - transMFLD_new),
+                                                   WASA2_FrontCap_log, "WASA2_FrontCap", MFLD_log, false, 0));
+
+      NameDetectorsSD.push_back(WASA2_FrontCap_log->GetName());
+    }
+  
   if(Par.IsAvailable("HypHI_EndCap"))
     {
       double HypHI_EndCap_rmax = Par.Get<double>("HypHI_EndCap_maxR");

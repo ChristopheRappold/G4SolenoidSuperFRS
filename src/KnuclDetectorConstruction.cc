@@ -69,7 +69,7 @@ G4ThreadLocal G4FieldManager* KnuclDetectorConstruction::fFieldMgr = 0;
 // ====================================================================
 
 //////////////////////////////////////////////////////
-KnuclDetectorConstruction::KnuclDetectorConstruction(const G4SolConfig& conf)
+KnuclDetectorConstruction::KnuclDetectorConstruction(G4SolConfig& conf)
   : G4SolVDetectorConstruction(conf),
    experimentalHall_box(0), experimentalHall_log(0), experimentalHall_phys(0),
     Kurama_box(0),           Kurama_log(0),           Kurama_phys(0),

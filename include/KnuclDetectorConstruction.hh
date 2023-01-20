@@ -93,7 +93,7 @@ private:
 
 public:
   // explicit KnuclDetectorConstruction();//const THypHi_Par& _par);
-  explicit KnuclDetectorConstruction(const G4SolConfig& conf); // KnuclAnaManager* ana);
+  explicit KnuclDetectorConstruction(G4SolConfig& conf); // KnuclAnaManager* ana);
   ~KnuclDetectorConstruction();
 
   void ConstructMaterials();

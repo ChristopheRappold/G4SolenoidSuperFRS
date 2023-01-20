@@ -68,7 +68,7 @@ G4ThreadLocal G4FieldManager* HIAFSimpleDetectorConstruction::fFieldMgr = 0;
 // ====================================================================
 
 //////////////////////////////////////////////////////
-HIAFSimpleDetectorConstruction::HIAFSimpleDetectorConstruction(const G4SolConfig& conf)
+HIAFSimpleDetectorConstruction::HIAFSimpleDetectorConstruction(G4SolConfig& conf)
   : G4SolVDetectorConstruction(conf),
     experimentalHall_box(0), experimentalHall_log(0), experimentalHall_phys(0),
     CD_tube(0),              CD_log(0),               CD_phys(0)

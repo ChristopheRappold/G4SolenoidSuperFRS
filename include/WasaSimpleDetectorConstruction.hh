@@ -85,7 +85,7 @@ private:
   // const G4SolConfig& Par;
 
 public:
-  explicit WasaSimpleDetectorConstruction(const G4SolConfig& conf);
+  explicit WasaSimpleDetectorConstruction(G4SolConfig& conf);
   ~WasaSimpleDetectorConstruction();
 
   void ConstructMaterials();

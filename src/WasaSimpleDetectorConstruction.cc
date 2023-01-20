@@ -60,7 +60,7 @@ G4ThreadLocal G4FieldManager* WasaSimpleDetectorConstruction::fFieldMgr         
 // ====================================================================
 
 //////////////////////////////////////////////////////
-WasaSimpleDetectorConstruction::WasaSimpleDetectorConstruction(const G4SolConfig& conf)
+WasaSimpleDetectorConstruction::WasaSimpleDetectorConstruction(G4SolConfig& conf)
     : G4SolVDetectorConstruction(conf), experimentalHall_box(0), experimentalHall_log(0), experimentalHall_phys(0),
       CD_tube(0), CD_log(0), CD_phys(0)
 
