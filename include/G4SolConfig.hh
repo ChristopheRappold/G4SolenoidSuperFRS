@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
 namespace pt = boost::property_tree;
 
@@ -21,6 +22,7 @@ public:
   G4SolConfig(int argc, char** argv);
   ~G4SolConfig();
   void ParseConfig(const std::string& namefile);
+  void ParsePreviousParams(std::map<std::string,double>* params);
   int ProperConf() { return status; }
 
   template <typename T>

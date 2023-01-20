@@ -98,6 +98,77 @@ void G4SolConfig::ParseConfig(const std::string& namefile)
     }
 }
 
+void G4SolConfig::ParsePreviousParams(std::map<std::string,double>* params)
+{
+
+  auto temp_pair = params->find("Target_Size");
+  if(temp_pair != params->end())
+    {
+      tree.put("Target_Size",temp_pair->second);
+      tree.put("Target_Size.unit","cm");
+      tree.put("Target_Size.unit.cm",1.*cm);
+    }
+  temp_pair = params->find("Target_PosX");
+  if(temp_pair != params->end())
+    {
+      tree.put("Target_PosX",temp_pair->second);
+      tree.put("Target_PosX.unit","cm");
+      tree.put("Target_PosX.unit.cm",1.*cm);
+    }
+  temp_pair = params->find("Target_PosY");
+  if(temp_pair != params->end())
+    {
+      tree.put("Target_PosY",temp_pair->second);
+      tree.put("Target_PosY.unit","cm");
+      tree.put("Target_PosY.unit.cm",1.*cm);
+    }
+  temp_pair = params->find("Target_PosZ");
+  if(temp_pair != params->end())
+    {
+      tree.put("Target_PosZ",temp_pair->second);
+      tree.put("Target_PosZ.unit","cm");
+      tree.put("Target_PosZ.unit.cm",1.*cm);
+    }
+  temp_pair = params->find("Wasa_ShiftZ");
+  if(temp_pair != params->end())
+    {
+      tree.put("Wasa_ShiftZ",temp_pair->second);
+      tree.put("Wasa_ShiftZ.unit","cm");
+      tree.put("Wasa_ShiftZ.unit.cm",1.*cm);
+    }
+  temp_pair = params->find("Wasa_Side");
+  if(temp_pair != params->end())
+      tree.put("Wasa_Side",static_cast<int>(temp_pair->second));
+
+  temp_pair = params->find("Systematic_Shift");
+  if(temp_pair != params->end())
+    {
+      tree.put("Systematic_Shift",temp_pair->second);
+      tree.put("Systematic_Shift.unit","cm");
+      tree.put("Systematic_Shift.unit.cm",1.*cm);
+    }
+
+  temp_pair = params->find("Field_CDS_Bz");
+  if(temp_pair != params->end())
+    {
+      tree.put("Field_CDS_Bz",temp_pair->second);
+      tree.put("Field_CDS_Bz.unit","tesla");
+      tree.put("Field_CDS_Bz.unit.tesla",1.*tesla);
+    }
+
+  temp_pair = params->find("Field_CDS_FieldMap");
+  if(temp_pair != params->end())
+    {
+      auto temp_pair2 = params->find("Field_CDS_Bz");
+      if(temp_pair2 != params->end())
+	{
+	  tree.put("Field_WasaMapMaxField",temp_pair2->second);
+	  tree.put("Field_WasaMapMaxField.unit","tesla");
+	  tree.put("Field_WasaMapMaxField.tesla",1.*tesla);
+	}
+    }
+}
+
 G4SolConfig::~G4SolConfig() {}
 
 int G4SolConfig::ParseCmd(int argc, char** argv)
