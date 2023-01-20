@@ -12,10 +12,13 @@
 #include "TGeoManager.h"
 #include "TROOT.h"
 
+#include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
+
 G4SolConvertGeo::G4SolConvertGeo(G4VPhysicalVolume* w) : physiWorld(w) {}
 G4SolConvertGeo::~G4SolConvertGeo() {}
 
-int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeometry)
+int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeometry, const std::vector<G4String>& NameDetectorsSD, const G4SolConfig& Config)
 {
   // Import Geant4 geometry to VGM
 
@@ -191,6 +194,26 @@ int G4SolConvertGeo::Convert(const std::string& nameOut, const G4String& nameGeo
   TFile* f_outGeo = new TFile(nameOut.c_str(), "RECREATE");
   f_outGeo->cd();
   gGeoManager->Write();
+
+  std::map<std::string, double> parameterToFile;
+  parameterToFile.insert(std::make_pair("Target_Size", Config.Get<double>("Target_Size") / cm));
+  parameterToFile.insert(std::make_pair("Target_PosX", Config.Get<double>("Target_PosX") / cm));
+  parameterToFile.insert(std::make_pair("Target_PosY", Config.Get<double>("Target_PosY") / cm));
+  parameterToFile.insert(std::make_pair("Target_PosZ", Config.Get<double>("Target_PosZ") / cm));
+  parameterToFile.insert(std::make_pair("Wasa_ShiftZ", Config.Get<double>("Wasa_ShiftZ") / cm));
+  parameterToFile.insert(std::make_pair("Wasa_Side", Config.Get<int>("Wasa_Side")));
+  parameterToFile.insert(std::make_pair("Systematic_Shift", Config.Get<double>("Systematic_Shift") / cm));
+  if(Config.IsAvailable("Field_CDS_Bz"))
+    parameterToFile.insert(std::make_pair("Field_CDS_Bz", Config.Get<double>("Field_CDS_Bz") / tesla));
+  else if(Config.IsAvailable("Field_WASAMapMaxField"))
+    {
+      parameterToFile.insert(std::make_pair("Field_CDS_Bz", Config.Get<double>("Field_WASAMapMaxField") / tesla));
+      parameterToFile.insert(std::make_pair("Field_CDS_FieldMap", 1.0));
+    }
+
+  f_outGeo->WriteObjectAny(&NameDetectorsSD, "std::vector<std::string>", "nameDet");
+  f_outGeo->WriteObjectAny(&parameterToFile, "std::map<std::string,double>", "simParameters");
+  
   f_outGeo->Close();
 
   // rtFactory.World();

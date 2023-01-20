@@ -89,7 +89,7 @@ void G4SolGeometryController::ConvertG4toRoot(const std::string& nameConvertRoot
     {
       std::cout << logi->GetName() << std::endl;
       G4SolConvertGeo convertor(detectorBuilder->experimentalHall_physOutRoot);
-      convertor.Convert(nameConvertRoot, nameGeometry);
+      convertor.Convert(nameConvertRoot, nameGeometry, detectorBuilder->GetNameDetectors(), Par);
     }
   else
     {
