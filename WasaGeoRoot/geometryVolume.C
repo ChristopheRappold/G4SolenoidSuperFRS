@@ -707,7 +707,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoRotation* rot245 = new TGeoRotation("rot245", 90, 240, 180, 330, 90, 330);
   TGeoRotation* rot246 = new TGeoRotation("rot246", 90, 255, 180, 345, 90, 345);
 
-  double z_mfld = -2.25;
+  double z_mfld = -2.5;
+  //double z_mfld = 0.;
   WASA->AddNode(MFLD, 1, new TGeoTranslation(0, 0, z_mfld));
   //#ifdef WASAVACUUMPIPE
   if(Pipe==true)
@@ -851,7 +852,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
 
   TGeoRotation* rot255 = new TGeoRotation("rot255", 90, 0, 90, 90, 0, 0);
 
-  MFLD->AddNode(IRC_, 1, rot255);
+  //MFLD->AddNode(IRC_, 1, rot255);
+  MFLD->AddNode(IRC_, 1, new TGeoCombiTrans(0, 0, -2.5 - z_mfld, rot255));
 
   TGeoRotation* rot256 = new TGeoRotation("rot256", 90, 180, 90, 270, 0, 0);
   //MFLD->AddNode(MD_1, 1, new TGeoCombiTrans(0, 0, -3.380001, rot256));
