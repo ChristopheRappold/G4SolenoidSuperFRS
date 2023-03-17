@@ -154,10 +154,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   const G4double TargetPosY       = Par.Get<double>("Target_PosY");
   const G4double TargetPosZ       = Par.Get<double>("Target_PosZ");
 
-  G4ThreeVector transMFLD_move(0., 0., Wasa_Zshift + Systematic_shift);
-  G4ThreeVector transMFLD_new = transMFLD + transMFLD_move;
-
   const int WasaSide = Par.Get<int>("Wasa_Side");
+  double Sign = WasaSide == 0 ? 1. : -1.;
+  G4ThreeVector transMFLD_move(0., 0., Wasa_Zshift + Systematic_shift);
+  //G4ThreeVector transMFLD_new = transMFLD + transMFLD_move;
+  G4ThreeVector transMFLD_new = transMFLD*Sign + transMFLD_move;
+
   if(WasaSide == 1)
     rotMFLD.rotateY(180 * degree);
 
@@ -335,7 +337,6 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   // G4VisAttributes* simpleBoxVisAtt= new G4VisAttributes(G4Colour(1.0,1.0,1.0));
   // simpleBoxVisAtt->SetVisibility(true);
   // if (calorLV) calorLV->SetVisAttributes(simpleBoxVisAtt);
-  double Sign = WasaSide == 0 ? 1. : -1.;
 
   G4NistManager* materialMgr = G4NistManager::Instance();
 
