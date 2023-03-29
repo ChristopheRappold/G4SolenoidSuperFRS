@@ -3701,66 +3701,66 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoRotation* rot1123 = new TGeoRotation("rot1123", 180,   0,  90,   82.65,  90,  352.65);
   TGeoRotation* rot1124 = new TGeoRotation("rot1124", 180,   0,  90,   90.00,  90,    0.00);
 
-  INNER_->AddNode(PSCE->GetVolume(0), 1 , new TGeoCombiTrans(2.932709 , 22.27613      , 0., rot1087));
-  INNER_->AddNode(PSCE->GetVolume(0), 2 , new TGeoCombiTrans(6.090441 , 22.72984      , 0., rot1086));
-  INNER_->AddNode(PSCE->GetVolume(0), 3 , new TGeoCombiTrans(8.598266 , 20.75805      , 0., rot1085));
-  INNER_->AddNode(PSCE->GetVolume(0), 4 , new TGeoCombiTrans(11.76583 , 20.37901      , 0., rot1084));
-  INNER_->AddNode(PSCE->GetVolume(0), 5 , new TGeoCombiTrans(13.67787 , 17.82534      , 0., rot1083));
-  INNER_->AddNode(PSCE->GetVolume(0), 6 , new TGeoCombiTrans(16.63939 , 16.63939      , 0., rot1082));
-  INNER_->AddNode(PSCE->GetVolume(0), 7 , new TGeoCombiTrans(17.82534 , 13.67787      , 0., rot1081));
-  INNER_->AddNode(PSCE->GetVolume(0), 8 , new TGeoCombiTrans(20.37901 , 11.76583      , 0., rot1080));
-  INNER_->AddNode(PSCE->GetVolume(0), 9 , new TGeoCombiTrans(20.75805 , 8.598266      , 0., rot1079));
-  INNER_->AddNode(PSCE->GetVolume(0), 10, new TGeoCombiTrans(22.72984 , 6.090441      , 0., rot1078));
-  INNER_->AddNode(PSCE->GetVolume(0), 11, new TGeoCombiTrans(22.27613 , 2.932708      , 0., rot1077));
-  INNER_->AddNode(PSCE->GetVolume(0), 12, new TGeoCombiTrans(23.53166 , -0.1192093E-05, 0., rot1124));
-  INNER_->AddNode(PSCE->GetVolume(0), 13, new TGeoCombiTrans(22.27613 , -2.932703     , 0., rot1123));
-  INNER_->AddNode(PSCE->GetVolume(0), 14, new TGeoCombiTrans(22.72984 , -6.090441     , 0., rot1122));
-  INNER_->AddNode(PSCE->GetVolume(0), 15, new TGeoCombiTrans(20.75805 , -8.59827      , 0., rot1121));
-  INNER_->AddNode(PSCE->GetVolume(0), 16, new TGeoCombiTrans(20.37901 , -11.76584     , 0., rot1120));
-  INNER_->AddNode(PSCE->GetVolume(0), 17, new TGeoCombiTrans(17.82535 , -13.67786     , 0., rot1119));
-  INNER_->AddNode(PSCE->GetVolume(0), 18, new TGeoCombiTrans(16.6394  , -16.63939     , 0., rot1118));
-  INNER_->AddNode(PSCE->GetVolume(0), 19, new TGeoCombiTrans(13.67786 , -17.82534     , 0., rot1117));
-  INNER_->AddNode(PSCE->GetVolume(0), 20, new TGeoCombiTrans(11.76583 , -20.37901     , 0., rot1116));
-  INNER_->AddNode(PSCE->GetVolume(0), 21, new TGeoCombiTrans(8.598266 , -20.75805     , 0., rot1115));
-  INNER_->AddNode(PSCE->GetVolume(0), 22, new TGeoCombiTrans(6.090446 , -22.72984     , 0., rot1114));
-  INNER_->AddNode(PSCE->GetVolume(0), 23, new TGeoCombiTrans(2.932709 , -22.27613     , 0., rot1113));
-  INNER_->AddNode(PSCE->GetVolume(0), 24, new TGeoCombiTrans(-2.932707, -22.27613     , 0., rot1111));
-  INNER_->AddNode(PSCE->GetVolume(0), 25, new TGeoCombiTrans(-6.090433, -22.72984     , 0., rot1110));
-  INNER_->AddNode(PSCE->GetVolume(0), 26, new TGeoCombiTrans(-8.598265, -20.75805     , 0., rot1109));
-  INNER_->AddNode(PSCE->GetVolume(0), 27, new TGeoCombiTrans(-11.76583, -20.37901     , 0., rot1108));
-  INNER_->AddNode(PSCE->GetVolume(0), 28, new TGeoCombiTrans(-13.67786, -17.82534     , 0., rot1107));
-  INNER_->AddNode(PSCE->GetVolume(0), 29, new TGeoCombiTrans(-16.6394 , -16.63939     , 0., rot1106));
-  INNER_->AddNode(PSCE->GetVolume(0), 30, new TGeoCombiTrans(-17.82534, -13.67787     , 0., rot1105));
-  INNER_->AddNode(PSCE->GetVolume(0), 31, new TGeoCombiTrans(-20.37901, -11.76583     , 0., rot1104));
-  INNER_->AddNode(PSCE->GetVolume(0), 32, new TGeoCombiTrans(-20.75805, -8.598267     , 0., rot1103));
-  INNER_->AddNode(PSCE->GetVolume(0), 33, new TGeoCombiTrans(-22.72984, -6.090443     , 0., rot1102));
-  INNER_->AddNode(PSCE->GetVolume(0), 34, new TGeoCombiTrans(-22.27613, -2.932705     , 0., rot1101));
-  INNER_->AddNode(PSCE->GetVolume(0), 35, new TGeoCombiTrans(-23.53166, -0.2384186E-05, 0., rot1100));
-  INNER_->AddNode(PSCE->GetVolume(0), 36, new TGeoCombiTrans(-22.27613, 2.93271       , 0., rot1099));
-  INNER_->AddNode(PSCE->GetVolume(0), 37, new TGeoCombiTrans(-22.72984, 6.090437      , 0., rot1098));
-  INNER_->AddNode(PSCE->GetVolume(0), 38, new TGeoCombiTrans(-20.75805, 8.598268      , 0., rot1097));
-  INNER_->AddNode(PSCE->GetVolume(0), 39, new TGeoCombiTrans(-20.37901, 11.76583      , 0., rot1096));
-  INNER_->AddNode(PSCE->GetVolume(0), 40, new TGeoCombiTrans(-17.82534, 13.67787      , 0., rot1095));
-  INNER_->AddNode(PSCE->GetVolume(0), 41, new TGeoCombiTrans(-16.63939, 16.63939      , 0., rot1094));
-  INNER_->AddNode(PSCE->GetVolume(0), 42, new TGeoCombiTrans(-13.67787, 17.82534      , 0., rot1093));
-  INNER_->AddNode(PSCE->GetVolume(0), 43, new TGeoCombiTrans(-11.76583, 20.37901      , 0., rot1092));
-  INNER_->AddNode(PSCE->GetVolume(0), 44, new TGeoCombiTrans(-8.598269, 20.75805      , 0., rot1091));
-  INNER_->AddNode(PSCE->GetVolume(0), 45, new TGeoCombiTrans(-6.090442, 22.72984      , 0., rot1090));
-  INNER_->AddNode(PSCE->GetVolume(0), 46, new TGeoCombiTrans(-2.932707, 22.27613      , 0., rot1089));
+  INNER_->AddNode(PSCE->GetVolume(0), 1 , new TGeoCombiTrans(  3.51434,   21.81879, 0., rot1087));
+  INNER_->AddNode(PSCE->GetVolume(0), 2 , new TGeoCombiTrans(  6.58206,   22.22065, 0., rot1086));
+  INNER_->AddNode(PSCE->GetVolume(0), 3 , new TGeoCombiTrans(  8.93599,   20.21282, 0., rot1085));
+  INNER_->AddNode(PSCE->GetVolume(0), 4 , new TGeoCombiTrans( 12.00528,   19.82307, 0., rot1084));
+  INNER_->AddNode(PSCE->GetVolume(0), 5 , new TGeoCombiTrans( 13.77266,   17.28363, 0., rot1083));
+  INNER_->AddNode(PSCE->GetVolume(0), 6 , new TGeoCombiTrans( 16.64258,   16.12778, 0., rot1082));
+  INNER_->AddNode(PSCE->GetVolume(0), 7 , new TGeoCombiTrans( 17.70771,   13.22297, 0., rot1081));
+  INNER_->AddNode(PSCE->GetVolume(0), 8 , new TGeoCombiTrans( 20.19038,   11.37669, 0., rot1080));
+  INNER_->AddNode(PSCE->GetVolume(0), 9 , new TGeoCombiTrans( 20.48353,    8.29668, 0., rot1079));
+  INNER_->AddNode(PSCE->GetVolume(0), 10, new TGeoCombiTrans( 22.41643,    5.88084, 0., rot1078));
+  INNER_->AddNode(PSCE->GetVolume(0), 11, new TGeoCombiTrans( 21.91841,    2.82726, 0., rot1077));
+  INNER_->AddNode(PSCE->GetVolume(0), 12, new TGeoCombiTrans( 23.17500,    0.00000, 0., rot1124));
+  INNER_->AddNode(PSCE->GetVolume(0), 13, new TGeoCombiTrans( 21.91841,   -2.82726, 0., rot1123));
+  INNER_->AddNode(PSCE->GetVolume(0), 14, new TGeoCombiTrans( 22.41643,   -5.88084, 0., rot1122));
+  INNER_->AddNode(PSCE->GetVolume(0), 15, new TGeoCombiTrans( 20.48353,   -8.29668, 0., rot1121));
+  INNER_->AddNode(PSCE->GetVolume(0), 16, new TGeoCombiTrans( 20.19038,  -11.37669, 0., rot1120));
+  INNER_->AddNode(PSCE->GetVolume(0), 17, new TGeoCombiTrans( 17.70771,  -13.22297, 0., rot1119));
+  INNER_->AddNode(PSCE->GetVolume(0), 18, new TGeoCombiTrans( 16.64258,  -16.12778, 0., rot1118));
+  INNER_->AddNode(PSCE->GetVolume(0), 19, new TGeoCombiTrans( 13.77266,  -17.28363, 0., rot1117));
+  INNER_->AddNode(PSCE->GetVolume(0), 20, new TGeoCombiTrans( 12.00528,  -19.82307, 0., rot1116));
+  INNER_->AddNode(PSCE->GetVolume(0), 21, new TGeoCombiTrans(  8.93599,  -20.21282, 0., rot1115));
+  INNER_->AddNode(PSCE->GetVolume(0), 22, new TGeoCombiTrans(  6.58206,  -22.22065, 0., rot1114));
+  INNER_->AddNode(PSCE->GetVolume(0), 23, new TGeoCombiTrans(  3.51434,  -21.81879, 0., rot1113));
+  INNER_->AddNode(PSCE->GetVolume(0), 24, new TGeoCombiTrans( -3.51434,  -21.81879, 0., rot1111));
+  INNER_->AddNode(PSCE->GetVolume(0), 25, new TGeoCombiTrans( -6.58206,  -22.22065, 0., rot1110));
+  INNER_->AddNode(PSCE->GetVolume(0), 26, new TGeoCombiTrans( -8.93599,  -20.21282, 0., rot1109));
+  INNER_->AddNode(PSCE->GetVolume(0), 27, new TGeoCombiTrans(-12.00528,  -19.82307, 0., rot1108));
+  INNER_->AddNode(PSCE->GetVolume(0), 28, new TGeoCombiTrans(-13.77266,  -17.28363, 0., rot1107));
+  INNER_->AddNode(PSCE->GetVolume(0), 29, new TGeoCombiTrans(-16.64258,  -16.12778, 0., rot1106));
+  INNER_->AddNode(PSCE->GetVolume(0), 30, new TGeoCombiTrans(-17.70771,  -13.22297, 0., rot1105));
+  INNER_->AddNode(PSCE->GetVolume(0), 31, new TGeoCombiTrans(-20.19038,  -11.37669, 0., rot1104));
+  INNER_->AddNode(PSCE->GetVolume(0), 32, new TGeoCombiTrans(-20.48353,   -8.29668, 0., rot1103));
+  INNER_->AddNode(PSCE->GetVolume(0), 33, new TGeoCombiTrans(-22.41643,   -5.88084, 0., rot1102));
+  INNER_->AddNode(PSCE->GetVolume(0), 34, new TGeoCombiTrans(-21.91841,   -2.82726, 0., rot1101));
+  INNER_->AddNode(PSCE->GetVolume(0), 35, new TGeoCombiTrans(-23.17500,    0.00000, 0., rot1100));
+  INNER_->AddNode(PSCE->GetVolume(0), 36, new TGeoCombiTrans(-21.91841,    2.82726, 0., rot1099));
+  INNER_->AddNode(PSCE->GetVolume(0), 37, new TGeoCombiTrans(-22.41643,    5.88084, 0., rot1098));
+  INNER_->AddNode(PSCE->GetVolume(0), 38, new TGeoCombiTrans(-20.48353,    8.29668, 0., rot1097));
+  INNER_->AddNode(PSCE->GetVolume(0), 39, new TGeoCombiTrans(-20.19038,   11.37669, 0., rot1096));
+  INNER_->AddNode(PSCE->GetVolume(0), 40, new TGeoCombiTrans(-17.70771,   13.22297, 0., rot1095));
+  INNER_->AddNode(PSCE->GetVolume(0), 41, new TGeoCombiTrans(-16.64258,   16.12778, 0., rot1094));
+  INNER_->AddNode(PSCE->GetVolume(0), 42, new TGeoCombiTrans(-13.77266,   17.28363, 0., rot1093));
+  INNER_->AddNode(PSCE->GetVolume(0), 43, new TGeoCombiTrans(-12.00528,   19.82307, 0., rot1092));
+  INNER_->AddNode(PSCE->GetVolume(0), 44, new TGeoCombiTrans( -8.93599,   20.21282, 0., rot1091));
+  INNER_->AddNode(PSCE->GetVolume(0), 45, new TGeoCombiTrans( -6.58206,   22.22065, 0., rot1090));
+  INNER_->AddNode(PSCE->GetVolume(0), 46, new TGeoCombiTrans( -3.51434,   21.81879, 0., rot1089));
 
   //TGeoVolume* PSBE = PSB_->Divide("PSBE", 2, 48, 0, 7.5);
   for(int i=1;i<=44;++i)
-    {
-      TString nameRotBE = "temp_rotBE_";
-      nameRotBE += i;
-      double rotAngle = 0;
-      if(i<=11     ) rotAngle = -90 + 8.18*(i+10);
-      else if(i<=33) rotAngle =  90 + 8.18*(i-12);
-      else           rotAngle = -90 + 8.18*(i-34);
-      TGeoRotation* tempRot_PSBE = new TGeoRotation(nameRotBE);
-      tempRot_PSBE->RotateZ(rotAngle);
-      PSB_->AddNode(PSBE,i,tempRot_PSBE);
-    }
+  {
+    TString nameRotBE = "temp_rotBE_";
+    nameRotBE += i;
+    double rotAngle = 0;
+    if(i<=11     ) rotAngle = -90 + 8.18*(i+10);
+    else if(i<=33) rotAngle =  90 + 8.18*(i-12);
+    else           rotAngle = -90 + 8.18*(i-34);
+    TGeoRotation* tempRot_PSBE = new TGeoRotation(nameRotBE);
+    tempRot_PSBE->RotateZ(rotAngle);
+    PSB_->AddNode(PSBE,i,tempRot_PSBE);
+  }
 
   PSBE->SetLineColor(kRed+1);
   TGeoRotation* rot1076 = new TGeoRotation("rot1076", 90, 3.75, 90, 93.75, 0, 0);
@@ -3771,17 +3771,17 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
 
   //TGeoVolume* PSFE = PSF_->Divide("PSFE", 2, 48, 0, 7.5);
   for(int i=1;i<=38;++i)
-    {
-      TString nameRotFE = "temp_rotFE_";
-      nameRotFE += i;
-      double rotAngle = 0;
-      if(i<=10     ) rotAngle =   0 - 4.09 + 8.18*(i-1 );
-      else if(i<=29) rotAngle = 180 - 4.09 + 8.18*(i-20);
-      else           rotAngle =   0 - 4.09 + 8.18*(i-39);
-      TGeoRotation* tempRot_PSFE = new TGeoRotation(nameRotFE);
-      tempRot_PSFE->RotateZ(rotAngle);
-      PSF_->AddNode(PSFE,i,tempRot_PSFE);
-    }
+  {
+    TString nameRotFE = "temp_rotFE_";
+    nameRotFE += i;
+    double rotAngle = 0;
+    if(i<=10     ) rotAngle =   0 - 4.09 + 8.18*(i-1 );
+    else if(i<=29) rotAngle = 180 - 4.09 + 8.18*(i-20);
+    else           rotAngle =   0 - 4.09 + 8.18*(i-39);
+    TGeoRotation* tempRot_PSFE = new TGeoRotation(nameRotFE);
+    tempRot_PSFE->RotateZ(rotAngle);
+    PSF_->AddNode(PSFE,i,tempRot_PSFE);
+  }
 
   PSFE->SetLineColor(kRed+1);
   TGeoRotation* rot1125 = new TGeoRotation("rot1125", 90, 3.75, 90, 93.75, 0, 0);
@@ -3798,7 +3798,7 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   // MFLD->AddNode(PTB1->GetVolume(17), 18, new TGeoCombiTrans(0, 3.75, 2.5, rot2141));
   INNER_->AddNode(PTB0->GetVolume(17), 18, new TGeoCombiTrans(0, -3.75, 0., rot2140));
   INNER_->AddNode(PTB1->GetVolume(17), 18, new TGeoCombiTrans(0,  3.75, 0., rot2141));
-  
+
   // MFLD->AddNode(PTB0->GetVolume(18), 19, new TGeoCombiTrans(0, -21.35, 2.5, rot2140));
   // MFLD->AddNode(PTB1->GetVolume(18), 19, new TGeoCombiTrans(0, 21.35, 2.5, rot2141));
   INNER_->AddNode(PTB0->GetVolume(18), 19, new TGeoCombiTrans(0, -21.35, 0., rot2140));
