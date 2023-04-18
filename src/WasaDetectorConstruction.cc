@@ -454,22 +454,23 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1){
 
-    std::vector<G4String> Name_MDC = {"MD01", "MD02", "MD03", "MD04", "MD05", "MD06", "MD07", "MD08",
-                                      "MD09", "MD10", "MD11", "MD12", "MD13", "MD14", "MD15", "MD16",
-                                      "MD17", "MDO",  "MDB",  "MDF",  "PTB0", "PTB1", "PTB2", "PTB3"};
+    G4VPhysicalVolume* MDC_temp = FindVolPhys("MDC");
 
-      for(auto& CurrentName : Name_MDC){
-        G4VPhysicalVolume* MDC_temp = FindVolPhys(CurrentName);
-        if(MDC_temp == nullptr) std::cout << "E> no volume :" << CurrentName << "\n";
-        G4ThreeVector transMDC = MDC_temp->GetObjectTranslation();
-        G4ThreeVector transMDC_move(mdc_pos_x*mm * Sign, mdc_pos_y*mm, mdc_pos_z*mm * Sign);
-        G4ThreeVector transMDC_new = transMDC + transMDC_move;
-        G4RotationMatrix *rotMDC= MDC_temp->GetObjectRotation();
-        rotMDC->rotateZ(mdc_rot_z*deg * Sign);
-        rotMDC->rotateX(mdc_rot_x*deg * Sign);
-        rotMDC->rotateY(mdc_rot_y*deg);
-        MDC_temp->SetTranslation(transMDC_new);
-      }
+    G4ThreeVector transMDC = MDC_temp->GetObjectTranslation();
+    G4ThreeVector transMDC_move(mdc_pos_x*mm * Sign, mdc_pos_y*mm, mdc_pos_z*mm * Sign);
+    G4ThreeVector transMDC_new = transMDC + transMDC_move;
+
+    G4RotationMatrix rotMDC = MDC_temp->GetObjectRotationValue();
+    //std::cout << "rotMDC before : " << rotMDC << std::endl;
+    rotMDC.rotateZ(mdc_rot_z * degree);
+    rotMDC.rotateX(mdc_rot_x * degree);
+    rotMDC.rotateY(mdc_rot_y * degree);
+    //std::cout << "rotMDC after : " << rotMDC << std::endl;
+
+    MDC_temp->SetTranslation(transMDC_new);
+    //MDC_temp->SetRotation(&rotMDC);
+    //G4RotationMatrix rotMDC_buf = MDC_temp->GetObjectRotationValue();
+    //std::cout << "rotMDC buf : " << rotMDC_buf << std::endl;
 
   }
 
