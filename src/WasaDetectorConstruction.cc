@@ -476,18 +476,21 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   if(Par.IsAvailable("Calib_PSB_ON") && Par.Get<int>("Calib_PSB_ON")==1){
 
-    std::vector<G4String> Name_PSCE = {"PSCE"};
+    G4VPhysicalVolume* PSB_temp = FindVolPhys("PSCEall");
 
-    for(auto& CurrentName : Name_PSCE){
-      G4VPhysicalVolume* PSCE_temp = FindVolPhys(CurrentName);
-      if(PSCE_temp == nullptr) std::cout << "E> no volume :" << CurrentName << "\n";
-      G4ThreeVector transPSCE = PSCE_temp->GetObjectTranslation();
-      G4ThreeVector transPSCE_move(psb_pos_x*mm * Sign, psb_pos_y*mm, psb_pos_z*mm * Sign);
-      G4ThreeVector transPSCE_new = transPSCE + transPSCE_move;
-      G4RotationMatrix *rotPSCE= PSCE_temp->GetObjectRotation();
-      rotPSCE->rotateZ(psb_rot_z*deg * Sign);
-      PSCE_temp->SetTranslation(transPSCE_new);
-    }
+    G4ThreeVector transPSB = PSB_temp->GetObjectTranslation();
+    G4ThreeVector transPSB_move(psb_pos_x*mm * Sign, psb_pos_y*mm, psb_pos_z*mm * Sign);
+    G4ThreeVector transPSB_new = transPSB + transPSB_move;
+
+    G4RotationMatrix rotPSB = PSB_temp->GetObjectRotationValue();
+    //std::cout << "rotPSB before : " << rotPSB << std::endl;
+    rotPSB.rotateZ(psb_rot_z * degree);
+    //std::cout << "rotPSB after : " << rotPSB << std::endl;
+
+    PSB_temp->SetTranslation(transPSB_new);
+    //PSB_temp->SetRotation(&rotPSB);
+    //G4RotationMatrix rotPSB_buf = PSB_temp->GetObjectRotationValue();
+    //std::cout << "rotPSB buf : " << rotPSB_buf << std::endl;
 
   }
 
