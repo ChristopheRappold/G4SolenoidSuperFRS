@@ -858,15 +858,6 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   MFLD->AddNode(IRC_, 1, new TGeoCombiTrans(0, 0, -2.5 - z_mfld, rot255));
 
   TGeoRotation* rot_mdc = new TGeoRotation("rot_mdc", 90, 0, 90, 90, 0, 0);
-  double mdc_rot_x = -0.32;
-  double mdc_rot_y = -0.10;
-  double mdc_rot_z = -0.40;
-  mdc_rot_x *= -1;
-  mdc_rot_z *= -1;
-  rot_mdc->RotateZ(mdc_rot_z);
-  rot_mdc->RotateX(mdc_rot_x);
-  rot_mdc->RotateY(mdc_rot_y);
-
   INNER_->AddNode(MDC, 1,  new TGeoCombiTrans(0, 0, 0, rot_mdc));
 
   TGeoRotation* rot256 = new TGeoRotation("rot256", 90, 180, 90, 270, 0, 0);
@@ -3717,9 +3708,6 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoRotation* rot1124 = new TGeoRotation("rot1124", 180,   0,  90,   90.00,  90,    0.00);
 
   TGeoRotation* rot_psce = new TGeoRotation("rot_psce", 90, 0, 90, 90, 0, 0);
-  double psce_rot_z = -0.40;
-  psce_rot_z *= -1;
-  rot_psce->RotateZ(psce_rot_z);
   INNER_->AddNode(PSCEall, 1 , new TGeoCombiTrans( 0., 0., 0., rot_psce));
 
   PSCEall->AddNode(PSCE->GetVolume(0), 1 , new TGeoCombiTrans(  3.51434,   21.81879, 0., rot1087));
