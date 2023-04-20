@@ -302,15 +302,16 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   double mdc_rot_y = 0.;
   double mdc_rot_z = 0.;
 
-  if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1){
-    mdc_pos_x = 1.5;
-    mdc_pos_y = 5.5;
-    mdc_pos_z = -4.;
+  if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1)
+    {
+      mdc_pos_x = 1.5;
+      mdc_pos_y = 5.5;
+      mdc_pos_z = -4.;
 
-    mdc_rot_x = -0.32;
-    mdc_rot_y = -0.1;
-    mdc_rot_z = -0.4;
-  }
+      mdc_rot_x = -0.32;
+      mdc_rot_y = -0.1;
+      mdc_rot_z = -0.4;
+    }
 
   // PSB
   double psb_pos_x = 0.;
@@ -318,14 +319,15 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   double psb_pos_z = 0.;
 
   double psb_rot_z = 0.;
-  if(Par.IsAvailable("Calib_PSB_ON") && Par.Get<int>("Calib_PSB_ON")==1){
-    psb_pos_x = 0.5;
-    psb_pos_y = 5.5;
-    psb_pos_z = 0.;
+  if(Par.IsAvailable("Calib_PSB_ON") && Par.Get<int>("Calib_PSB_ON")==1)
+    {
+      psb_pos_x = 0.5;
+      psb_pos_y = 5.5;
+      psb_pos_z = 0.;
 
-    psb_rot_z = -0.4;
+      psb_rot_z = -0.4;
 
-  }
+    }
 
 
   G4VisAttributes VisDetectorSD(Blue);
@@ -488,47 +490,87 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
           }
     }
 
-  if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1){
+  if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1)
+    {
 
-    G4VPhysicalVolume* MDC_temp = FindVolPhys("MDC");
 
-    G4ThreeVector transMDC = MDC_temp->GetObjectTranslation();
-    G4ThreeVector transMDC_move(mdc_pos_x*mm * Sign, mdc_pos_y*mm, mdc_pos_z*mm * Sign);
-    G4ThreeVector transMDC_new = transMDC + transMDC_move;
+      // std::vector<G4String> Name_MDC = {"MD01", "MD02", "MD03", "MD04", "MD05", "MD06", "MD07", "MD08",
+      // 					"MD09", "MD10", "MD11", "MD12", "MD13", "MD14", "MD15", "MD16",
+      // 					"MD17", "MDO",  "MDB",  "MDF",  "PTB0", "PTB1", "PTB2", "PTB3"};
 
-    G4RotationMatrix rotMDC = MDC_temp->GetObjectRotationValue();
-    //std::cout << "rotMDC before : " << rotMDC << std::endl;
-    rotMDC.rotateZ(mdc_rot_z * degree);
-    rotMDC.rotateX(mdc_rot_x * degree);
-    rotMDC.rotateY(mdc_rot_y * degree);
-    //std::cout << "rotMDC after : " << rotMDC << std::endl;
+      // for(size_t iName = 0; iName< Name_MDC.size() ; ++iName)
+      // 	{
+      // 	  auto& CurrentName = Name_MDC[iName];
+      // 	  G4VPhysicalVolume* MDC_temp = FindVolPhys(CurrentName);
+      // 	  if(MDC_temp == nullptr)
+      // 	  std::cout << "E> no volume :" << CurrentName << "\n";
 
-    MDC_temp->SetTranslation(transMDC_new);
-    //MDC_temp->SetRotation(&rotMDC);
-    //G4RotationMatrix rotMDC_buf = MDC_temp->GetObjectRotationValue();
-    //std::cout << "rotMDC buf : " << rotMDC_buf << std::endl;
+      // 	transMDC[iName] = MDC_temp->GetObjectTranslation();
+      // 	G4ThreeVector transMDC_move(mdc_pos_x*mm * Sign, mdc_pos_y*mm, mdc_pos_z*mm * Sign);
+      // 	G4ThreeVector transMDC_new = transMDC[iName] + transMDC_move;
+      // 	rotMDC[iName] = MDC_temp->GetObjectRotationValue();
+      // 	rotMDC[iName].rotateZ(mdc_rot_z*deg);// * Sign);
+      // 	rotMDC[iName].rotateX(mdc_rot_x*deg);// * Sign);
+      // 	rotMDC[iName].rotateY(mdc_rot_y*deg);
 
-  }
+      // 	MDC_temp->SetTranslation(transMDC_new);
+      // 	std::cout<<" volume : "<<CurrentName<<" "<<rotMDC.size()<<" "<<rotMDC[iName]<<"\n";
 
-  if(Par.IsAvailable("Calib_PSB_ON") && Par.Get<int>("Calib_PSB_ON")==1){
+      // 	MDC_temp->SetRotation(&(rotMDC[iName]));
+      // }
 
-    G4VPhysicalVolume* PSB_temp = FindVolPhys("PSCEall");
+      G4VPhysicalVolume* MDC_temp = FindVolPhys("MDC");
 
-    G4ThreeVector transPSB = PSB_temp->GetObjectTranslation();
-    G4ThreeVector transPSB_move(psb_pos_x*mm * Sign, psb_pos_y*mm, psb_pos_z*mm * Sign);
-    G4ThreeVector transPSB_new = transPSB + transPSB_move;
+      transMDC = MDC_temp->GetObjectTranslation();
+      G4ThreeVector transMDC_move(mdc_pos_x*mm * Sign, mdc_pos_y*mm, mdc_pos_z*mm * Sign);
+      G4ThreeVector transMDC_new = transMDC + transMDC_move;
 
-    G4RotationMatrix rotPSB = PSB_temp->GetObjectRotationValue();
-    //std::cout << "rotPSB before : " << rotPSB << std::endl;
-    rotPSB.rotateZ(psb_rot_z * degree);
-    //std::cout << "rotPSB after : " << rotPSB << std::endl;
+      rotMDC = MDC_temp->GetObjectRotationValue();
+      //std::cout << "rotMDC before : " << rotMDC << std::endl;
+      rotMDC.rotateZ(mdc_rot_z * degree);
+      rotMDC.rotateX(mdc_rot_x * degree);
+      rotMDC.rotateY(mdc_rot_y * degree);
+      //std::cout << "rotMDC after : " << rotMDC << std::endl;
 
-    PSB_temp->SetTranslation(transPSB_new);
-    //PSB_temp->SetRotation(&rotPSB);
-    //G4RotationMatrix rotPSB_buf = PSB_temp->GetObjectRotationValue();
-    //std::cout << "rotPSB buf : " << rotPSB_buf << std::endl;
+      MDC_temp->SetTranslation(transMDC_new);
+      MDC_temp->SetRotation(&rotMDC);
+      //G4RotationMatrix rotMDC_buf = MDC_temp->GetObjectRotationValue();
+      //std::cout << "rotMDC buf : " << rotMDC_buf << std::endl;
 
-  }
+    }
+
+  if(Par.IsAvailable("Calib_PSB_ON") && Par.Get<int>("Calib_PSB_ON")==1)
+    {
+
+      G4VPhysicalVolume* PSCE_temp = FindVolPhys("PSCEall");
+
+      transPSCE = PSCE_temp->GetObjectTranslation();
+      G4ThreeVector transPSCE_move(psb_pos_x*mm * Sign, psb_pos_y*mm, psb_pos_z*mm * Sign);
+      G4ThreeVector transPSCE_new = transPSCE + transPSCE_move;
+
+      rotPSCE = PSCE_temp->GetObjectRotationValue();
+      //std::cout << "rotPSB before : " << rotPSB << std::endl;
+      rotPSCE.rotateZ(psb_rot_z * degree);
+      //std::cout << "rotPSB after : " << rotPSB << std::endl;
+
+      PSCE_temp->SetTranslation(transPSCE_new);
+      PSCE_temp->SetRotation(&rotPSCE);
+
+      //G4RotationMatrix rotPSB_buf = PSB_temp->GetObjectRotationValue();
+      //std::cout << "rotPSB buf : " << rotPSB_buf << std::endl;
+
+      // for(auto& CurrentName : Name_PSCE){
+      //   G4VPhysicalVolume* PSCE_temp = FindVolPhys(CurrentName);
+      //   if(PSCE_temp == nullptr) std::cout << "E> no volume :" << CurrentName << "\n";
+      //   transPSCE = PSCE_temp->GetObjectTranslation();
+      //   G4ThreeVector transPSCE_move(psb_pos_x*mm * Sign, psb_pos_y*mm, psb_pos_z*mm * Sign);
+      //   G4ThreeVector transPSCE_new = transPSCE + transPSCE_move;
+      //   rotPSCE = PSCE_temp->GetObjectRotationValue();
+      //   rotPSCE.rotateZ(psb_rot_z*deg * Sign);
+      //   PSCE_temp->SetTranslation(transPSCE_new);
+      // }
+
+    }
 
 
   std::vector<G4String> NameSD = {"MG01", "MG02", "MG03", "MG04", "MG05", "MG06", "MG07", "MG08", "MG09", "MG10",
