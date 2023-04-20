@@ -8,7 +8,9 @@ Wasa_ShiftZ 2760 mm
 Field_WASAMapMaxField 1.0 tesla
 Field_WASAMap ../MagField_default.dat
 Geo Wasa
-Geometry_Namefile ../WasaGeoRoot/WasaGeometry8_AsExp.root
+#Geometry_Namefile ../WasaGeoRoot/WasaGeometry8_AsExp.root
+#Geometry_Namefile ../WasaGeoRoot/WasaGeometry10_AsExpNewPSB.root
+Geometry_Namefile ../WasaGeoRoot/WasaGeometry11_AsExpNewGeo.root
 SimpleGeo 0
 HypHI_FiberTR_On 1
 HypHI_FiberTracker1_posZ 1547.7 mm
