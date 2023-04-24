@@ -52,6 +52,9 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4SolidStore.hh"
 #include "G4VisAttributes.hh"
+#include "G4IntersectionSolid.hh"
+#include "G4UnionSolid.hh"
+
 
 // VGM demo
 #include "Geant4GM/volumes/Factory.h"
@@ -2575,10 +2578,32 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4VisAttributes* visAttributes_v = new G4VisAttributes(color_v);
 
       // -------------------------- First MiniFiber Detector --------------------------
-      G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 30. * cm, 30. * cm, 1.5 * cm);
-      G4VSolid* MiniFiberD1_layerX_MothVol_solid = new G4Box("MiniFiberD1_layerX_solid", 20. * cm, 20. * cm, 4. * mm);
-      G4VSolid* MiniFiberD1_layerU_MothVol_solid = new G4Box("MiniFiberD1_layerU_solid", 20. * cm, 20. * cm, 4. * mm);
-      G4VSolid* MiniFiberD1_layerV_MothVol_solid = new G4Box("MiniFiberD1_layerV_solid", 20. * cm, 20. * cm, 4. * mm);
+      G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 20. * cm, 20. * cm, 0.8 * cm);
+      //G4VSolid* MiniFiberD1_layerX_MothVol_solid = new G4Box("MiniFiberD1_layerX_solid", 20. * cm, 20. * cm, 2. * mm);
+      //G4VSolid* MiniFiberD1_layerU_MothVol_solid = new G4Box("MiniFiberD1_layerU_solid", 20. * cm, 20. * cm, 2. * mm);
+      //G4VSolid* MiniFiberD1_layerV_MothVol_solid = new G4Box("MiniFiberD1_layerV_solid", 20. * cm, 20. * cm, 2. * mm);
+
+      G4RotationMatrix* rot_mf1 = new G4RotationMatrix();
+      G4VSolid* MiniFiberD1_half  = new G4Box("MiniFiberD1_half"  , 6. * cm, 12. * cm, 0.6 * mm);
+
+      G4VSolid* MiniFiberD1_layerX_MothVol_solid_buf = new G4Box("MiniFiberD1_layerX_solid_buf", 12. * cm, 12. * cm, 4.  * mm);
+      G4UnionSolid* MiniFiberD1_layerX_MothVol_solid_sub = new G4UnionSolid("MiniFiberD1_layerX_solid_sub", MiniFiberD1_half, MiniFiberD1_half, rot_mf1,
+          Sign*G4ThreeVector(12.*cm , 0.*cm, fiber_mft_shift[0][0][1]-fiber_mft_shift[0][0][0]) );
+      G4IntersectionSolid* MiniFiberD1_layerX_MothVol_solid = new G4IntersectionSolid("MiniFiberD1_layerX_solid", MiniFiberD1_layerX_MothVol_solid_buf, MiniFiberD1_layerX_MothVol_solid_sub, rot_mf1,
+          Sign*G4ThreeVector(-6.*cm , 0.*cm, fiber_mft_shift[0][0][0]) );
+
+      G4VSolid* MiniFiberD1_layerU_MothVol_solid_buf = new G4Box("MiniFiberD1_layerU_solid_buf", 12. * cm, 12. * cm, 4.  * mm);
+      G4UnionSolid* MiniFiberD1_layerU_MothVol_solid_sub = new G4UnionSolid("MiniFiberD1_layerU_solid_sub", MiniFiberD1_half, MiniFiberD1_half, rot_mf1,
+          Sign*G4ThreeVector(12.*cm , 0.*cm, fiber_mft_shift[0][1][1]-fiber_mft_shift[0][1][0]) );
+      G4IntersectionSolid* MiniFiberD1_layerU_MothVol_solid = new G4IntersectionSolid("MiniFiberD1_layerU_solid", MiniFiberD1_layerU_MothVol_solid_buf, MiniFiberD1_layerU_MothVol_solid_sub, rot_mf1,
+          Sign*G4ThreeVector(-6.*cm , 0.*cm, fiber_mft_shift[0][1][0]) );
+
+      G4VSolid* MiniFiberD1_layerV_MothVol_solid_buf = new G4Box("MiniFiberD1_layerV_solid_buf", 12. * cm, 12. * cm, 4.  * mm);
+      G4UnionSolid* MiniFiberD1_layerV_MothVol_solid_sub = new G4UnionSolid("MiniFiberD1_layerV_solid_sub", MiniFiberD1_half, MiniFiberD1_half, rot_mf1,
+          Sign*G4ThreeVector(12.*cm , 0.*cm, fiber_mft_shift[0][2][1]-fiber_mft_shift[0][2][0]) );
+      G4IntersectionSolid* MiniFiberD1_layerV_MothVol_solid = new G4IntersectionSolid("MiniFiberD1_layerV_solid", MiniFiberD1_layerV_MothVol_solid_buf, MiniFiberD1_layerV_MothVol_solid_sub, rot_mf1,
+          Sign*G4ThreeVector(-6.*cm , 0.*cm, fiber_mft_shift[0][2][0]) );
+
       G4LogicalVolume* MiniFiberD1_MothVol_log =
           new G4LogicalVolume(MiniFiberD1_MothVol_solid, Air, "MiniFiberD1_log", 0, 0, 0);
       G4LogicalVolume* MiniFiberD1_MothVol_log_x =
@@ -2780,10 +2805,33 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
 
       // -------------------------- Second MiniFiber Detector --------------------------
-      G4VSolid* MiniFiberD2_MothVol_solid         = new G4Box("MiniFiberDetector2", 30. * cm, 30. * cm, 1.5 * cm);
-      G4VSolid* MiniFiberD2_layerX_MothVol_solid = new G4Box("MiniFiberD2_layerX_solid", 20. * cm, 20. * cm, 4. * mm);
-      G4VSolid* MiniFiberD2_layerV_MothVol_solid = new G4Box("MiniFiberD2_layerV_solid", 20. * cm, 20. * cm, 4. * mm);
-      G4VSolid* MiniFiberD2_layerU_MothVol_solid = new G4Box("MiniFiberD2_layerU_solid", 20. * cm, 20. * cm, 4. * mm);
+      G4VSolid* MiniFiberD2_MothVol_solid         = new G4Box("MiniFiberDetector2", 12. * cm, 12. * cm, 8 * mm);
+      //G4VSolid* MiniFiberD2_layerX_MothVol_solid = new G4Box("MiniFiberD2_layerX_solid", 20. * cm, 20. * cm, 2. * mm);
+      //G4VSolid* MiniFiberD2_layerV_MothVol_solid = new G4Box("MiniFiberD2_layerV_solid", 20. * cm, 20. * cm, 2. * mm);
+      //G4VSolid* MiniFiberD2_layerU_MothVol_solid = new G4Box("MiniFiberD2_layerU_solid", 20. * cm, 20. * cm, 2. * mm);
+
+      G4RotationMatrix* rot_mf2 = new G4RotationMatrix();
+      G4VSolid* MiniFiberD2_half  = new G4Box("MiniFiberD2_half"  , 6. * cm, 12. * cm, 0.6 * mm);
+
+      G4VSolid* MiniFiberD2_layerX_MothVol_solid_buf = new G4Box("MiniFiberD2_layerX_solid_buf", 12. * cm, 12. * cm, 4.  * mm);
+      G4UnionSolid* MiniFiberD2_layerX_MothVol_solid_sub = new G4UnionSolid("MiniFiberD2_layerX_solid_sub", MiniFiberD2_half, MiniFiberD2_half, rot_mf2,
+          Sign*G4ThreeVector(12.*cm , 0.*cm, fiber_mft_shift[1][0][1]-fiber_mft_shift[1][0][0]) );
+      G4IntersectionSolid* MiniFiberD2_layerX_MothVol_solid = new G4IntersectionSolid("MiniFiberD2_layerX_solid", MiniFiberD2_layerX_MothVol_solid_buf, MiniFiberD2_layerX_MothVol_solid_sub, rot_mf2,
+          Sign*G4ThreeVector(-6.*cm , 0.*cm, fiber_mft_shift[1][0][0]) );
+
+      G4VSolid* MiniFiberD2_layerV_MothVol_solid_buf = new G4Box("MiniFiberD2_layerV_solid_buf", 12. * cm, 12. * cm, 4.  * mm);
+      G4UnionSolid* MiniFiberD2_layerV_MothVol_solid_sub = new G4UnionSolid("MiniFiberD2_layerV_solid_sub", MiniFiberD2_half, MiniFiberD2_half, rot_mf2,
+          Sign*G4ThreeVector(12.*cm , 0.*cm, fiber_mft_shift[1][1][1]-fiber_mft_shift[1][1][0]) );
+      G4IntersectionSolid* MiniFiberD2_layerV_MothVol_solid = new G4IntersectionSolid("MiniFiberD2_layerV_solid", MiniFiberD2_layerV_MothVol_solid_buf, MiniFiberD2_layerV_MothVol_solid_sub, rot_mf2,
+          Sign*G4ThreeVector(-6.*cm , 0.*cm, fiber_mft_shift[1][1][0]) );
+
+      G4VSolid* MiniFiberD2_layerU_MothVol_solid_buf = new G4Box("MiniFiberD2_layerU_solid_buf", 12. * cm, 12. * cm, 4.  * mm);
+      G4UnionSolid* MiniFiberD2_layerU_MothVol_solid_sub = new G4UnionSolid("MiniFiberD2_layerU_solid_sub", MiniFiberD2_half, MiniFiberD2_half, rot_mf2,
+          Sign*G4ThreeVector(12.*cm , 0.*cm, fiber_mft_shift[1][2][1]-fiber_mft_shift[1][2][0]) );
+      G4IntersectionSolid* MiniFiberD2_layerU_MothVol_solid = new G4IntersectionSolid("MiniFiberD2_layerU_solid", MiniFiberD2_layerU_MothVol_solid_buf, MiniFiberD2_layerU_MothVol_solid_sub, rot_mf2,
+          Sign*G4ThreeVector(-6.*cm , 0.*cm, fiber_mft_shift[1][2][0]) );
+
+
       G4LogicalVolume* MiniFiberD2_MothVol_log =
           new G4LogicalVolume(MiniFiberD2_MothVol_solid, Air, "MiniFiberD2_log", 0, 0, 0);
       G4LogicalVolume* MiniFiberD2_MothVol_log_x =
