@@ -153,6 +153,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         for(int l=0; l<3; ++l)
           fiber_mft_cor_par[i][j][k][l] = 0.;
 
+  std::array<std::array<std::array<double, 2>, 3>, 2> fiber_mft_shift;
+  for(int i=0; i<2; ++i)
+    for(int j=0; j<3; ++j)
+      for(int k=0; k<2; ++k)
+          fiber_mft_shift[i][j][k] = 0.;
+
   if(Par.IsAvailable("Calib_Fiber_ON") && Par.Get<int>("Calib_Fiber_ON")==1){
 
     fiber_mft1_pos_x = 2.1*mm;  fiber_mft1_pos_y = 2.5*mm;
@@ -290,6 +296,28 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       printf(" ! fail to open  : %s\n", fiber_name_mftcor.c_str());
       exit(-1);
     }
+
+    for(int i=0; i<2; ++i){
+      for(int j=0; j<3; ++j){
+        for(int k=0; k<2; ++k){
+          double x1 = 12.6;
+          double y1 = 0.;
+          double x2 = 12.6;
+          double y2 = 104.2;
+          double shift1 = pow(x1,2)/fiber_mft_cor_par[i][j][k][0] +  pow(y1,2)/fiber_mft_cor_par[i][j][k][1] + fiber_mft_cor_par[i][j][k][2];
+          double shift2 = pow(x2,2)/fiber_mft_cor_par[i][j][k][0] +  pow(y2,2)/fiber_mft_cor_par[i][j][k][1] + fiber_mft_cor_par[i][j][k][2];
+          fiber_mft_shift[i][j][k] = (shift1 + shift2) / 2. * mm;
+        }
+      }
+    }
+
+    for(int i=0; i<2; ++i){
+      for(int j=0; j<3; ++j){
+        std::cout << Form("%d %d : %.2f, %2.f",i,j, fiber_mft_shift[i][j][0], fiber_mft_shift[i][j][1]) << std::endl;
+      }
+    }
+
+
 
   }
 
@@ -1679,8 +1707,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       rotFib3->rotateX(90. * deg);
 
       const G4double spacingX               = 0.55 * mm;
-      const G4double startZ1                = 0. * mm;
-      const G4double startZ2                = 0.47631397 * mm;
+      const G4double startZ1                = (0. - 0.2) * mm;
+      const G4double startZ2                = (0.47631397) * mm;
       const std::vector<G4double> posZshift = {-4. * mm, 0. * mm, 4. * mm};
 
       G4ThreeVector posFibX;
@@ -2535,8 +2563,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       rotFib1->rotateX(90. * deg);
 
       const G4double spacingX               = 0.55 * mm;
-      const G4double startZ1                = 0. * mm;
-      const G4double startZ2                = 0.47631397 * mm;
+      const G4double startZ1                = (0. - 0.2) * mm;
+      const G4double startZ2                = (0.47631397 - 0.2) * mm;
       const std::vector<G4double> posZshift = {-4. * mm, 0. * mm, 4. * mm};
 
       G4ThreeVector posFib;
@@ -2548,9 +2576,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       // -------------------------- First MiniFiber Detector --------------------------
       G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 30. * cm, 30. * cm, 1.5 * cm);
-      G4VSolid* MiniFiberD1_layerX_MothVol_solid = new G4Box("MiniFiberD1_layerX_solid", 20. * cm, 20. * cm, 2. * mm);
-      G4VSolid* MiniFiberD1_layerU_MothVol_solid = new G4Box("MiniFiberD1_layerU_solid", 20. * cm, 20. * cm, 2. * mm);
-      G4VSolid* MiniFiberD1_layerV_MothVol_solid = new G4Box("MiniFiberD1_layerV_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4VSolid* MiniFiberD1_layerX_MothVol_solid = new G4Box("MiniFiberD1_layerX_solid", 20. * cm, 20. * cm, 4. * mm);
+      G4VSolid* MiniFiberD1_layerU_MothVol_solid = new G4Box("MiniFiberD1_layerU_solid", 20. * cm, 20. * cm, 4. * mm);
+      G4VSolid* MiniFiberD1_layerV_MothVol_solid = new G4Box("MiniFiberD1_layerV_solid", 20. * cm, 20. * cm, 4. * mm);
       G4LogicalVolume* MiniFiberD1_MothVol_log =
           new G4LogicalVolume(MiniFiberD1_MothVol_solid, Air, "MiniFiberD1_log", 0, 0, 0);
       G4LogicalVolume* MiniFiberD1_MothVol_log_x =
@@ -2646,12 +2674,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
               pos_u2_buf /= cos(fiber_angle_offset[3][1][0]*deg);
               pos_v1_buf /= cos(fiber_angle_offset[3][2][0]*deg);
               pos_v2_buf /= cos(fiber_angle_offset[3][2][0]*deg);
-              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z());
-              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z());
-              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z());
-              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z());
-              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z());
-              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z());
+              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z() + fiber_mft_shift[0][0][0]);
+              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z() + fiber_mft_shift[0][0][0]);
+              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z() + fiber_mft_shift[0][1][0]);
+              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z() + fiber_mft_shift[0][1][0]);
+              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z() + fiber_mft_shift[0][2][0]);
+              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z() + fiber_mft_shift[0][2][0]);
               rotFibMx = rotFibM1x1;
               rotFibMu = rotFibM1u1;
               rotFibMv = rotFibM1v1;
@@ -2672,12 +2700,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
               pos_u2_buf /= cos(fiber_angle_offset[3][1][1]*deg);
               pos_v1_buf /= cos(fiber_angle_offset[3][2][1]*deg);
               pos_v2_buf /= cos(fiber_angle_offset[3][2][1]*deg);
-              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z());
-              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z());
-              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z());
-              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z());
-              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z());
-              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z());
+              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z() + fiber_mft_shift[0][0][1]);
+              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z() + fiber_mft_shift[0][0][1]);
+              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z() + fiber_mft_shift[0][1][1]);
+              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z() + fiber_mft_shift[0][1][1]);
+              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z() + fiber_mft_shift[0][2][1]);
+              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z() + fiber_mft_shift[0][2][1]);
               rotFibMx = rotFibM1x2;
               rotFibMu = rotFibM1u2;
               rotFibMv = rotFibM1v2;
@@ -2753,9 +2781,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       // -------------------------- Second MiniFiber Detector --------------------------
       G4VSolid* MiniFiberD2_MothVol_solid         = new G4Box("MiniFiberDetector2", 30. * cm, 30. * cm, 1.5 * cm);
-      G4VSolid* MiniFiberD2_layerX_MothVol_solid = new G4Box("MiniFiberD2_layerX_solid", 20. * cm, 20. * cm, 2. * mm);
-      G4VSolid* MiniFiberD2_layerV_MothVol_solid = new G4Box("MiniFiberD2_layerV_solid", 20. * cm, 20. * cm, 2. * mm);
-      G4VSolid* MiniFiberD2_layerU_MothVol_solid = new G4Box("MiniFiberD2_layerU_solid", 20. * cm, 20. * cm, 2. * mm);
+      G4VSolid* MiniFiberD2_layerX_MothVol_solid = new G4Box("MiniFiberD2_layerX_solid", 20. * cm, 20. * cm, 4. * mm);
+      G4VSolid* MiniFiberD2_layerV_MothVol_solid = new G4Box("MiniFiberD2_layerV_solid", 20. * cm, 20. * cm, 4. * mm);
+      G4VSolid* MiniFiberD2_layerU_MothVol_solid = new G4Box("MiniFiberD2_layerU_solid", 20. * cm, 20. * cm, 4. * mm);
       G4LogicalVolume* MiniFiberD2_MothVol_log =
           new G4LogicalVolume(MiniFiberD2_MothVol_solid, Air, "MiniFiberD2_log", 0, 0, 0);
       G4LogicalVolume* MiniFiberD2_MothVol_log_x =
@@ -2851,12 +2879,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
               pos_u2_buf /= cos(fiber_angle_offset[4][2][0]*deg);
               pos_v1_buf /= cos(fiber_angle_offset[4][1][0]*deg);
               pos_v2_buf /= cos(fiber_angle_offset[4][1][0]*deg);
-              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z());
-              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z());
-              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z());
-              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z());
-              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z());
-              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z());
+              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z() + fiber_mft_shift[1][0][0]);
+              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z() + fiber_mft_shift[1][0][0]);
+              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z() + fiber_mft_shift[1][2][0]);
+              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z() + fiber_mft_shift[1][2][0]);
+              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z() + fiber_mft_shift[1][1][0]);
+              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z() + fiber_mft_shift[1][1][0]);
               rotFibMx = rotFibM2x1;
               rotFibMu = rotFibM2u1;
               rotFibMv = rotFibM2v1;
@@ -2877,12 +2905,12 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
               pos_u2_buf /= cos(fiber_angle_offset[4][2][1]*deg);
               pos_v1_buf /= cos(fiber_angle_offset[4][1][1]*deg);
               pos_v2_buf /= cos(fiber_angle_offset[4][1][1]*deg);
-              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z());
-              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z());
-              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z());
-              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z());
-              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z());
-              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z());
+              posFib_x1 = G4ThreeVector(pos_x1_buf, 0., posFib.z() + fiber_mft_shift[1][0][1]);
+              posFib_x2 = G4ThreeVector(pos_x2_buf, 0., posFib.z() + fiber_mft_shift[1][0][1]);
+              posFib_u1 = G4ThreeVector(pos_u1_buf, 0., posFib.z() + fiber_mft_shift[1][2][1]);
+              posFib_u2 = G4ThreeVector(pos_u2_buf, 0., posFib.z() + fiber_mft_shift[1][2][1]);
+              posFib_v1 = G4ThreeVector(pos_v1_buf, 0., posFib.z() + fiber_mft_shift[1][1][1]);
+              posFib_v2 = G4ThreeVector(pos_v2_buf, 0., posFib.z() + fiber_mft_shift[1][1][1]);
               rotFibMx = rotFibM2x2;
               rotFibMu = rotFibM2u2;
               rotFibMv = rotFibM2v2;
