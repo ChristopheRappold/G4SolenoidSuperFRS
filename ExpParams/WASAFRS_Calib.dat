@@ -1,0 +1,84 @@
+## Fiber
+
+fiber_mft1_pos_x   2.1 mm
+fiber_mft1_pos_y   2.5 mm
+fiber_mft1_pos_z  -6.2 mm
+fiber_mft2_pos_x   2.1 mm
+fiber_mft2_pos_y   2.5 mm
+fiber_mft2_pos_z  -5.8 mm
+
+fiber_mft1_off_x1  1.63 mm
+fiber_mft1_off_u1  1.04 mm
+fiber_mft1_off_v1  1.47 mm
+
+fiber_mft1_off_x2 -0.27 mm
+fiber_mft1_off_u2  0.03 mm
+fiber_mft1_off_v2 -0.81 mm
+
+fiber_mft2_off_x1  1.63 mm
+fiber_mft2_off_v1  1.41 mm
+fiber_mft2_off_u1  1.07 mm
+
+fiber_mft2_off_x2 -0.28 mm
+fiber_mft2_off_v2 -0.4  mm
+fiber_mft2_off_u2 -0.36 mm
+
+fiber_uft1_pos_x 0. mm
+fiber_uft1_pos_y 0. mm
+fiber_uft1_pos_z 0. mm
+
+fiber_uft2_pos_x 0. mm
+fiber_uft2_pos_y 0. mm
+fiber_uft2_pos_z 0. mm
+
+fiber_uft3_pos_x 0. mm
+fiber_uft3_pos_y 0. mm
+fiber_uft3_pos_z 0. mm
+
+fiber_uft1_off_x  0.294 mm
+fiber_uft1_off_u  0.102 mm
+fiber_uft1_off_v  0.273 mm
+
+fiber_uft2_off_x -0.258 mm
+fiber_uft2_off_u -0.100 mm
+fiber_uft2_off_v -0.247 mm
+
+fiber_uft3_off_x -1.194 mm
+fiber_uft3_off_u -0.422 mm
+fiber_uft3_off_v -0.887 mm
+
+fiber_dft1_pos_x    0. mm
+fiber_dft1_pos_y   12. mm
+fiber_dft1_pos_z    0. mm
+
+fiber_dft2_pos_x    0. mm
+fiber_dft2_pos_y  -12. mm
+fiber_dft2_pos_z    0. mm
+
+fiber_dft1_off_x    0.040 mm
+fiber_dft1_off_u   -0.287 mm
+fiber_dft1_off_v    0.892 mm
+
+fiber_dft2_off_x    0.183 mm
+fiber_dft2_off_u    0.436 mm
+fiber_dft2_off_v   -0.377 mm
+
+
+## MDC
+
+mdc_pos_x  1.5 mm
+mdc_pos_y  5.5 mm
+mdc_pos_z -4.0 mm
+
+mdc_rot_x -0.32 degree
+mdc_rot_y -0.1  degree
+mdc_rot_z -0.4  degree
+
+
+## PSB
+
+psb_pos_x  0.5 mm
+psb_pos_y  5.5 mm
+psb_pos_z  0.0 mm
+
+psb_rot_z -0.4 degree

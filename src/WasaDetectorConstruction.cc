@@ -117,24 +117,24 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   // Input calibration parameters ////////////
 
   // Fiber
-  double fiber_mft1_pos_x = 0.;  double fiber_mft1_pos_y = 0.;
-  double fiber_mft2_pos_x = 0.;  double fiber_mft2_pos_y = 0.;
+  double fiber_mft1_pos_x = 0.;  double fiber_mft1_pos_y = 0.;  double fiber_mft1_pos_z = 0.;
+  double fiber_mft2_pos_x = 0.;  double fiber_mft2_pos_y = 0.;  double fiber_mft2_pos_z = 0.;
 
   double fiber_mft1_off_x1 = 0.; double fiber_mft1_off_u1 = 0.; double fiber_mft1_off_v1 = 0.;
   double fiber_mft1_off_x2 = 0.; double fiber_mft1_off_u2 = 0.; double fiber_mft1_off_v2 = 0.;
   double fiber_mft2_off_x1 = 0.; double fiber_mft2_off_u1 = 0.; double fiber_mft2_off_v1 = 0.;
   double fiber_mft2_off_x2 = 0.; double fiber_mft2_off_u2 = 0.; double fiber_mft2_off_v2 = 0.;
 
-  double fiber_uft1_pos_x = 0.;  double fiber_uft1_pos_y = 0.;
-  double fiber_uft2_pos_x = 0.;  double fiber_uft2_pos_y = 0.;
-  double fiber_uft3_pos_x = 0.;  double fiber_uft3_pos_y = 0.;
+  double fiber_uft1_pos_x = 0.;  double fiber_uft1_pos_y = 0.;  double fiber_uft1_pos_z = 0.;
+  double fiber_uft2_pos_x = 0.;  double fiber_uft2_pos_y = 0.;  double fiber_uft2_pos_z = 0.;
+  double fiber_uft3_pos_x = 0.;  double fiber_uft3_pos_y = 0.;  double fiber_uft3_pos_z = 0.;
 
   double fiber_uft1_off_x = 0.;  double fiber_uft1_off_u = 0.;  double fiber_uft1_off_v = 0.;
   double fiber_uft2_off_x = 0.;  double fiber_uft2_off_u = 0.;  double fiber_uft2_off_v = 0.;
   double fiber_uft3_off_x = 0.;  double fiber_uft3_off_u = 0.;  double fiber_uft3_off_v = 0.;
 
-  double fiber_dft1_pos_x = 0.;  double fiber_dft1_pos_y = 0.;
-  double fiber_dft2_pos_x = 0.;  double fiber_dft2_pos_y = 0.;
+  double fiber_dft1_pos_x = 0.;  double fiber_dft1_pos_y = 0.;  double fiber_dft1_pos_z = 0.;
+  double fiber_dft2_pos_x = 0.;  double fiber_dft2_pos_y = 0.;  double fiber_dft2_pos_z = 0.;
 
   double fiber_dft1_off_x = 0.;  double fiber_dft1_off_u = 0.;  double fiber_dft1_off_v = 0.;
   double fiber_dft2_off_x = 0.;  double fiber_dft2_off_u = 0.;  double fiber_dft2_off_v = 0.;
@@ -164,29 +164,34 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   if(Par.IsAvailable("Calib_Fiber_ON") && Par.Get<int>("Calib_Fiber_ON")==1){
 
-    fiber_mft1_pos_x = 2.1*mm;  fiber_mft1_pos_y = 2.5*mm;
-    fiber_mft2_pos_x = 2.1*mm;  fiber_mft2_pos_y = 2.5*mm;
+    if(!Par.IsAvailable("WasaFrs_ExperimentCalib")){
+      std::cout << "No WasaFrs_ExperimentCalib"  << std::endl;
+      exit(-1);
+    }
 
-    fiber_mft1_off_x1 = ( 0.93 + 0.7 )*mm;  fiber_mft1_off_u1 = (1.49 - 0.45       )*mm;  fiber_mft1_off_v1 = ( 0.76 + 0.05 + 0.66)*mm;
-    fiber_mft1_off_x2 = (-0.22 - 0.05)*mm;  fiber_mft1_off_u2 = (0.25 - 0.05 - 0.17)*mm;  fiber_mft1_off_v2 = (-0.52 - 0.29       )*mm;
-    fiber_mft2_off_x1 = ( 0.70 + 0.93)*mm;  fiber_mft2_off_v1 = (0.61 + 0.8        )*mm;  fiber_mft2_off_u1 = ( 1.62 - 0.55       )*mm;
-    fiber_mft2_off_x2 = (-0.13 - 0.15)*mm;  fiber_mft2_off_v2 = (0.10 - 0.50       )*mm;  fiber_mft2_off_u2 = (-0.08 - 0.20 - 0.08)*mm;
+    fiber_mft1_pos_x = Par.Get<double>("fiber_mft1_pos_x");  fiber_mft1_pos_y = Par.Get<double>("fiber_mft1_pos_y"); fiber_mft1_pos_z = Par.Get<double>("fiber_mft1_pos_z");
+    fiber_mft2_pos_x = Par.Get<double>("fiber_mft2_pos_x");  fiber_mft2_pos_y = Par.Get<double>("fiber_mft2_pos_y"); fiber_mft2_pos_z = Par.Get<double>("fiber_mft2_pos_z");
 
-
-    fiber_uft1_pos_x = 0.*mm;  fiber_uft1_pos_y = 0.*mm;
-    fiber_uft2_pos_x = 0.*mm;  fiber_uft2_pos_y = 0.*mm;
-    fiber_uft3_pos_x = 0.*mm;  fiber_uft3_pos_y = 0.*mm;
-
-    fiber_uft1_off_x =  0.294*mm; fiber_uft1_off_u =  0.102*mm; fiber_uft1_off_v =  0.273*mm;
-    fiber_uft2_off_x = -0.258*mm; fiber_uft2_off_u = -0.100*mm; fiber_uft2_off_v = -0.247*mm;
-    fiber_uft3_off_x = -1.194*mm; fiber_uft3_off_u = -0.422*mm; fiber_uft3_off_v = -0.887*mm;
+    fiber_mft1_off_x1 = Par.Get<double>("fiber_mft1_off_x1");  fiber_mft1_off_u1 = Par.Get<double>("fiber_mft1_off_u1");  fiber_mft1_off_v1 = Par.Get<double>("fiber_mft1_off_v1");
+    fiber_mft1_off_x2 = Par.Get<double>("fiber_mft1_off_x2");  fiber_mft1_off_u2 = Par.Get<double>("fiber_mft1_off_u2");  fiber_mft1_off_v2 = Par.Get<double>("fiber_mft1_off_v2");
+    fiber_mft2_off_x1 = Par.Get<double>("fiber_mft2_off_x1");  fiber_mft2_off_u1 = Par.Get<double>("fiber_mft2_off_u1");  fiber_mft2_off_v1 = Par.Get<double>("fiber_mft2_off_v1");
+    fiber_mft2_off_x2 = Par.Get<double>("fiber_mft2_off_x2");  fiber_mft2_off_u2 = Par.Get<double>("fiber_mft2_off_u2");  fiber_mft2_off_v2 = Par.Get<double>("fiber_mft2_off_v2");
 
 
-    fiber_dft1_pos_x = 0.*mm;  fiber_dft1_pos_y =  12.*mm;
-    fiber_dft2_pos_x = 0.*mm;  fiber_dft2_pos_y = -12.*mm;
+    fiber_uft1_pos_x = Par.Get<double>("fiber_uft1_pos_x");  fiber_uft1_pos_y = Par.Get<double>("fiber_uft1_pos_y");  fiber_uft1_pos_z = Par.Get<double>("fiber_uft1_pos_z");
+    fiber_uft2_pos_x = Par.Get<double>("fiber_uft2_pos_x");  fiber_uft2_pos_y = Par.Get<double>("fiber_uft2_pos_y");  fiber_uft2_pos_z = Par.Get<double>("fiber_uft2_pos_z");
+    fiber_uft3_pos_x = Par.Get<double>("fiber_uft3_pos_x");  fiber_uft3_pos_y = Par.Get<double>("fiber_uft3_pos_y");  fiber_uft3_pos_z = Par.Get<double>("fiber_uft3_pos_z");
 
-    fiber_dft1_off_x = 0.040*mm; fiber_dft1_off_u  = -0.287*mm; fiber_dft1_off_v  =  0.892*mm;
-    fiber_dft2_off_x = 0.183*mm; fiber_dft2_off_u  =  0.436*mm; fiber_dft2_off_v  = -0.377*mm;
+    fiber_uft1_off_x = Par.Get<double>("fiber_uft1_off_x");  fiber_uft1_off_u = Par.Get<double>("fiber_uft1_off_u");  fiber_uft1_off_v = Par.Get<double>("fiber_uft1_off_v");
+    fiber_uft2_off_x = Par.Get<double>("fiber_uft2_off_x");  fiber_uft2_off_u = Par.Get<double>("fiber_uft2_off_u");  fiber_uft2_off_v = Par.Get<double>("fiber_uft2_off_v");
+    fiber_uft3_off_x = Par.Get<double>("fiber_uft3_off_x");  fiber_uft3_off_u = Par.Get<double>("fiber_uft3_off_u");  fiber_uft3_off_v = Par.Get<double>("fiber_uft3_off_v");
+
+
+    fiber_dft1_pos_x = Par.Get<double>("fiber_dft1_pos_x");  fiber_dft1_pos_y = Par.Get<double>("fiber_dft1_pos_y");  fiber_dft1_pos_z = Par.Get<double>("fiber_dft1_pos_z");
+    fiber_dft2_pos_x = Par.Get<double>("fiber_dft2_pos_x");  fiber_dft2_pos_y = Par.Get<double>("fiber_dft2_pos_y");  fiber_dft2_pos_z = Par.Get<double>("fiber_dft2_pos_z");
+
+    fiber_dft1_off_x = Par.Get<double>("fiber_dft1_off_x");  fiber_dft1_off_u = Par.Get<double>("fiber_dft1_off_u");  fiber_dft1_off_v = Par.Get<double>("fiber_dft1_off_v");
+    fiber_dft2_off_x = Par.Get<double>("fiber_dft2_off_x");  fiber_dft2_off_u = Par.Get<double>("fiber_dft2_off_u");  fiber_dft2_off_v = Par.Get<double>("fiber_dft2_off_v");
 
 
     std::string fiber_name_offset = Par.Get<std::string>("CalibFile_Fiber_Offset");
@@ -316,7 +321,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
     for(int i=0; i<2; ++i){
       for(int j=0; j<3; ++j){
-        std::cout << Form("%d %d : %.2f, %2.f",i,j, fiber_mft_shift[i][j][0], fiber_mft_shift[i][j][1]) << std::endl;
+        std::cout << Form("MFT shift %d %d : %.2f, %.2f",i,j, fiber_mft_shift[i][j][0], fiber_mft_shift[i][j][1]) << std::endl;
       }
     }
 
@@ -335,13 +340,19 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1)
     {
-      mdc_pos_x = 1.5;
-      mdc_pos_y = 5.5;
-      mdc_pos_z = -4.;
 
-      mdc_rot_x = -0.32;
-      mdc_rot_y = -0.1;
-      mdc_rot_z = -0.4;
+      if(!Par.IsAvailable("WasaFrs_ExperimentCalib")){
+        std::cout << "No WasaFrs_ExperimentCalib"  << std::endl;
+        exit(-1);
+      }
+
+      mdc_pos_x = Par.Get<double>("mdc_pos_x");
+      mdc_pos_y = Par.Get<double>("mdc_pos_y");
+      mdc_pos_z = Par.Get<double>("mdc_pos_z");
+
+      mdc_rot_x = Par.Get<double>("mdc_rot_x");
+      mdc_rot_y = Par.Get<double>("mdc_rot_y");
+      mdc_rot_z = Par.Get<double>("mdc_rot_z");
     }
 
   // PSB
@@ -352,11 +363,17 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   double psb_rot_z = 0.;
   if(Par.IsAvailable("Calib_PSB_ON") && Par.Get<int>("Calib_PSB_ON")==1)
     {
-      psb_pos_x = 0.5;
-      psb_pos_y = 5.5;
-      psb_pos_z = 0.;
 
-      psb_rot_z = -0.4;
+      if(!Par.IsAvailable("WasaFrs_ExperimentCalib")){
+        std::cout << "No WasaFrs_ExperimentCalib"  << std::endl;
+        exit(-1);
+      }
+
+      psb_pos_x = Par.Get<double>("psb_pos_x");
+      psb_pos_y = Par.Get<double>("psb_pos_y");
+      psb_pos_z = Par.Get<double>("psb_pos_z");
+
+      psb_rot_z = Par.Get<double>("psb_rot_z");
 
     }
 
@@ -558,9 +575,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       rotMDC = MDC_temp->GetObjectRotationValue();
       //std::cout << "rotMDC before : " << rotMDC << std::endl;
-      rotMDC.rotateZ(mdc_rot_z * degree);
-      rotMDC.rotateX(mdc_rot_x * degree);
-      rotMDC.rotateY(mdc_rot_y * degree);
+      rotMDC.rotateZ(mdc_rot_z);
+      rotMDC.rotateX(mdc_rot_x);
+      rotMDC.rotateY(mdc_rot_y);
       //std::cout << "rotMDC after : " << rotMDC << std::endl;
 
       MDC_temp->SetTranslation(transMDC_new);
@@ -581,7 +598,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       rotPSCE = PSCE_temp->GetObjectRotationValue();
       //std::cout << "rotPSB before : " << rotPSB << std::endl;
-      rotPSCE.rotateZ(psb_rot_z * degree);
+      rotPSCE.rotateZ(psb_rot_z);
       //std::cout << "rotPSB after : " << rotPSB << std::endl;
 
       PSCE_temp->SetTranslation(transPSCE_new);
@@ -1694,11 +1711,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   if(Par.IsAvailable("HypHI_FiberTR_On"))
     {
 
-      const double HypHI_FiberTracker1_posZ = Par.Get<double>("HypHI_FiberTracker1_posZ");
-      const double HypHI_FiberTracker2_posZ = Par.Get<double>("HypHI_FiberTracker2_posZ");
-      const double HypHI_FiberTracker3_posZ = Par.Get<double>("HypHI_FiberTracker3_posZ");
-      const double HypHI_FiberTracker4_posZ = Par.Get<double>("HypHI_FiberTracker4_posZ");
-      const double HypHI_FiberTracker5_posZ = Par.Get<double>("HypHI_FiberTracker5_posZ");
+      const double HypHI_FiberTracker1_posZ = Par.Get<double>("HypHI_FiberTracker1_posZ") + fiber_uft1_pos_z;
+      const double HypHI_FiberTracker2_posZ = Par.Get<double>("HypHI_FiberTracker2_posZ") + fiber_uft2_pos_z;
+      const double HypHI_FiberTracker3_posZ = Par.Get<double>("HypHI_FiberTracker3_posZ") + fiber_uft3_pos_z;
+      const double HypHI_FiberTracker4_posZ = Par.Get<double>("HypHI_FiberTracker4_posZ") + fiber_dft1_pos_z;
+      const double HypHI_FiberTracker5_posZ = Par.Get<double>("HypHI_FiberTracker5_posZ") + fiber_dft2_pos_z;
 
       G4RotationMatrix* rotFib1 = new G4RotationMatrix;
       rotFib1->rotateX(90. * deg);
@@ -1710,8 +1727,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       rotFib3->rotateX(90. * deg);
 
       const G4double spacingX               = 0.55 * mm;
-      const G4double startZ1                = (0. - 0.2) * mm;
-      const G4double startZ2                = (0.47631397) * mm;
+      const G4double startZ1                = -0.47631397/2 * mm;
+      const G4double startZ2                =  0.47631397/2.* mm;
       const std::vector<G4double> posZshift = {-4. * mm, 0. * mm, 4. * mm};
 
       G4ThreeVector posFibX;
@@ -2507,11 +2524,11 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       const double HypHI_MiniFiberTracker1_posX = fiber_mft1_pos_x;
       const double HypHI_MiniFiberTracker1_posY = fiber_mft1_pos_y;
-      const double HypHI_MiniFiberTracker1_posZ = Par.IsAvailable("HypHI_MiniFiberTracker1_posZ") ? Par.Get<double>("HypHI_MiniFiberTracker1_posZ") : 2269.3*mm;
+      const double HypHI_MiniFiberTracker1_posZ = Par.IsAvailable("HypHI_MiniFiberTracker1_posZ") ? Par.Get<double>("HypHI_MiniFiberTracker1_posZ")+fiber_mft1_pos_z : 2269.3*mm;
 
       const double HypHI_MiniFiberTracker2_posX = fiber_mft2_pos_x;
       const double HypHI_MiniFiberTracker2_posY = fiber_mft2_pos_y;
-      const double HypHI_MiniFiberTracker2_posZ = Par.IsAvailable("HypHI_MiniFiberTracker2_posZ") ? Par.Get<double>("HypHI_MiniFiberTracker2_posZ") : 2309.3*mm;
+      const double HypHI_MiniFiberTracker2_posZ = Par.IsAvailable("HypHI_MiniFiberTracker2_posZ") ? Par.Get<double>("HypHI_MiniFiberTracker2_posZ")+fiber_mft2_pos_z : 2309.3*mm;
 
       G4RotationMatrix* rotFibM1 = new G4RotationMatrix;
       rotFibM1->rotateZ(0. * deg);
@@ -2566,8 +2583,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       rotFib1->rotateX(90. * deg);
 
       const G4double spacingX               = 0.55 * mm;
-      const G4double startZ1                = (0. - 0.2) * mm;
-      const G4double startZ2                = (0.47631397 - 0.2) * mm;
+      const G4double startZ1                = -0.47631397/2 * mm;
+      const G4double startZ2                =  0.47631397/2 * mm;
       const std::vector<G4double> posZshift = {-4. * mm, 0. * mm, 4. * mm};
 
       G4ThreeVector posFib;
