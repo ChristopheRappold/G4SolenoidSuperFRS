@@ -406,7 +406,7 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   // MDC in air
   //TGeoVolume* MDC_buf  = gGeoManager->MakeTube("MDC_buf" , med3, 3.1, 22.1, 23.0);
 
-  TGeoTube* MDC_buf  = new TGeoTube("MDC_buf", 3.1, 21.425, 23.0);
+  TGeoTube* MDC_buf  = new TGeoTube("MDC_buf", 3.1, 21.426, 23.0);
   TGeoBBox* MDC_sub  = new TGeoBBox("MDC_sub", 0.4, 0.7, 0.4);
   TGeoTranslation *MDC_t1 = new TGeoTranslation("MDC_t1",0,  21.35, 0);
   MDC_t1->RegisterYourself();
@@ -414,6 +414,7 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   MDC_t2->RegisterYourself();
   TGeoCompositeShape *MDC_shape = new TGeoCompositeShape("MDC_shape", "MDC_buf + MDC_sub:MDC_t1 + MDC_sub:MDC_t2");
   TGeoVolume *MDC = new TGeoVolume("MDC",MDC_shape, med3);
+  //MDC->SetLineColor(kRed-8);
 
   TGeoVolume* MD_1 = gGeoManager->MakeTube("MD01", med3, 3.897, 4.303, 16.48);
   TGeoVolume* ME_1 = gGeoManager->MakeTube("ME01", med9, 0, 0.2025, 16.48);
@@ -602,14 +603,15 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   // Plastic barrel
   //TGeoVolume* PSCEall  = gGeoManager->MakeTube("PSCEall" , med3, 21.6, 23.7, 27.6);
 
-  TGeoTube* PSCE_buf  = new TGeoTube("PSCE_buf", 21.6, 23.7, 27.6);
-  TGeoBBox* PSCE_sub  = new TGeoBBox("PSCE_sub", 0.5, 2.0, 28);
+  TGeoTube* PSCE_buf  = new TGeoTube("PSCE_buf", 21.699, 23.7, 27.51);
+  TGeoBBox* PSCE_sub  = new TGeoBBox("PSCE_sub", 1.0, 2.0, 28);
   TGeoTranslation *PSCE_t1 = new TGeoTranslation("PSCE_t1",0,  22.65, 0);
   PSCE_t1->RegisterYourself();
-  TGeoTranslation *PSCE_t2 = new TGeoTranslation("PSCE_t2",0, -20.65, 0);
+  TGeoTranslation *PSCE_t2 = new TGeoTranslation("PSCE_t2",0, -22.65, 0);
   PSCE_t2->RegisterYourself();
   TGeoCompositeShape *PSCE_shape = new TGeoCompositeShape("PSCE_shape", "PSCE_buf - PSCE_sub:PSCE_t1 - PSCE_sub:PSCE_t2");
   TGeoVolume *PSCEall = new TGeoVolume("PSCEall",PSCE_shape, med3);
+  //PSCEall->SetLineColor(kBlue - 4);
 
   TGeoVolumeMulti* PSCE = gGeoManager->MakeVolumeMulti("PSCEMult", med72);
   PSCE->AddVolume(gGeoManager->MakeBox("PSCE", med72, 27.5, 1.9, 0.4));
