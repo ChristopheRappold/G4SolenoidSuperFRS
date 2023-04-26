@@ -2595,7 +2595,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       G4VisAttributes* visAttributes_v = new G4VisAttributes(color_v);
 
       // -------------------------- First MiniFiber Detector --------------------------
-      G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 20. * cm, 20. * cm, 0.8 * cm);
+      G4VSolid* MiniFiberD1_MothVol_solid         = new G4Box("MiniFiberDetector1", 20. * cm, 20. * cm, 8 * mm);
       //G4VSolid* MiniFiberD1_layerX_MothVol_solid = new G4Box("MiniFiberD1_layerX_solid", 20. * cm, 20. * cm, 2. * mm);
       //G4VSolid* MiniFiberD1_layerU_MothVol_solid = new G4Box("MiniFiberD1_layerU_solid", 20. * cm, 20. * cm, 2. * mm);
       //G4VSolid* MiniFiberD1_layerV_MothVol_solid = new G4Box("MiniFiberD1_layerV_solid", 20. * cm, 20. * cm, 2. * mm);
@@ -2822,7 +2822,7 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
 
       // -------------------------- Second MiniFiber Detector --------------------------
-      G4VSolid* MiniFiberD2_MothVol_solid         = new G4Box("MiniFiberDetector2", 12. * cm, 12. * cm, 8 * mm);
+      G4VSolid* MiniFiberD2_MothVol_solid         = new G4Box("MiniFiberDetector2", 20. * cm, 20. * cm, 8 * mm);
       //G4VSolid* MiniFiberD2_layerX_MothVol_solid = new G4Box("MiniFiberD2_layerX_solid", 20. * cm, 20. * cm, 2. * mm);
       //G4VSolid* MiniFiberD2_layerV_MothVol_solid = new G4Box("MiniFiberD2_layerV_solid", 20. * cm, 20. * cm, 2. * mm);
       //G4VSolid* MiniFiberD2_layerU_MothVol_solid = new G4Box("MiniFiberD2_layerU_solid", 20. * cm, 20. * cm, 2. * mm);
