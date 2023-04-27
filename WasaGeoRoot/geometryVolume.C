@@ -506,9 +506,12 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   //TGeoVolume* PSL0 = gGeoManager->MakeCone("PSL0", med10, 12.5, 22.2, 24.2, 30.5, 32.5);
   TGeoVolume* PSL0 = gGeoManager->MakeCone("PSL0", med10, 10.5, 22.2, 24.2, 30.5, 32.5); // Change for overlap
   PSL0->SetLineColor(kYellow+1);
-  TGeoVolume* PSL1 = gGeoManager->MakeCone("PSL1", med10, 13.5, 23.1, 24.1, 38.5, 39.5);
+  //TGeoVolume* PSL1 = gGeoManager->MakeCone("PSL1", med10, 13.5, 23.1, 24.1, 38.5, 39.5);
+  double PSL1_sub = 1.0;
+  double PSL1_rmin = 23.1 * ( PSL1_sub  / ( 23.1/(38.5-23.1) * (13.5*2) ) + 1);
+  TGeoVolume* PSL1 = gGeoManager->MakeCone("PSL1", med10, 13.5 - PSL1_sub/2. , PSL1_rmin, PSL1_rmin + 1.0, 38.5, 39.5);
   PSL1->SetLineColor(kYellow+1);
-  
+
   // Solenoid Coil
 
 
@@ -3823,7 +3826,7 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoRotation* rot1126 = new TGeoRotation("rot1126", 90, 180, 90, 90, 180, 0);
   TGeoRotation* rot1127 = new TGeoRotation("rot1127", 90, 0, 90, 90, 0, 0);
   MFLD->AddNode(PSL0, 1, new TGeoCombiTrans(0, 0, -40.83165 - 2.5 - z_mfld, rot1126));
-  MFLD->AddNode(PSL1, 1, new TGeoCombiTrans(0, 0, 43.03165 - 2.5 - z_mfld, rot1127));
+  MFLD->AddNode(PSL1, 1, new TGeoCombiTrans(0, 0, 43.03165 + PSL1_sub/2. - 2.5 - z_mfld, rot1127));
 
   // MFLD->AddNode(PTB0->GetVolume(17), 18, new TGeoCombiTrans(0, -3.75, 2.5, rot2140));
   // MFLD->AddNode(PTB1->GetVolume(17), 18, new TGeoCombiTrans(0, 3.75, 2.5, rot2141));
