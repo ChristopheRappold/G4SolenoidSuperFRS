@@ -575,9 +575,9 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
       rotMDC = MDC_temp->GetObjectRotationValue();
       //std::cout << "rotMDC before : " << rotMDC << std::endl;
-      rotMDC.rotateZ(mdc_rot_z);
+      rotMDC.rotateY(mdc_rot_y * Sign);
       rotMDC.rotateX(mdc_rot_x);
-      rotMDC.rotateY(mdc_rot_y);
+      rotMDC.rotateZ(mdc_rot_z);
       //std::cout << "rotMDC after : " << rotMDC << std::endl;
 
       MDC_temp->SetTranslation(transMDC_new);
