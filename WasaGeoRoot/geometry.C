@@ -4,6 +4,8 @@
 #include "TGeoMedium.h"
 #include "TGeoPcon.h"
 #include "TGeoVolume.h"
+#include "TGeoTube.h"
+#include "TGeoCompositeShape.h"
 
 #include "TEveGeoNode.h"
 #include "TEveManager.h"

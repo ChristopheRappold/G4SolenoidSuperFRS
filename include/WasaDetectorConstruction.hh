@@ -149,6 +149,16 @@ private:
   G4ThreeVector transMFLD;
   G4RotationMatrix rotMFLD;
 
+  //std::array<G4ThreeVector,24> transMDC;
+  //std::array<G4RotationMatrix,24> rotMDC;
+
+  G4ThreeVector transMDC;
+  G4RotationMatrix rotMDC;
+
+  G4ThreeVector transPSCE;
+  G4RotationMatrix rotPSCE;
+
+
   std::vector<G4PVPlacement*> AllPlacements;
 
   G4VPhysicalVolume* FindVolPhys(const G4String& name);
