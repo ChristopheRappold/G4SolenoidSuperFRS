@@ -245,9 +245,14 @@ int G4SolConfig::ParseCmd(int argc, char** argv)
   if(this->IsAvailable("WasaFrs_ExperimentParams"))
     ParseConfig(this->Get<std::string>("WasaFrs_ExperimentParams"));
 
-  if(this->IsAvailable("WasaFrs_ExperimentCalib"))
-    ParseConfig(this->Get<std::string>("WasaFrs_ExperimentCalib"));
+  if(this->IsAvailable("WasaFrs_ExperimentCalibFiber"))
+    ParseConfig(this->Get<std::string>("WasaFrs_ExperimentCalibFiber"));
 
+  if(this->IsAvailable("WasaFrs_ExperimentCalibMDC"))
+    ParseConfig(this->Get<std::string>("WasaFrs_ExperimentCalibMDC"));
+
+  if(this->IsAvailable("WasaFrs_ExperimentCalibPSB"))
+    ParseConfig(this->Get<std::string>("WasaFrs_ExperimentCalibPSB"));
 
   return 0;
 }

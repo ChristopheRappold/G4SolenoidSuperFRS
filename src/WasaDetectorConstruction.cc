@@ -164,8 +164,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
   if(Par.IsAvailable("Calib_Fiber_ON") && Par.Get<int>("Calib_Fiber_ON")==1){
 
-    if(!Par.IsAvailable("WasaFrs_ExperimentCalib")){
-      std::cout << "No WasaFrs_ExperimentCalib"  << std::endl;
+    if(!Par.IsAvailable("WasaFrs_ExperimentCalibFiber")){
+      std::cout << "No WasaFrs_ExperimentCalibFiber"  << std::endl;
       exit(-1);
     }
 
@@ -341,8 +341,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1)
     {
 
-      if(!Par.IsAvailable("WasaFrs_ExperimentCalib")){
-        std::cout << "No WasaFrs_ExperimentCalib"  << std::endl;
+      if(!Par.IsAvailable("WasaFrs_ExperimentCalibMDC")){
+        std::cout << "No WasaFrs_ExperimentCalibMDC"  << std::endl;
         exit(-1);
       }
 
@@ -364,8 +364,8 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   if(Par.IsAvailable("Calib_PSB_ON") && Par.Get<int>("Calib_PSB_ON")==1)
     {
 
-      if(!Par.IsAvailable("WasaFrs_ExperimentCalib")){
-        std::cout << "No WasaFrs_ExperimentCalib"  << std::endl;
+      if(!Par.IsAvailable("WasaFrs_ExperimentCalibPSB")){
+        std::cout << "No WasaFrs_ExperimentCalibPSB"  << std::endl;
         exit(-1);
       }
 

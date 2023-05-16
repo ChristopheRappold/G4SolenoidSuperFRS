@@ -10,14 +10,15 @@ Field_WASAMap ../MagField_default.dat
 Geo Wasa
 #Geometry_Namefile ../WasaGeoRoot/WasaGeometry8_AsExp.root
 #Geometry_Namefile ../WasaGeoRoot/WasaGeometry10_AsExpNewPSB.root
-Geometry_Namefile ../WasaGeoRoot/WasaGeometry11_AsExpNewGeo.root
+#Geometry_Namefile ../WasaGeoRoot/WasaGeometry11_AsExpNewGeo.root
+Geometry_Namefile ../WasaGeoRoot/WasaGeometry12_AsExpGeoFinalCad.root
 SimpleGeo 0
 HypHI_FiberTR_On 1
-HypHI_FiberTracker1_posZ 1547.7 mm
-HypHI_FiberTracker2_posZ 1711.7 mm
-HypHI_FiberTracker3_posZ 1996.7 mm
-HypHI_FiberTracker4_posZ 3960.0 mm
-HypHI_FiberTracker5_posZ 4056.3 mm
+#HypHI_FiberTracker1_posZ 1547.7 mm -> Now in repository for calibration wasa-frs-s447calib directory fiber_param
+#HypHI_FiberTracker2_posZ 1711.7 mm -> So it should not be used anymore !
+#HypHI_FiberTracker3_posZ 1996.7 mm
+#HypHI_FiberTracker4_posZ 3960.0 mm
+#HypHI_FiberTracker5_posZ 4056.3 mm
 HypHI_MiniFiberTR_On 1
-HypHI_MiniFiberTracker1_posZ 2269.3 mm
-HypHI_MiniFiberTracker2_posZ 2309.3 mm
+#HypHI_MiniFiberTracker1_posZ 2269.3 mm
+#HypHI_MiniFiberTracker2_posZ 2309.3 mm
