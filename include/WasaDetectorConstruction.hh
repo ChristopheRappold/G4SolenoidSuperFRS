@@ -154,6 +154,7 @@ private:
 
   G4ThreeVector transMDC;
   G4RotationMatrix rotMDC;
+  G4RotationMatrix rotMDC_layer[17];
 
   G4ThreeVector transPSCE;
   G4RotationMatrix rotPSCE;
