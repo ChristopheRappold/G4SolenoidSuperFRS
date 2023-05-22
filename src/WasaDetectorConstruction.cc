@@ -208,7 +208,6 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         std::size_t it_comment = testComment.find(CommentSymbol);
         if(it_comment!=std::string::npos)
         {
-          //std::cout<<"!> Skip comment"<<temp_line<<std::endl;
           continue;
         }
 
@@ -216,16 +215,13 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         double offset;
 
         stream >> det_id >> lay_id >> fib_id >> offset;
-        //printf("%d %d %d : %.2f\n", det_id, lay_id, fib_id, offset );
 
         fiber_offset[det_id][lay_id][fib_id] = offset*mm;
       }
-      //std::cout << "done " << mdc_name_map << std::endl;
       printf("fiber offset loaded : %s\n", fiber_name_offset.c_str());
     }
     else
     {
-      //std::cout << " ! fail to open " << mdc_name_map << std::endl;
       printf(" ! fail to open  : %s\n", fiber_name_offset.c_str());
       exit(-1);
     }
@@ -245,7 +241,6 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         std::size_t it_comment = testComment.find(CommentSymbol);
         if(it_comment!=std::string::npos)
         {
-          //std::cout<<"!> Skip comment"<<temp_line<<std::endl;
           continue;
         }
 
@@ -257,12 +252,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
 
         fiber_angle_offset[det_id][lay_id][seg_id] = angle;
       }
-      //std::cout << "done " << mdc_name_map << std::endl;
       printf("fiber angle offset loaded : %s\n", fiber_name_angleoffset.c_str());
     }
     else
     {
-      //std::cout << " ! fail to open " << mdc_name_map << std::endl;
       printf(" ! fail to open  : %s\n", fiber_name_angleoffset.c_str());
       exit(-1);
     }
@@ -281,7 +274,6 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         std::size_t it_comment = testComment.find(CommentSymbol);
         if(it_comment!=std::string::npos)
         {
-          //std::cout<<"!> Skip comment"<<temp_line<<std::endl;
           continue;
         }
 
@@ -289,18 +281,15 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
         double p0, p1, p2;
 
         stream >> det >> lay >> seg >> p0 >> p1 >> p2;
-        //printf("%d %d %d : %.2f\n", det_id, lay_id, fib_id, offset );
 
         fiber_mft_cor_par[det][lay][seg][0] = p0;
         fiber_mft_cor_par[det][lay][seg][1] = p1;
         fiber_mft_cor_par[det][lay][seg][2] = p2;
       }
-      //std::cout << "done " << mdc_name_map << std::endl;
       printf("fiber mft corrections loaded : %s\n", fiber_name_mftcor.c_str());
     }
     else
     {
-      //std::cout << " ! fail to open " << mdc_name_map << std::endl;
       printf(" ! fail to open  : %s\n", fiber_name_mftcor.c_str());
       exit(-1);
     }
@@ -338,6 +327,10 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
   double mdc_rot_y = 0.;
   double mdc_rot_z = 0.;
 
+  std::array<double, 17> mdc_offset;
+  for(int i=0; i<17; ++i)
+    mdc_offset[i] = 0.;
+
   if(Par.IsAvailable("Calib_MDC_ON") && Par.Get<int>("Calib_MDC_ON")==1)
     {
 
@@ -353,6 +346,40 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       mdc_rot_x = Par.Get<double>("mdc_rot_x");
       mdc_rot_y = Par.Get<double>("mdc_rot_y");
       mdc_rot_z = Par.Get<double>("mdc_rot_z");
+
+      std::string mdc_name_offset = Par.Get<std::string>("CalibFile_MDC_Offset");
+      std::ifstream ifs_mdc ( mdc_name_offset );
+      if(ifs_mdc.is_open())
+      {
+        const std::string CommentSymbol("#");
+
+        std::string temp_line;
+        while(std::getline(ifs_mdc,temp_line))
+        {
+          std::stringstream stream(temp_line);
+          std::string testComment(stream.str());
+          std::size_t it_comment = testComment.find(CommentSymbol);
+          if(it_comment!=std::string::npos)
+          {
+            continue;
+          }
+
+          int lay_id;
+          double offset;
+
+          stream >> lay_id >> offset;
+
+          mdc_offset[lay_id] = offset*degree;
+        }
+        printf("mdc offset loaded : %s\n", mdc_name_offset.c_str());
+      }
+      else
+      {
+        printf(" ! fail to open  : %s\n", mdc_name_offset.c_str());
+        exit(-1);
+      }
+
+
     }
 
   // PSB
@@ -584,6 +611,13 @@ G4VPhysicalVolume* WasaDetectorConstruction::Construct()
       MDC_temp->SetRotation(&rotMDC);
       //G4RotationMatrix rotMDC_buf = MDC_temp->GetObjectRotationValue();
       //std::cout << "rotMDC buf : " << rotMDC_buf << std::endl;
+
+      for(int i=0; i<17; ++i){
+        G4VPhysicalVolume* MDC_layer_temp = FindVolPhys(Form("MD%02d",i+1));
+        rotMDC_layer[i] = MDC_layer_temp->GetObjectRotationValue();
+        rotMDC_layer[i].rotateZ(mdc_offset[i]);
+        MDC_layer_temp->SetRotation(&rotMDC_layer[i]);
+      }
 
     }
 
