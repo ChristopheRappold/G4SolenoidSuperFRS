@@ -47,8 +47,10 @@
 #include "FTFP_BERT.hh"
 #include "FTFP_BERT_HP.hh"
 #include "QGSP_FTFP_BERT.hh"
+#include "QBBC.hh"
 //#include "HypHIFrsPhysicsList.hh"
 #include "HypernuclearPhysics.hh"
+#include "G4PhysListFactory.hh"
 
 #include "G4RegionStore.hh"
 
@@ -188,6 +190,20 @@ int main(int argc,char** argv)
 	  physicsList = new QGSP_FTFP_BERT;
 	  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
 	  physicsList->RegisterPhysics(new HypernuclearPhysics("Hypernuclear",config));
+	}
+      else if(namePhysList == "G4_Factory")
+	{
+	  std::string namePhysFac = config.Get<std::string >("PhysicslistFactory");
+	  G4PhysListFactory factory;
+	  if(factory.IsReferencePhysList(namePhysFac) == false)
+	    {
+	      G4cerr << "Physics list " << namePhysFac << " is not available in PhysListFactory." << G4endl;
+	      exit(-1);
+	    }
+
+	  physicsList = factory.GetReferencePhysList(namePhysFac);
+	  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+	  //physicsList->RegisterPhysics(new HypernuclearPhysics("Hypernuclear",config));
 	}
       //else if(namePhysList == "NewHypHIFrsList")
 	//physicsList = new HypHIFrsPhysicsList(config);
