@@ -76,7 +76,10 @@ void G4SolConfig::ParseConfig(const std::string& namefile)
                 break;
               }
             default:
-              std::cout << "!> stream of line from config file with unknown parsing " << out_list.size() << " \n";
+              std::cout << "!> stream of line from config file with unknown parsing " << out_list.size()<<": ";
+	      for(const auto& str1 : out_list)
+		std::cout<<str1<<" | ";
+	      std::cout<<"\n";
               break;
             }
 
