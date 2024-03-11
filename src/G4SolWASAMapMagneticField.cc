@@ -35,7 +35,7 @@ void G4SolWASAMapMagneticField::SetOriginField(double initPoint[3], double signD
 void G4SolWASAMapMagneticField::InitField()
 {
   std::cout<<" SetMaxField : "<<maxField/kilogauss<<" kG"<<" "<<maxField/tesla<<" T"<<" "<<maxField<<"\n";
-  FieldMap->SetScale(maxField/kilogauss);
+  FieldMap->SetScale(std::fabs(maxField/kilogauss));
   FieldMap->InitializeParameter();
 
   double checkB[3] = {0.,0.,0.};
@@ -52,14 +52,14 @@ void G4SolWASAMapMagneticField::GetFieldValue(const double Point[3],double *Bfie
   //std::cout<<" MagField "<<Point[0]<<" "<<Point[1]<<" "<<Point[2]<<" ";
 
   pos[0]=signDir*(Point[0]-originField[0])/cm;
-  pos[1]=signDir*(Point[1]-originField[1])/cm;
+  pos[1]=(Point[1]-originField[1])/cm;
   pos[2]=signDir*(Point[2]-originField[2])/cm;
 
   FieldMap->Wfld(pos,B);
   
-  Bfield[0] = B[0]*kilogauss;
+  Bfield[0] = signDir*B[0]*kilogauss;
   Bfield[1] = B[1]*kilogauss;
-  Bfield[2] = B[2]*kilogauss;
+  Bfield[2] = signDir*B[2]*kilogauss;
   
   //std::cout<<"["<<pos[0]<<" "<<pos[1]<<" "<<pos[2]<<"] :"<<" ["<<B[0]<<" "<<B[1]<<" "<<B[2]<<"] / "<<Bfield[2]<<" T"<<G4endl;
 
