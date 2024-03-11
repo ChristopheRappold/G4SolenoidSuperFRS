@@ -3301,7 +3301,7 @@ void WasaDetectorConstruction::ConstructSDandField()
       std::cout << "Trans:" << transMFLD << "\n";
       std::cout << "Rot:" << rotMFLD << "\n";
 
-      double signDir = rotMFLD.xx()< 0 ? 1. : -1. ;
+      double signDir = rotMFLD.xx()> 0 ? 1. : -1. ;
       double originF[3] = {transMFLD.x(), transMFLD.y(), transMFLD.z()};
 
       fMagneticField = new G4SolWASAMapMagneticField(field_name);
