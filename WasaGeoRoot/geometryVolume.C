@@ -420,7 +420,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* ME_1 = gGeoManager->MakeTube("ME01", med9, 0, 0.2025, 16.48);
   TGeoVolume* MG_1 = gGeoManager->MakeTube("MG01", med74, 0, 0.2, 16.48);
   ME_1->SetLineColor(kOrange-8);
-  TGeoVolume* MD_2 = gGeoManager->MakeTube("MD02", med3, 4.302974, 5.4475, 17.435);
+  //TGeoVolume* MD_2 = gGeoManager->MakeTube("MD02", med3, 4.302974, 5.4475, 17.435);
+  TGeoVolume* MD_2 = gGeoManager->MakeTube("MD02", med3, 4.302974, 5.4475, 17.435+0.07); // overlap in Z
   TGeoVolume* ME_2 = gGeoManager->MakeTube("ME02", med9, 0, 0.2025, 17.53981);
   TGeoVolume* MG_2 = gGeoManager->MakeTube("MG02", med74, 0, 0.2, 17.53981);
   ME_2->SetLineColor(kOrange-7);
@@ -428,7 +429,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* ME_3 = gGeoManager->MakeTube("ME03", med9, 0, 0.2025, 18.67);
   TGeoVolume* MG_3 = gGeoManager->MakeTube("MG03", med74, 0, 0.2, 18.67);
   ME_3->SetLineColor(kOrange-6);
-  TGeoVolume* MD_4 = gGeoManager->MakeTube("MD04", med3, 5.900502, 7.0475, 19.9);
+  //TGeoVolume* MD_4 = gGeoManager->MakeTube("MD04", med3, 5.900502, 7.0475, 19.9);
+  TGeoVolume* MD_4 = gGeoManager->MakeTube("MD04", med3, 5.900502, 7.0475, 19.9+0.07); // overlap in Z
   TGeoVolume* ME_4 = gGeoManager->MakeTube("ME04", med9, 0, 0.2025, 20.02379);
   TGeoVolume* MG_4 = gGeoManager->MakeTube("MG04", med74, 0, 0.2, 20.02379);
   ME_4->SetLineColor(kOrange-5);
@@ -438,7 +440,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* MG_5 = gGeoManager->MakeTube("MG05", med74, 0, 0.2, 21.13);
   ME_5->SetLineColor(kOrange-4);
   //TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med2, 7.491163, 8.8475, 22.36);
-  TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med3, 7.50, 8.8475, 22.36); // overlap
+  //TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med3, 7.50, 8.8475, 22.36); // overlap R
+  TGeoVolume* MD_6 = gGeoManager->MakeTube("MD06", med3, 7.50, 8.8475, 22.36+0.07); // overlap in R+Z
   TGeoVolume* ME_6 = gGeoManager->MakeTube("ME06", med9, 0, 0.3025, 22.50312);
   TGeoVolume* MG_6 = gGeoManager->MakeTube("MG06", med74, 0, 0.3, 22.50312);
   ME_6->SetLineColor(kOrange-3);
@@ -446,7 +449,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* ME_7 = gGeoManager->MakeTube("ME07", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_7 = gGeoManager->MakeTube("MG07", med74, 0, 0.3, 22.36);
   ME_7->SetLineColor(kOrange-2);
-  TGeoVolume* MD_8 = gGeoManager->MakeTube("MD08", med3, 9.497369, 10.8475, 22.36);
+  //TGeoVolume* MD_8 = gGeoManager->MakeTube("MD08", med3, 9.497369, 10.8475, 22.36);
+  TGeoVolume* MD_8 = gGeoManager->MakeTube("MD08", med3, 9.502999, 10.8475, 22.36+0.07); // overlap in Z
   TGeoVolume* ME_8 = gGeoManager->MakeTube("ME08", med9, 0, 0.3025, 22.53606);
   TGeoVolume* MG_8 = gGeoManager->MakeTube("MG08", med74, 0, 0.3, 22.53606);
   ME_8->SetLineColor(kOrange-1);
@@ -454,7 +458,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* ME_9 = gGeoManager->MakeTube("ME09", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG_9 = gGeoManager->MakeTube("MG09", med74, 0, 0.3, 22.36);
   ME_9->SetLineColor(kOrange);
-  TGeoVolume* MD10 = gGeoManager->MakeTube("MD10", med3, 11.5039, 12.8475, 22.36);
+  //TGeoVolume* MD10 = gGeoManager->MakeTube("MD10", med3, 11.5039, 12.8475, 22.36);
+  TGeoVolume* MD10 = gGeoManager->MakeTube("MD10", med3, 11.5039, 12.8475, 22.36+0.07); // overlap in Z
   TGeoVolume* ME10 = gGeoManager->MakeTube("ME10", med9, 0, 0.3025, 22.56769);
   TGeoVolume* MG10 = gGeoManager->MakeTube("MG10", med74, 0, 0.3, 22.56769);
   ME10->SetLineColor(kOrange+1);
@@ -462,7 +467,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* ME11 = gGeoManager->MakeTube("ME11", med9, 0, 0.3025, 22.36);
   TGeoVolume* MG11 = gGeoManager->MakeTube("MG11", med74, 0, 0.3, 22.36);
   ME11->SetLineColor(kOrange+2);
-  TGeoVolume* MD12 = gGeoManager->MakeTube("MD12", med3, 13.49739, 15.0475, 22.36);
+  //TGeoVolume* MD12 = gGeoManager->MakeTube("MD12", med3, 13.49739, 15.0475, 22.36);
+  TGeoVolume* MD12 = gGeoManager->MakeTube("MD12", med3, 13.503, 15.0475, 22.36+0.07); // overlap in Z
   TGeoVolume* ME12 = gGeoManager->MakeTube("ME12", med9, 0, 0.4025, 22.60782);
   TGeoVolume* MG12 = gGeoManager->MakeTube("MG12", med74, 0, 0.4, 22.60782);
   ME12->SetLineColor(kOrange+3);
@@ -470,7 +476,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* ME13 = gGeoManager->MakeTube("ME13", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG13 = gGeoManager->MakeTube("MG13", med74, 0, 0.4, 22.36);
   ME13->SetLineColor(kOrange+4);
-  TGeoVolume* MD14 = gGeoManager->MakeTube("MD14", med3, 15.89664, 17.4475, 22.36);
+  //TGeoVolume* MD14 = gGeoManager->MakeTube("MD14", med3, 15.89664, 17.4475, 22.36);
+  TGeoVolume* MD14 = gGeoManager->MakeTube("MD14", med3, 15.903, 17.4475, 22.36+0.07); // overlap in Z
   TGeoVolume* ME14 = gGeoManager->MakeTube("ME14", med9, 0, 0.4025, 22.65027);
   TGeoVolume* MG14 = gGeoManager->MakeTube("MG14", med74, 0, 0.4, 22.65027);
   ME14->SetLineColor(kOrange+5);
@@ -478,7 +485,8 @@ TGeoVolume* geometryVolumeCentral(TGeoVolume* WASA, const std::vector<TGeoMateri
   TGeoVolume* ME15 = gGeoManager->MakeTube("ME15", med9, 0, 0.4025, 22.36);
   TGeoVolume* MG15 = gGeoManager->MakeTube("MG15", med74, 0, 0.4, 22.36);
   ME15->SetLineColor(kOrange+6);
-  TGeoVolume* MD16 = gGeoManager->MakeTube("MD16", med3, 18.30906, 19.8475, 22.36);
+  //TGeoVolume* MD16 = gGeoManager->MakeTube("MD16", med3, 18.30906, 19.8475, 22.36); //
+  TGeoVolume* MD16 = gGeoManager->MakeTube("MD16", med3, 18.30906, 19.8475, 22.36+0.07); // overlap in Z
   TGeoVolume* ME16 = gGeoManager->MakeTube("ME16", med9, 0, 0.4025, 22.68193);
   TGeoVolume* MG16 = gGeoManager->MakeTube("MG16", med74, 0, 0.4, 22.68193);
   ME16->SetLineColor(kOrange+7);
